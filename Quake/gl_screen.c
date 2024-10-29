@@ -1871,6 +1871,10 @@ void SCR_ShowObsFrags(void)
 				x = 10;
 				y = 160;
 			}
+
+			char qflbracket[2] = { 144, '\0' }; // woods  -- quake font left bracket
+			char qfrbracket[2] = { 145, '\0' }; // woods  -- quake font right bracket
+
 			for (i = 0; i < scoreboardlines; i++, y += -8) //johnfitz -- change y init, test, inc woods (reverse drawing order from bottom to top)
 			{
 				k = fragsort[i];
@@ -1881,6 +1885,12 @@ void SCR_ShowObsFrags(void)
 				// colors
 				Draw_FillPlayer(x, y + 1, 40, 4, s->shirt, 1);
 				Draw_FillPlayer(x, y + 5, 40, 3, s->pants, 1);
+
+				if (k == cl.viewentity - 1)
+				{
+					Draw_StringRGBA(x - 2, y, qflbracket, CL_PLColours_Parse("0xffffff"), 1);
+					Draw_StringRGBA(x + 33, y, qfrbracket, CL_PLColours_Parse("0xffffff"), 1);
+				}
 
 				// number
 				f = s->frags;
