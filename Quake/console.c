@@ -171,6 +171,8 @@ void Con_ToggleConsole_f (void)
 		}
 	}
 
+	cl.expectingpingtimes = realtime + 1; // woods
+
 	SCR_EndLoadingPlaque ();
 	memset (con_times, 0, sizeof(con_times));
 
