@@ -3495,12 +3495,13 @@ void SCR_EndLoadingPlaque (void)
 const char	*scr_notifystring;
 qboolean	scr_drawdialog;
 
-void SCR_DrawNotifyString (void)
+void SCR_DrawNotifyString (void) // woods add ^m support
 {
 	const char	*start;
 	int		l;
-	int		j;
 	int		x, y;
+	int mask = 0;       // Masking state
+	int last_char = 0;  // Previous character
 
 	GL_SetCanvas (CANVAS_MENU); //johnfitz
 
@@ -3508,25 +3509,92 @@ void SCR_DrawNotifyString (void)
 
 	y = 200 * 0.35; //johnfitz -- stretched overlays
 
-	do
+	while (*start)
 	{
-	// scan the width of the line
-		for (l=0 ; l<40 ; l++)
+		// First pass: calculate visible length (excluding control sequences)
+		int visible_length = 0;
+		for (l = 0; l < 40; l++)
+		{
 			if (start[l] == '\n' || !start[l])
 				break;
-		x = (320 - l*8)/2; //johnfitz -- stretched overlays
-		for (j=0 ; j<l ; j++, x+=8)
-			Draw_Character (x, y, start[j]);
+
+			// Skip ^m sequences when calculating length
+			if (start[l] == '^' && l + 1 < 40 && start[l + 1] == 'm')
+			{
+				l++; // Skip both ^ and m
+				continue;
+			}
+			// Skip standalone ^ if it's not part of a valid sequence
+			if (start[l] == '^' && l + 1 < 40 && start[l + 1] != 'm')
+			{
+				continue;
+			}
+			visible_length++;
+		}
+
+		// Calculate starting x position based on visible length
+		x = (320 - visible_length * 8) / 2;
+
+		// Second pass: actual drawing
+		for (int j = 0; j < l;)
+		{
+			char c = start[j];
+
+			// Handle masking sequences
+			if (last_char == '^' && c == 'm')
+			{
+				mask ^= 128;  // Toggle mask
+				last_char = 0;
+				j++;
+				continue;
+			}
+
+			if (c == '^')
+			{
+				last_char = '^';
+				j++;
+				continue;
+			}
+
+			if (last_char == '^' && c != 'm')
+			{
+				last_char = 0;
+				// Continue to draw the current character
+			}
+			else
+			{
+				last_char = 0;
+			}
+
+			// Apply mask if enabled
+			int num = c;
+			if (mask)
+				num = (num & 127) | 128;
+			else
+				num &= 127;
+
+			if (num == 32)
+			{
+				x += 8;
+				j++;
+				continue;
+			}
+
+			Draw_CharacterRGBA(x, y, num, CL_PLColours_Parse("0xffffff"), 1);
+			x += 8;
+			j++;
+		}
 
 		y += 8;
+
+		start += l;
 
 		while (*start && *start != '\n')
 			start++;
 
-		if (!*start)
-			break;
-		start++;		// skip the \n
-	} while (1);
+		if (*start == '\n')
+			start++;
+	}
 }
 
 /*

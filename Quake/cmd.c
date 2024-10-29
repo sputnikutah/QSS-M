@@ -1510,7 +1510,7 @@ qboolean	Cmd_ExecuteString (const char *text, cmd_source_t src)
 
 	if (Cmd_IsQuitMistype(Cmd_Argv(0))) // // woods -- #smartquit -- check for mistyped "quit" command
 	{
-		if (SCR_ModalMessage(va("you typed: %s\n\n do you want to quit? (y/n)\n", Cmd_Argv(0)), 0.0f))
+		if (SCR_ModalMessage(va("you typed: ^m%s^m\n\n do you want to quit? (^my^m/^mn^m)\n", Cmd_Argv(0)), 0.0f))
 			Host_Quit_f();
 		return true;
 	}
