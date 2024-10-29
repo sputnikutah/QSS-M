@@ -585,6 +585,171 @@ void Cmd_Unaliasall_f (void)
 }
 
 /*
+===============
+Alias_WriteAliases - woods #serveralias
+
+Writes all non-server aliases to a file as:
+  alias <name> "<value>"
+
+1. Outputs "unaliasall."
+2. Categorizes '+' (key press), '-' (key release), and other aliases.
+3. Filters out server aliases, sorts and pairs '+'/'-' aliases, then writes all aliases without trailing newlines.
+
+===============
+*/
+
+#define MAX_ALIASES 1024
+#define MAX_ALIAS_VALUE 1024
+
+qboolean IsServerAlias(const char* name, server_alias_t* server_aliases) 
+{
+	server_alias_t* sa;
+	for (sa = server_aliases; sa; sa = sa->next) {
+		if (strcmp(name, sa->name) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
+
+void RemoveTrailingNewline(char* str)
+{
+	size_t len = strlen(str);
+	while (len > 0 && (str[len - 1] == '\n' || str[len - 1] == '\r')) 
+	{
+		str[len - 1] = '\0';
+		len--;
+	}
+}
+
+int CompareAliases(const void* a, const void* b) 
+{
+	cmdalias_t* alias_a = *(cmdalias_t**)a;
+	cmdalias_t* alias_b = *(cmdalias_t**)b;
+	return q_strcasecmp(alias_a->name, alias_b->name);
+}
+
+void Alias_WriteAliases(FILE* f) 
+{
+	cmdalias_t* alias;
+	cmdalias_t* plus_aliases[MAX_ALIASES];
+	cmdalias_t* minus_aliases[MAX_ALIASES];
+	cmdalias_t* other_aliases[MAX_ALIASES];
+	int plus_count = 0, minus_count = 0, other_count = 0;
+	int i, j;
+	extern cmdalias_t* cmd_alias;
+	extern server_alias_t* server_aliases;
+
+	if (!f) {
+		fprintf(stderr, "Alias_WriteAliases: Invalid file pointer\n");
+		return;
+	}
+
+	// Print unaliasall at the top
+	fprintf(f, "unaliasall\n");
+
+	// Gather and categorize the aliases
+	for (alias = cmd_alias; alias; alias = alias->next) {
+		if (alias->value[0] != '\0') {
+			if (IsServerAlias(alias->name, server_aliases)) {
+				continue; // Skip server aliases
+			}
+			if (alias->name[0] == '+') {
+				if (plus_count < MAX_ALIASES) {
+					plus_aliases[plus_count++] = alias;
+				}
+			}
+			else if (alias->name[0] == '-') {
+				if (minus_count < MAX_ALIASES) {
+					minus_aliases[minus_count++] = alias;
+				}
+			}
+			else {
+				if (other_count < MAX_ALIASES) {
+					other_aliases[other_count++] = alias;
+				}
+			}
+		}
+	}
+
+	// Sort each group of aliases alphabetically
+	qsort(plus_aliases, plus_count, sizeof(cmdalias_t*), CompareAliases);
+	qsort(minus_aliases, minus_count, sizeof(cmdalias_t*), CompareAliases);
+	qsort(other_aliases, other_count, sizeof(cmdalias_t*), CompareAliases);
+
+	// Process '+' aliases and their corresponding '-' aliases
+	for (i = 0; i < plus_count; i++) {
+		cmdalias_t* plus_alias = plus_aliases[i];
+		qboolean found_partner = false;
+
+		for (j = 0; j < minus_count; j++) {
+			cmdalias_t* minus_alias = minus_aliases[j];
+
+			if (q_strcasecmp(plus_alias->name + 1, minus_alias->name + 1) == 0) {
+				// Remove trailing newlines from copies
+				char plus_value[MAX_ALIAS_VALUE];
+				char minus_value[MAX_ALIAS_VALUE];
+
+				Q_strncpy(plus_value, plus_alias->value, MAX_ALIAS_VALUE);
+				RemoveTrailingNewline(plus_value);
+
+				Q_strncpy(minus_value, minus_alias->value, MAX_ALIAS_VALUE);
+				RemoveTrailingNewline(minus_value);
+
+				fprintf(f, "alias \"%s\" \"%s\"\n", plus_alias->name, plus_value);
+				fprintf(f, "alias \"%s\" \"%s\"\n", minus_alias->name, minus_value);
+
+				found_partner = true;
+				break;
+			}
+		}
+
+		if (!found_partner) {
+			// Print unpaired '+' alias
+			char plus_value[MAX_ALIAS_VALUE];
+			Q_strncpy(plus_value, plus_alias->value, MAX_ALIAS_VALUE);
+			RemoveTrailingNewline(plus_value);
+
+			fprintf(f, "alias \"%s\" \"%s\"\n", plus_alias->name, plus_value);
+		}
+	}
+
+	// Print unpaired '-' aliases
+	for (i = 0; i < minus_count; i++) {
+		cmdalias_t* minus_alias = minus_aliases[i];
+		qboolean found_partner = false;
+
+		for (j = 0; j < plus_count; j++) {
+			cmdalias_t* plus_alias = plus_aliases[j];
+
+			if (q_strcasecmp(minus_alias->name + 1, plus_alias->name + 1) == 0) {
+				found_partner = true;
+				break;
+			}
+		}
+
+		if (!found_partner) {
+			// Print unpaired '-' alias
+			char minus_value[MAX_ALIAS_VALUE];
+			Q_strncpy(minus_value, minus_alias->value, MAX_ALIAS_VALUE);
+			RemoveTrailingNewline(minus_value);
+
+			fprintf(f, "alias \"%s\" \"%s\"\n", minus_alias->name, minus_value);
+		}
+	}
+
+	// Print other aliases
+	for (i = 0; i < other_count; i++) {
+		alias = other_aliases[i];
+		char value_copy[MAX_ALIAS_VALUE];
+		Q_strncpy(value_copy, alias->value, MAX_ALIAS_VALUE);
+		RemoveTrailingNewline(value_copy);
+
+		fprintf(f, "alias \"%s\" \"%s\"\n", alias->name, value_copy);
+	}
+}
+
+/*
 =============================================================================
 
 					COMMAND EXECUTION

@@ -515,6 +515,11 @@ void Host_WriteConfigurationToFile (const char* name)
 
 		Config_PrintPreamble(f);
 
+		if (cfg_save_aliases.value) // woods #serveralias
+		{ 
+			Config_PrintHeading(f, "A L I A S E S");
+			Alias_WriteAliases(f);
+		}
 		Config_PrintHeading(f, "K E Y   B I N D I N G S"); // woods #configprint
 		Key_WriteBindings (f);
 		Config_PrintHeading(f, "V A R I A B L E S"); // woods #configprint

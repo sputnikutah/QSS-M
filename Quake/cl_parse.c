@@ -24,6 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // cl_parse.c  -- parse a message received from the server
 
 #include "quakedef.h"
+#include "q_ctype.h" // woods #serveralias
 #include "bgmusic.h"
 #include "arch_def.h" // woods for f_system
 #if defined(PLATFORM_OSX) || defined(PLATFORM_MAC) // woods for f_system
@@ -53,6 +54,7 @@ extern char videoc[40];		// woods #q_sysinfo (qrack)
 qboolean	endscoreprint = false; // woods pq_confilter+
 
 extern Uint32 exec_dm_cfg (Uint32 interval, void* param); // woods #execdelay
+server_alias_t* server_aliases = NULL; // woods #serveralias
 
 const char *svc_strings[128] =
 {
@@ -2709,6 +2711,48 @@ static void CL_ParseStuffText(const char *msg)
 		}*/
 
 		*str++ = 0;//skip past the \n
+
+		if (strncmp(cl.stuffcmdbuf, "alias ", 6) == 0) // woods #serveralias
+		{
+			char alias_name[MAX_ALIAS_NAME];
+			const char* alias_cmd = cl.stuffcmdbuf + 6;
+
+			// Find the end of the alias name by checking for whitespace
+			const char* alias_name_end = alias_cmd;
+			while (*alias_name_end && !q_isspace(*alias_name_end))
+				alias_name_end++;
+
+			if (alias_name_end > alias_cmd)
+			{
+				size_t name_length = alias_name_end - alias_cmd;
+				if (name_length >= MAX_ALIAS_NAME)
+					name_length = MAX_ALIAS_NAME - 1;
+
+				Q_strncpy(alias_name, alias_cmd, name_length);
+				alias_name[name_length] = '\0';
+
+				// Check if the alias already exists in the server_aliases list
+				qboolean alias_exists = false;
+				server_alias_t* sa;
+				for (sa = server_aliases; sa; sa = sa->next)
+				{
+					if (!strcmp(alias_name, sa->name))
+					{
+						alias_exists = true;
+						break;
+					}
+				}
+
+				if (!alias_exists)
+				{
+					// Add alias name to server_aliases list
+					server_alias_t* new_alias = (server_alias_t*)Z_Malloc(sizeof(server_alias_t));
+					Q_strncpy(new_alias->name, alias_name, MAX_ALIAS_NAME);
+					new_alias->next = server_aliases;
+					server_aliases = new_alias;
+				}
+			}
+		}
 
 		//handle special commands
 		if (cl.stuffcmdbuf[0] == '/' && cl.stuffcmdbuf[1] == '/')

@@ -156,5 +156,7 @@ void	Cmd_Print (const char *text);
 
 qboolean Cmd_IsReservedName (const char* name); // woods #iwtabcomplete
 
+void Alias_WriteAliases(FILE* f); // woods #serveralias
+
 #endif	/* _QUAKE_CMD_H */
 

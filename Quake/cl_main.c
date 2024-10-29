@@ -47,6 +47,7 @@ cvar_t	cl_nolerp = {"cl_nolerp","0",CVAR_NONE};
 cvar_t	cl_nopred = {"cl_nopred", "0", CVAR_ARCHIVE};	//name comes from quakeworld.
 
 cvar_t	cfg_unbindall = {"cfg_unbindall", "1", CVAR_ARCHIVE};
+cvar_t	cfg_save_aliases = {"cfg_save_aliases", "1", CVAR_ARCHIVE}; // woods #serveralias
 
 cvar_t	lookspring = {"lookspring","0", CVAR_ARCHIVE};
 cvar_t	lookstrafe = {"lookstrafe","0", CVAR_ARCHIVE};
@@ -2644,6 +2645,7 @@ void CL_Init (void)
 	Cvar_RegisterVariable (&m_side);
 
 	Cvar_RegisterVariable (&cfg_unbindall);
+	Cvar_RegisterVariable (&cfg_save_aliases); // woods #serveralias
 
 	Cvar_RegisterVariable (&cl_maxpitch); //johnfitz -- variable pitch clamping
 	Cvar_RegisterVariable (&cl_minpitch); //johnfitz -- variable pitch clamping

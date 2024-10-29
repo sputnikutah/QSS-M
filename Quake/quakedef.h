@@ -483,5 +483,13 @@ extern speed_info_t speed_info; // woods - #speedometer
 #define bound(a,b,c) ((a) >= (c) ? (a) : \
 					(b) < (a) ? (a) : (b) > (c) ? (c) : (b)) // woods #configprint
 
+#define	MAX_ALIAS_NAME	32 // woods #serveralias
+
+typedef struct server_alias_s // woods #serveralias
+{
+	char name[MAX_ALIAS_NAME];
+	struct server_alias_s* next;
+} server_alias_t;
+
 #endif	/* QUAKEDEFS_H */
 

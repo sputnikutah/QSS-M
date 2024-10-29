@@ -431,6 +431,7 @@ extern	cvar_t	cl_nolerp;
 extern	cvar_t	cl_demoreel;
 
 extern	cvar_t	cfg_unbindall;
+extern	cvar_t	cfg_save_aliases; // woods #serveralias
 
 extern	cvar_t	cl_pitchdriftspeed;
 extern	cvar_t	lookspring;
