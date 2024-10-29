@@ -3794,8 +3794,6 @@ void SCR_UpdateScreen (void)
 		//FIXME: only call this when needed
 		SCR_TileClear ();
 
-		SCR_DrawAutoID(); // woods #autoid
-
 		if (!cl.intermission)
 		{
 			Sbar_Draw ();

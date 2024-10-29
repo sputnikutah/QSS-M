@@ -78,6 +78,7 @@ vec3_t	v_punchangles[2]; //johnfitz -- copied from cl.punchangle.  0 is current,
 double	v_punchangles_times[2]; //spike -- times, to avoid assumptions...
 
 void SCR_SetupAutoID(void); // woods #autoid
+void SCR_DrawAutoID(void); // woods #autoid
 
 /*
 ===============
@@ -1011,6 +1012,8 @@ void V_RenderView (void)
 	R_RenderView ();
 
 	SCR_SetupAutoID(); // woods #autoid
+
+	SCR_DrawAutoID(); // woods #autoid
 
 	V_PolyBlend (); //johnfitz -- moved here from R_Renderview ();
 }
