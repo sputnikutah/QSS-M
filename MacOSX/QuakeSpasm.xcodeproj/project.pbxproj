@@ -1003,10 +1003,10 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					codecs/include,
-					"vcpkg/installed/x64-osx-10.9/include",
-					"vcpkg/installed/x64-osx-10.9/include/opus",
-					"vcpkg/installed/arm64-osx-11.0/include",
-					"vcpkg/installed/arm64-osx-11.0/include/opus",
+					"vcpkg/installed/x64-osx-1013/include",
+					"vcpkg/installed/x64-osx-1013/include/opus",
+					"vcpkg/installed/arm64-osx-11/include",
+					"vcpkg/installed/arm64-osx-11/include/opus",
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				INFOPLIST_FILE = Info.plist;
@@ -1016,8 +1016,8 @@
 					"$(SRCROOT)",
 					"$(SRCROOT)/codecs/lib",
 					"$(PROJECT_DIR)/libs_universal",
-					"$(PROJECT_DIR)/vcpkg/installed/x64-osx-10.9/lib",
-					"$(PROJECT_DIR)/vcpkg/installed/arm64-osx-11.0/lib",
+					"$(PROJECT_DIR)/vcpkg/installed/x64-osx-1013/lib",
+					"$(PROJECT_DIR)/vcpkg/installed/arm64-osx-11/lib",
 					"$(PROJECT_DIR)/codecs/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1059,10 +1059,10 @@
 				"GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]" = NO;
 				HEADER_SEARCH_PATHS = (
 					codecs/include,
-					"vcpkg/installed/x64-osx-10.9/include",
-					"vcpkg/installed/x64-osx-10.9/include/opus",
-					"vcpkg/installed/arm64-osx-11.0/include",
-					"vcpkg/installed/arm64-osx-11.0/include/opus",
+					"vcpkg/installed/x64-osx-1013/include",
+					"vcpkg/installed/x64-osx-1013/include/opus",
+					"vcpkg/installed/arm64-osx-11/include",
+					"vcpkg/installed/arm64-osx-11/include/opus",
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				INFOPLIST_FILE = Info.plist;
@@ -1072,8 +1072,8 @@
 					"$(SRCROOT)",
 					"$(SRCROOT)/codecs/lib",
 					"$(PROJECT_DIR)/libs_universal",
-					"$(PROJECT_DIR)/vcpkg/installed/x64-osx-10.9/lib",
-					"$(PROJECT_DIR)/vcpkg/installed/arm64-osx-11.0/lib",
+					"$(PROJECT_DIR)/vcpkg/installed/x64-osx-1013/lib",
+					"$(PROJECT_DIR)/vcpkg/installed/arm64-osx-11/lib",
 					"$(PROJECT_DIR)/codecs/lib",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
@@ -1117,10 +1117,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					codecs/include,
-					"vcpkg/installed/x64-osx-10.9/include",
-					"vcpkg/installed/x64-osx-10.9/include/opus",
-					"vcpkg/installed/arm64-osx-11.0/include",
-					"vcpkg/installed/arm64-osx-11.0/include/opus",
+					"vcpkg/installed/x64-osx-1013/include",
+					"vcpkg/installed/x64-osx-1013/include/opus",
+					"vcpkg/installed/arm64-osx-11/include",
+					"vcpkg/installed/arm64-osx-11/include/opus",
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
@@ -1168,10 +1168,10 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					codecs/include,
-					"vcpkg/installed/x64-osx-10.9/include",
-					"vcpkg/installed/x64-osx-10.9/include/opus",
-					"vcpkg/installed/arm64-osx-11.0/include",
-					"vcpkg/installed/arm64-osx-11.0/include/opus",
+					"vcpkg/installed/x64-osx-1013/include",
+					"vcpkg/installed/x64-osx-1013/include/opus",
+					"vcpkg/installed/arm64-osx-11/include",
+					"vcpkg/installed/arm64-osx-11/include/opus",
 					"$(HEADER_SEARCH_PATHS)",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";

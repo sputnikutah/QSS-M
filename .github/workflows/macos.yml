@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    name: arm64-intel
+    name: arm64-universal
     runs-on: macos-latest
     strategy:
       fail-fast: false
