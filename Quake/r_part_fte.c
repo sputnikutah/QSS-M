@@ -5470,9 +5470,11 @@ int PScript_EntParticleTrail(vec3_t oldorg, entity_t *ent, const char *name)
 	if (type < 0)
 		return 1;
 
-	if (!strcmp(ent->model->name, "progs/grenade.mdl")) // woods #r2g
-		if (cl.model_precache[grenadecache]->fromrl == 1)
+	if (ent->model && !strcmp(ent->model->name, "progs/grenade.mdl")) // woods #r2g
+	{
+		if (grenadecache >= 0 && grenadecache < MAX_MODELS && cl.model_precache[grenadecache] && cl.model_precache[grenadecache]->fromrl == 1) 
 			type = PScript_FindParticleType("TR_ROCKET");
+	}
 
 	AngleVectors(ent->angles, axis[0], axis[1], axis[2]);
 	return PScript_ParticleTrail(oldorg, ent->origin, type, timeinterval, ent-cl.entities, axis, &ent->trailstate);
