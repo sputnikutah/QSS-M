@@ -1430,7 +1430,7 @@ char truncatedStrings[MAX_KEYS][MAX_LENGTH] = { 0 }; // woods #iwtabcomplete
 
 static void ProcessKeyBinding (int i, const char* partial) // woods #iwtabcomplete
 {
-	if (keybindings[i]) 
+	if (keybindings[0][i])
 	{
 		const char* name = Key_KeynumToString(i);
 		if (strcmp(name, "<UNKNOWN KEYNUM>") != 0)
