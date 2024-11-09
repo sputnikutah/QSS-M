@@ -2316,6 +2316,8 @@ void M_Setup_Mousemove(int cx, int cy) // woods #mousemenu
 //=============================================================================
 int	namemaker_cursor_x, namemaker_cursor_y;
 #define	NAMEMAKER_TABLE_SIZE	16
+#define NAMEMAKER_TOTAL_ROWS (NAMEMAKER_TABLE_SIZE + 1) // Added to include the new row
+
 //extern int key_special_dest;
 
 void M_Menu_NameMaker_f (void)
@@ -2349,9 +2351,11 @@ void M_NameMaker_Draw (void)
 		for (x = 0; x < NAMEMAKER_TABLE_SIZE; x++)
 			M_DrawCharacter(32 + (16 * x), 40 + (8 * y), NAMEMAKER_TABLE_SIZE * y + x);
 
+	M_PrintWhite(32, 48 + 8 * NAMEMAKER_TABLE_SIZE, "Web Name Maker");
+
 	if (namemaker_cursor_y == NAMEMAKER_TABLE_SIZE)
-		M_DrawCharacter(128, 184, 12 + ((int)(realtime * 4) & 1));
-	else
+		M_DrawCharacter(24, 48 + 8 * NAMEMAKER_TABLE_SIZE, 12 + ((int)(realtime * 4) & 1));
+	else // Cursor within the character table
 		M_DrawCharacter(24 + 16 * namemaker_cursor_x, 40 + 8 * namemaker_cursor_y, 12 + ((int)(realtime * 4) & 1));
 
 	//	M_DrawTextBox (136, 176, 2, 1);
@@ -2399,13 +2403,13 @@ void M_NameMaker_Key (int k)
 		S_LocalSound("misc/menu1.wav");
 		namemaker_cursor_y--;
 		if (namemaker_cursor_y < 0)
-			namemaker_cursor_y = NAMEMAKER_TABLE_SIZE - 1;
+			namemaker_cursor_y = NAMEMAKER_TOTAL_ROWS - 1;
 		break;
 
 	case K_DOWNARROW:
 		S_LocalSound("misc/menu1.wav");
 		namemaker_cursor_y++;
-		if (namemaker_cursor_y > NAMEMAKER_TABLE_SIZE - 1)
+		if (namemaker_cursor_y >= NAMEMAKER_TOTAL_ROWS)
 			namemaker_cursor_y = 0;
 		break;
 
@@ -2420,17 +2424,23 @@ void M_NameMaker_Key (int k)
 		break;
 
 	case K_LEFTARROW:
-		S_LocalSound("misc/menu1.wav");
-		namemaker_cursor_x--;
-		if (namemaker_cursor_x < 0)
-			namemaker_cursor_x = NAMEMAKER_TABLE_SIZE - 1;
+		if (namemaker_cursor_y < NAMEMAKER_TABLE_SIZE) // Only move left if within table
+		{
+			S_LocalSound("misc/menu1.wav");
+			namemaker_cursor_x--;
+			if (namemaker_cursor_x < 0)
+				namemaker_cursor_x = NAMEMAKER_TABLE_SIZE - 1;
+		}
 		break;
 
 	case K_RIGHTARROW:
-		S_LocalSound("misc/menu1.wav");
-		namemaker_cursor_x++;
-		if (namemaker_cursor_x >= NAMEMAKER_TABLE_SIZE - 1)
-			namemaker_cursor_x = 0;
+		if (namemaker_cursor_y < NAMEMAKER_TABLE_SIZE) // Only move right if within table
+		{
+			S_LocalSound("misc/menu1.wav");
+			namemaker_cursor_x++;
+			if (namemaker_cursor_x >= NAMEMAKER_TABLE_SIZE)
+				namemaker_cursor_x = 0;
+		}
 		break;
 
 	case K_HOME:
@@ -2455,12 +2465,7 @@ void M_NameMaker_Key (int k)
 	case K_KP_ENTER:
 	case K_ABUTTON:
 	case K_MOUSE1: // woods #mousemenu
-		if (namemaker_cursor_y == NAMEMAKER_TABLE_SIZE)
-		{
-			q_strlcpy(setup_myname, namemaker_name, sizeof(setup_myname));
-			M_Menu_Setup_f();
-		}
-		else
+		if (namemaker_cursor_y < NAMEMAKER_TABLE_SIZE)
 		{
 			l = strlen(namemaker_name);
 			if (l < 15)
@@ -2468,6 +2473,12 @@ void M_NameMaker_Key (int k)
 				namemaker_name[l] = NAMEMAKER_TABLE_SIZE * namemaker_cursor_y + namemaker_cursor_x;
 				namemaker_name[l + 1] = 0;
 			}
+		}
+		else if (namemaker_cursor_y == NAMEMAKER_TABLE_SIZE)
+		{
+			// Open the web name maker
+			SCR_ModalMessage("web name maker webpage has been opened\nin your ^mweb browser^m\n\nminimize QSS-M to view", 3.5f); // woods
+			SDL_OpenURL("https://q1tools.github.io/namemaker/");
 		}
 		break;
 
@@ -2489,7 +2500,34 @@ void M_NameMaker_Key (int k)
 
 void M_NameMaker_Mousemove(int cx, int cy) // woods #mousemenu
 {
-	M_UpdateCursorXY(cx -8, cy - 8, 20, 32, 16, 8, NAMEMAKER_TABLE_SIZE, &namemaker_cursor_x, &namemaker_cursor_y);
+	int x_origin = 28;
+	int y_origin = 36;
+	int x_spacing = 16;
+	int y_spacing = 8;
+	int num_rows = NAMEMAKER_TOTAL_ROWS;
+	int max_columns;
+	int temp_cursor_x, temp_cursor_y;
+
+	temp_cursor_x = (cx - 8 - x_origin + x_spacing / 2) / x_spacing; // Calculate tentative cursor positions
+	temp_cursor_y = (cy - 8 - y_origin + y_spacing / 2) / y_spacing;
+
+	if (temp_cursor_y < 0) // Clamp cursor_y between 0 and num_rows - 1
+		temp_cursor_y = 0;
+	if (temp_cursor_y >= num_rows)
+		temp_cursor_y = num_rows - 1;
+
+	if (temp_cursor_y < NAMEMAKER_TABLE_SIZE) // Determine the number of columns in the current row
+		max_columns = NAMEMAKER_TABLE_SIZE; // Regular character table rows
+	else
+		max_columns = 1; // Last row with "Web Name Maker"
+
+	if (temp_cursor_x < 0) // Clamp cursor_x between 0 and max_columns - 1
+		temp_cursor_x = 0;
+	if (temp_cursor_x >= max_columns)
+		temp_cursor_x = max_columns - 1;
+
+	namemaker_cursor_x = temp_cursor_x; // Update cursor positions
+	namemaker_cursor_y = temp_cursor_y;
 }
 
 //=============================================================================
