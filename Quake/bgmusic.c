@@ -31,6 +31,9 @@
 qboolean	bgmloop;
 cvar_t		bgm_extmusic = {"bgm_extmusic", "1", CVAR_ARCHIVE};
 
+
+extern qboolean muted; // woods #usermute #mute
+
 static qboolean	no_extmusic= false;
 static float	old_volume = -1.0f;
 
@@ -372,7 +375,7 @@ static void BGM_UpdateStream (void)
 	int	fileBytes;
 	byte	raw[16384];
 
-	if (bgmstream->status != STREAM_PLAY)
+	if (muted || bgmstream->status != STREAM_PLAY) // woods #usermute #mute
 		return;
 
 	/* don't bother playing anything if musicvolume is 0 */

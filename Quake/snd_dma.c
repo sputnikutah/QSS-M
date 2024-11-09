@@ -115,6 +115,7 @@ static	cvar_t	snd_noextraupdate = {"snd_noextraupdate", "0", CVAR_NONE};
 static	cvar_t	snd_show = {"snd_show", "0", CVAR_NONE};
 static	cvar_t	_snd_mixahead = {"_snd_mixahead", "0.1", CVAR_ARCHIVE};
 
+extern char mute[2]; // woods #usermute #mute
 
 static void S_SoundInfo_f (void)
 {
@@ -137,6 +138,8 @@ static void S_SoundInfo_f (void)
 static void SND_Callback_sfxvolume (cvar_t *var)
 {
 	SND_InitScaletable ();
+	if (!strcmp(mute, "y")) // woods #usermute #mute
+		Sound_Toggle_Mute_f();
 }
 
 static void SND_Callback_snd_filterquality (cvar_t *var)
@@ -210,6 +213,12 @@ void S_Restart_f(void)
 	}
 }
 
+void BGM_Volume_Callback_f (cvar_t* var) // woods #usermute #mute
+{
+	if (!strcmp(mute, "y"))
+		Sound_Toggle_Mute_f();
+}
+
 /*
 ================
 S_Init
@@ -230,6 +239,7 @@ void S_Init (void)
 	Cvar_RegisterVariable(&precache);
 	Cvar_RegisterVariable(&loadas8bit);
 	Cvar_RegisterVariable(&bgmvolume);
+	Cvar_SetCallback(&bgmvolume, &BGM_Volume_Callback_f); // woods #usermute #mute
 	Cvar_RegisterVariable(&ambient_level);
 	Cvar_RegisterVariable(&ambient_fade);
 	Cvar_RegisterVariable(&snd_noextraupdate);
