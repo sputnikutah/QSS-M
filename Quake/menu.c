@@ -2091,8 +2091,8 @@ void M_Setup_Draw (void)
 	M_PrintWhite (126, 112, CL_PLColours_ToString (setup_bottom)); // woods #showcolornum
 	M_DrawColorBar_Bot (64, 118, atoi(CL_PLColours_ToString (setup_bottom))); // woods #colorbar
 
-	if (!rgbactive) // woods
-		M_PrintRGBA (64, 170, "Shift For RGB Colors", CL_PLColours_Parse ("0xffffff"), 0.6f); // woods
+	if (!rgbactive && (setup_cursor == 3 || setup_cursor == 4)) // woods
+		M_PrintRGBA (64, 170, "+shift for RGB colors", CL_PLColours_Parse ("0xffffff"), 0.6f); // woods
 
 	M_DrawTextBox (64, 142, 14, 1);  // woods 140 to 152 #namemaker
 	M_Print (72, 150, "Accept Changes"); // woods #colorbar
