@@ -539,8 +539,18 @@ static void Host_Maps_f (void) // prints worldspawn map description
 		int word_length = strlen(level->name);
 		int num_spaces = (max_word_length + 2) - word_length;
 		if (num_spaces < 1) num_spaces = 1;
-		snprintf(combined, sizeof(combined), "%-*s %.50s", word_length + num_spaces, level->name, level->data);
 
+		// Calculate available space for level->data
+		int name_space = word_length + num_spaces;
+		int remaining_space = sizeof(combined) - name_space - 2;
+		if (remaining_space < 10)
+		{
+			remaining_space = 10;
+			name_space = sizeof(combined) - remaining_space - 2;
+		}
+		q_snprintf(combined, sizeof(combined), "%-*s %.*s",
+			name_space, level->name,
+			remaining_space - 1, level->data);
 		if (filter) 
 		{
 			if (!(q_strcasestr(level->name, filter) || q_strcasestr(level->data, filter)))
@@ -2124,7 +2134,14 @@ int ICMP_Ping_Host(const char* host)
 	char command[256];
 	char buffer[128];
 
+#ifdef __APPLE__
 	snprintf(command, sizeof(command), "ping -c 1 -W 200 %s", host);
+#elif defined(__linux__)
+	snprintf(command, sizeof(command), "ping -c 1 -W 1 %s", host);
+#else
+	snprintf(command, sizeof(command), "ping -c 1 %s", host);
+#endif
+
 	FILE* fp = popen(command, "r");
 	if (fp == NULL) {
 		perror("popen failed");
