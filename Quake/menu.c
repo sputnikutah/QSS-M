@@ -1761,6 +1761,7 @@ void M_Skill_Mousemove(int cx, int cy)
 
 int	m_multiplayer_cursor;
 #define	MULTIPLAYER_ITEMS	3
+extern cvar_t scr_shownet; // woods
 
 
 void M_Menu_MultiPlayer_f (void)
@@ -1797,7 +1798,11 @@ void M_MultiPlayer_Draw (void)
 		M_DrawTextBox(f, 96, i, 2);
 		f += 8;
 		M_Print(f, 104, "currently connected to:");
-		M_PrintWhite(f, 112, lastmphost);
+
+		if (realtime - cl.last_received_message > scr_shownet.value)
+			M_PrintRGBA(f, 112, lastmphost, CL_PLColours_Parse("0xffffff"), 0.2f);
+		else
+			M_PrintWhite(f, 112, lastmphost);
 	}
 
 	if (ipxAvailable || ipv4Available || ipv6Available)
