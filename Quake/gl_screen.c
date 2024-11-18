@@ -2460,7 +2460,7 @@ void SCR_DrawNet (void)
 {
 	if (!scr_shownet.value)
 		return;
-	
+
 	if (realtime - cl.last_received_message < 0.3)
 		return;
 	if (cls.demoplayback)
@@ -3136,6 +3136,9 @@ void SCR_SetupAutoID(void)
 	char buf2[15];
 	const char* playmode;
 
+	char buf3[15];
+	const char* mode;
+
 	//if (r_refdef.viewangles[ROLL] == 80) // dead, could rotate text?
 
 	if (!scr_autoid.value || cls.state != ca_connected || cl.intermission || qeintermission || crxintermission)
@@ -3145,6 +3148,7 @@ void SCR_SetupAutoID(void)
 	{
 		obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf));
 		playmode = Info_GetKey(cl.serverinfo, "playmode", buf2, sizeof(buf2));
+		mode = Info_GetKey(cl.serverinfo, "mode", buf3, sizeof(buf3));
 
 		if (cl.modtype == 1 || cl.modtype == 4) // mods with observer keys
 		{
@@ -3158,7 +3162,7 @@ void SCR_SetupAutoID(void)
 					((int)scr_autoid.value != 2)
 					) &&
 				(
-					(strcmp(playmode, "match") != 0) || // allow in pre-match if value 2
+					((strcmp(playmode, "match") != 0 || (strcmp(mode, "dm") != 0 && strcmp(mode, "ctf") != 0))) || // allow in pre-match if value 2
 					(cl.matchinp || (int)scr_autoid.value != 2)
 					)
 				) {
@@ -3225,6 +3229,10 @@ void SCR_DrawAutoID(void)
 
 	GL_SetCanvas(CANVAS_AUTOID);
 
+	const char* observing = "null";
+	char buf[16];
+	observing = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observing", buf, sizeof(buf)); // userinfo
+
 	for (i = 0; i < autoid_count; i++)
 	{
 		// Adjust coordinates according to the scaling factor
@@ -3242,6 +3250,9 @@ void SCR_DrawAutoID(void)
 		TrimTrailingSpaces(formatted_name);
 
 		name_length = strlen(formatted_name);
+
+		if (!strcmp(formatted_name, observing))
+			continue;
 
 		Draw_FillPlayer(x - 4 * name_length - 1, y - 1, (name_length * 8) + 2, 11, CL_PLColours_Parse("0x000000"), decimal_part);
 
