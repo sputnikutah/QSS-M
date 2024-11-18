@@ -2458,10 +2458,12 @@ SCR_DrawNet
 */
 void SCR_DrawNet (void)
 {
+	scr_shownet.value = CLAMP(0, scr_shownet.value, 10);
+	
 	if (!scr_shownet.value)
 		return;
 
-	if (realtime - cl.last_received_message < 0.3)
+	if (realtime - cl.last_received_message < scr_shownet.value)
 		return;
 	if (cls.demoplayback)
 		return;
