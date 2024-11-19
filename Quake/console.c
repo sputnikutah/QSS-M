@@ -1430,22 +1430,19 @@ char truncatedStrings[MAX_KEYS][MAX_LENGTH] = { 0 }; // woods #iwtabcomplete
 
 static void ProcessKeyBinding (int i, const char* partial) // woods #iwtabcomplete
 {
-	if (keybindings[0][i])
+	const char* name = Key_KeynumToString(i);
+	if (strcmp(name, "<UNKNOWN KEYNUM>") != 0)
 	{
-		const char* name = Key_KeynumToString(i);
-		if (strcmp(name, "<UNKNOWN KEYNUM>") != 0)
+		char* keybindingValue = keybindings[0][i];
+		if (keybindingValue && strlen(keybindingValue) > MAX_LENGTH) 
 		{
-			char* keybindingValue = keybindings[0][i];
-			if (keybindingValue && strlen(keybindingValue) > MAX_LENGTH) 
-			{
-				int copyLength = MAX_LENGTH - 4; 
-				Q_strncpy(truncatedStrings[i], keybindingValue, copyLength);
-				truncatedStrings[i][copyLength] = '\0';
-				Q_strcat(truncatedStrings[i], "...");
-				keybindingValue = truncatedStrings[i];
-			}
-			Con_AddToTabList(name, partial, keybindingValue, NULL);
+			int copyLength = MAX_LENGTH - 4; 
+			Q_strncpy(truncatedStrings[i], keybindingValue, copyLength);
+			truncatedStrings[i][copyLength] = '\0';
+			Q_strcat(truncatedStrings[i], "...");
+			keybindingValue = truncatedStrings[i];
 		}
+		Con_AddToTabList(name, partial, keybindingValue, NULL);
 	}
 }
 
