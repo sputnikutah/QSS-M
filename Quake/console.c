@@ -1648,22 +1648,20 @@ static qboolean CompleteAddLoc(const char* partial, void* unused) // woods #loce
 	if (cls.state == ca_connected)
 	{
 		const char* Names[] = {
-			"quad",
-			"suit",
-			"ring",
-			"pent",
-			"lg",
-			"gl",
-			"rl",
-			"sng",
-			"ssg",
-			"ng",
-			"blue-flag",
-			"red-flag",
-			"tele-exit",
-			"tele",
-			"mh",
-			"auto"
+			"auto",          "blue-flag",    "blue-ga",       "blue-gl",
+			"blue-lg",       "blue-mega",    "blue-ng",       "blue-pent",
+			"blue-quad",     "blue-ra",      "blue-ring",     "blue-rl",
+			"blue-sng",      "blue-suit",    "blue-ssg",      "blue-tele",
+			"blue-tele-exit","blue-ya",      "blue-base",     "ga",
+			"gl",            "lg",           "mega",          "mid",
+			"ng",            "pent",         "quad",          "ra",
+			"red-flag",      "red-ga",       "red-gl",        "red-lg",
+			"red-mega",      "red-ng",       "red-pent",      "red-quad",
+			"red-ra",        "red-ring",     "red-rl",        "red-sng",
+			"red-suit",      "red-ssg",      "red-tele",      "red-tele-exit",
+			"red-ya",        "red-base",     "ring",          "rl",
+			"sng",           "ssg",          "suit",          "tele",
+			"tele-exit",     "ya",
 		};
 
 		for (int i = 0; i < sizeof(Names) / sizeof(Names[0]); i++)
