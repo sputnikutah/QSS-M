@@ -571,7 +571,12 @@ int CL_GetMessage (void)
 
 	// discard nop keepalive message
 		if (net_message.cursize == 1 && net_message.data[0] == svc_nop)
-			Con_Printf ("<-- server to client keepalive\n");
+		{
+			if (cls.download.active) // woods -- silence during dl
+				Con_DPrintf ("<-- server to client keepalive\n");
+			else
+				Con_Printf ("<-- server to client keepalive\n");
+		}
 		else
 			break;
 	}
