@@ -2357,32 +2357,192 @@ void CL_Viewpos_f (void)
 
 /*
 ===============
+GetBspVersionString -- woods #entcopy -- get string representation of BSP version
+===============
+*/
+static const char* GetBspVersionString(int version)
+{
+	switch (version)
+	{
+	case BSPVERSION:
+		return "BSP29";
+	case BSP2VERSION_2PSB:
+		return "BSP2 (2PSB)";
+	case BSP2VERSION_BSP2:
+		return "BSP2";
+	case BSPVERSION_QUAKE64:
+		return "BSP64";
+	default:
+		return "Unknown";
+	}
+}
+
+/*
+===============
 CL_Entdump_f -- woods (source: github.com/alexey-lysiuk/quakespasm-exp) #entcopy
 ===============
 */
 void CL_Entdump_f(void)
 {
-	char entfilename[MAX_QPATH];
-	size_t entlen;
-
-	if (!cl.worldmodel)
+	if (Cmd_Argc() < 2) // Handle case when no argument is given - use loaded map
 	{
-		Con_SafePrintf("no map loaded, cannot save .ent\n");
+		if (!cl.worldmodel)
+		{
+			Con_Printf("no map loaded, cannot save .ent\n");
+			return;
+		}
+
+		if (!cl.worldmodel->entities)
+		{
+			Con_Printf("no entities in current map\n");
+			return;
+		}
+
+		char entfilename[MAX_QPATH];
+		q_snprintf(entfilename, sizeof(entfilename), "%s.ent", cl.mapname);
+
+		COM_WriteFile(entfilename, cl.worldmodel->entities, strlen(cl.worldmodel->entities));
+		Con_Printf("saved entities from maps/%s.bsp (%s) to ^m%s^m\n",
+			cl.mapname, GetBspVersionString(cl.worldmodel->bspversion), entfilename);
 		return;
 	}
 
-	entlen = strlen(cl.worldmodel->entities);
+	// Handle case when map name is provided as argument
+	const char* mapname = Cmd_Argv(1);
+	char cleaned_mapname[MAX_QPATH];
 
-	if (Cmd_Argc() < 2)
-		q_snprintf(entfilename, sizeof entfilename, "%s.ent", cl.mapname);
+	COM_StripExtension(mapname, cleaned_mapname, sizeof(cleaned_mapname));
+
+	// Check if this is the currently loaded map
+	qboolean matches_current;
+	if (FS_IsCaseSensitive())
+		matches_current = (cl.worldmodel && !strcmp(cleaned_mapname, cl.mapname));
 	else
+		matches_current = (cl.worldmodel && !q_strcasecmp(cleaned_mapname, cl.mapname));
+
+	if (matches_current)
 	{
-		strncpy(entfilename, Cmd_Argv(1), sizeof entfilename - 1);
-		entfilename[sizeof entfilename - 1] = '\0';
+		if (!cl.worldmodel->entities)
+		{
+			Con_SafePrintf("no entities in current map\n");
+			return;
+		}
+
+		char entfilename[MAX_QPATH];
+		q_snprintf(entfilename, sizeof(entfilename), "%s.ent", cleaned_mapname);
+
+		COM_WriteFile(entfilename, cl.worldmodel->entities, strlen(cl.worldmodel->entities));
+		Con_Printf("saved entities from maps/%s.bsp (%s) to ^m%s^m\n",
+			cleaned_mapname, GetBspVersionString(cl.worldmodel->bspversion), entfilename);
+		return;
 	}
 
-	COM_WriteFile(entfilename, cl.worldmodel->entities, entlen);
-	Con_Printf("saved %s.ent to game directory\n", cl.mapname);
+	char bspfilename[MAX_OSPATH];
+
+	// Build full BSP path
+	if (q_snprintf(bspfilename, sizeof(bspfilename), "maps/%s.bsp", cleaned_mapname) >= sizeof(bspfilename))
+	{
+		Con_Printf("map name too long\n");
+		return;
+	}
+
+	// Open and read BSP file
+	FILE* f;
+	unsigned path_id;
+	int length = COM_FOpenFile(bspfilename, &f, &path_id);
+	if (length <= 0)
+	{
+		if (f)
+			fclose(f);
+		Con_Printf("couldn't load %s\n", bspfilename);
+		return;
+	}
+
+	byte* buffer = malloc(length);
+	if (!buffer)
+	{
+		fclose(f);
+		Con_Printf("out of memory for BSP file\n");
+		return;
+	}
+
+	if (fread(buffer, 1, length, f) != (size_t)length)
+	{
+		free(buffer);
+		fclose(f);
+		Con_Printf("error reading BSP file\n");
+		return;
+	}
+	fclose(f);
+
+	dheader_t* header = (dheader_t*)buffer;
+	header->version = LittleLong(header->version);
+
+	const char* bspversion = GetBspVersionString(header->version);
+	if (!strcmp(bspversion, "Unknown"))
+	{
+		free(buffer);
+		Con_Printf("unsupported BSP version %d\n", header->version);
+		return;
+	}
+
+	// Swap header integers to correct endianness
+	for (int i = 0; i < HEADER_LUMPS; i++)
+	{
+		header->lumps[i].fileofs = LittleLong(header->lumps[i].fileofs);
+		header->lumps[i].filelen = LittleLong(header->lumps[i].filelen);
+	}
+
+	// Get entities lump
+	const lump_t* entlump = &header->lumps[LUMP_ENTITIES];
+	if (entlump->filelen <= 0)
+	{
+		free(buffer);
+		Con_Printf("no entities in %s\n", bspfilename);
+		return;
+	}
+
+	// Validate entity lump position
+	if (entlump->fileofs < 0 || entlump->fileofs + entlump->filelen > length)
+	{
+		free(buffer);
+		Con_Printf("invalid entity lump in %s\n", bspfilename);
+		return;
+	}
+
+	// Point to the entities data in the buffer
+	char* entities_data = (char*)(buffer + entlump->fileofs);
+
+	char entfilename[MAX_QPATH];
+	q_snprintf(entfilename, sizeof(entfilename), "%s.ent", cleaned_mapname);
+
+	// Find the actual length of valid entity text
+	int text_length = 0;
+	while (text_length < entlump->filelen && entities_data[text_length])
+		text_length++;
+
+	// Basic validation - check for either '{' or '//' to indicate valid entity data
+	qboolean valid_start = false;
+	for (int i = 0; i < text_length - 1; i++) {
+		if (entities_data[i] == '{' || (entities_data[i] == '/' && entities_data[i + 1] == '/')) {
+			valid_start = true;
+			break;
+		}
+		// Skip whitespace during validation
+		if (entities_data[i] != ' ' && entities_data[i] != '\n' && entities_data[i] != '\r' && entities_data[i] != '\t')
+			break;
+	}
+
+	if (!valid_start) {
+		free(buffer);
+		Con_Printf("invalid entity data in %s (no valid entity data found)\n", bspfilename);
+		return;
+	}
+
+	COM_WriteFile(entfilename, entities_data, text_length);
+	Con_Printf("saved entities from %s (%s) to ^m%s^m\n", bspfilename, bspversion, entfilename);
+
+	free(buffer);
 }
 
 static void CL_ServerExtension_FullServerinfo_f(void)
