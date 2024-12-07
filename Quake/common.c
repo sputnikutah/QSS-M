@@ -3288,20 +3288,73 @@ qboolean AddHashedDirectories(void* ctx, const char* fname, time_t mtime, size_t
 
 /*
 =================
-COM_AddGameDirectory -- johnfitz -- modified based on topaz's tutorial
+COM_AddGameDirectory -- johnfitz -- modified based on topaz's tutorial, reworked (woods)
 =================
 */
+//////////////////////////////////////////////////////////////////////
+//
+// Loading Order Within Each Game Directory:
+//
+// 1. Engine Paks (ALWAYS first)
+//    - quakespasm.pak
+//    - qssm.pak
+//    - Both .pak and .pk3 formats tried for each
+//
+// 2. Base Paks (ALWAYS second)
+//    - pak0.pak
+//    - pak1.pak
+//    - Both .pak and .pk3 formats tried for each
+//
+// 3. Paks Listed in pak.lst
+//    - Loaded in the order specified in pak.lst
+//    - Should NOT include engine paks (quakespasm.pak, qssm.pak)
+//    - Should NOT include base paks (pak0.pak, pak1.pak)
+//    - If pak.lst doesn't exist, falls back to loading pak2+ numerically
+//
+// 4. Unlisted Paks (unless -nowildpaks is specified)
+//    - Any .pak files not listed in pak.lst
+//    - Loaded in alphabetical order
+//    - Example: pak2.pak, custom.pak, etc.
+//    - Both .pak and .pk3 formats are included
+//
+// 5. #Directories Within Current Game Directory
+//    - Special directories that load as virtual paks
+//    - Files in #folders override pak files in the same game directory
+//    - Multiple #folders load in alphabetical order
+//    - Example: #textures, #models override paks in current directory
+//    - Useful for development and easy file overrides
+//
+// 6. Loose Files in Regular Directories
+//    - Files in regular folders (e.g., id1/progs/, id1/maps/)
+//    - Searched last within the current game directory
+//    - Override by files in later game directories
+//
+// Game Directory Priority:
+// - Each new game directory is added to the FRONT of the search path
+// - Later game directories override earlier ones
+// - Example order (last has highest priority):
+//   * id1/          (base game)
+//   * hipnotic/     (mission pack)
+//   * mymod/        (custom mod)
+//
+// Notes:
+// - All paths support both .pak and .pk3 formats
+// - The -nowildpaks command line parameter disables loading of unlisted paks
+// - Files in a later game directory will override ALL content 
+//   (including #directories and loose files) from earlier game directories
+//
+//////////////////////////////////////////////////////////////////////
+
 static void COM_AddGameDirectory (const char *dir)
 {
 	const char *base = com_basedir;
-	int i, j;
+	int i;
 	unsigned int path_id;
 	searchpath_t *searchdir;
 	char pakfile[MAX_OSPATH];
 	char purename[MAX_OSPATH];
 	qboolean been_here = false;
 	FILE *listing;
-	qboolean found;
 	const char* enginepacknames[] = { "quakespasm", "qssm" }; // woods
 	int num_enginepacks = sizeof(enginepacknames) / sizeof(enginepacknames[0]); // Number of engine pack names
 
@@ -3316,7 +3369,7 @@ static void COM_AddGameDirectory (const char *dir)
 	}
 
 	//quakespasm enables mission pack flags automatically, so -game rogue works without breaking the hud
-	//we might as well do that here to simplify the code.
+//we might as well do that here to simplify the code.
 	if (!q_strcasecmp(dir,"rogue")) {
 		rogue = true;
 		standard_quake = false;
@@ -3339,82 +3392,99 @@ _add_path:
 	q_strlcpy (searchdir->filename, com_gamedir, sizeof(searchdir->filename));
 	q_strlcpy (searchdir->purename, dir, sizeof(searchdir->purename));
 
-	for (j = 0; j < num_enginepacks; j++) // Iterate over engine pack names
+	// First load engine paks
+	for (i = 0; i < num_enginepacks; i++) 
 	{
-		const char* enginepackname = enginepacknames[j]; // Current engine pack name
+		const char* enginepackname = enginepacknames[i];
+		qboolean old = com_modified;
 
-		q_snprintf (pakfile, sizeof(pakfile), "%s/pak.lst", com_gamedir);
-		listing = fopen(pakfile, "rb");
-		if (listing)
-		{
-			int len;
-			char *buffer;
-			const char *name;
-			fseek(listing, 0, SEEK_END);
-			len = ftell(listing);
-			fseek(listing, 0, SEEK_SET);
-			buffer = Z_Malloc(len+1);
-			fread(buffer, 1, len, listing);
-			buffer[len] = 0;
-			fclose(listing);
+		if (been_here)
+			base = host_parms->userdir;
 
-			name = buffer;
-			com_modified = true;	//any reordering of paks should be frowned upon
-			while ((name = COM_Parse(name)))
-			{
-				if (!*com_token)
-					continue;
-				if (strchr(com_token, '/') || strchr(com_token, '\\') || strchr(com_token, ':'))
-					continue;
-				q_snprintf (pakfile, sizeof(pakfile), "%s/%s", com_gamedir, com_token);
-				q_snprintf (purename, sizeof(purename), "%s/%s", dir, com_token);
-				COM_AddPackage(searchdir, pakfile, purename);
+		// Try both .pak and .pk3 formats for engine paks
+		q_snprintf(pakfile, sizeof(pakfile), "%s/%s.pak", base, enginepackname);
+		q_snprintf(purename, sizeof(purename), "%s.pak", enginepackname);
+		COM_AddPackage(searchdir, pakfile, purename);
 
-				if (path_id == 1 && !fitzmode && !q_strncasecmp(com_token, "pak0.", 5))
-				{	//add this now, to try to retain correct ordering.
-					qboolean old = com_modified;
-					if (been_here) base = host_parms->userdir;
-					q_snprintf (pakfile, sizeof(pakfile), "%s/%s.%s", base, enginepackname, COM_FileGetExtension(com_token));
-					q_snprintf (purename, sizeof(purename), "%s.%s", enginepackname, COM_FileGetExtension(com_token));
-					COM_AddPackage(searchdir, pakfile, purename);
-					com_modified = old;
-				}
-			}
-		}
+		q_snprintf(pakfile, sizeof(pakfile), "%s/%s.pk3", base, enginepackname);
+		q_snprintf(purename, sizeof(purename), "%s.pk3", enginepackname);
+		COM_AddPackage(searchdir, pakfile, purename);
 
-		// add any pak files in the format pak0.pak pak1.pak, ...
-		for (i = 0; ; i++)
-		{
-			found = false;
+		com_modified = old;
+	}
 
-			q_snprintf (pakfile, sizeof(pakfile), "%s/pak%i.pak", com_gamedir, i);
-			q_snprintf (purename, sizeof(purename), "%s/pak%i.pak", dir, i);
-			found |= COM_AddPackage(searchdir, pakfile, purename);
-			q_snprintf (pakfile, sizeof(pakfile), "%s/pak%i.pk3", com_gamedir, i);
-			q_snprintf (purename, sizeof(purename), "%s/pak%i.pk3", dir, i);
+	// Then load pak0 and pak1 specifically
+	for (i = 0; i <= 1; i++) {
+		q_snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", com_gamedir, i);
+		q_snprintf(purename, sizeof(purename), "%s/pak%i.pak", dir, i);
+		COM_AddPackage(searchdir, pakfile, purename);
+
+		q_snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pk3", com_gamedir, i);
+		q_snprintf(purename, sizeof(purename), "%s/pak%i.pk3", dir, i);
+		COM_AddPackage(searchdir, pakfile, purename);
+	}
+
+	// Load additional paks not in pak.lst first
+	q_snprintf (pakfile, sizeof(pakfile), "%s/pak.lst", com_gamedir);
+	listing = fopen(pakfile, "rb");
+
+	if (!listing)
+	{
+		// If no pak.lst exists, load remaining paks in alphabetical order
+		for (i = 2; ; i++) {
+			qboolean found = false;
+
+			q_snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", com_gamedir, i);
+			q_snprintf(purename, sizeof(purename), "%s/pak%i.pak", dir, i);
 			found |= COM_AddPackage(searchdir, pakfile, purename);
 
-			if (i == 0 && path_id == 1 && !fitzmode)
-			{
-				qboolean old = com_modified;
-				if (been_here) base = host_parms->userdir;
+			q_snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pk3", com_gamedir, i);
+			q_snprintf(purename, sizeof(purename), "%s/pak%i.pk3", dir, i);
+			found |= COM_AddPackage(searchdir, pakfile, purename);
 
-				q_snprintf (pakfile, sizeof(pakfile), "%s/%s.pak", base, enginepackname);
-				q_snprintf (purename, sizeof(purename), "%s.pak", enginepackname);
-				COM_AddPackage(searchdir, pakfile, purename);
-				q_snprintf (pakfile, sizeof(pakfile), "%s/%s.pk3", base, enginepackname);
-				q_snprintf (purename, sizeof(purename), "%s.pk3", enginepackname);
-				COM_AddPackage(searchdir, pakfile, purename);
-
-				com_modified = old;
-			}
 			if (!found)
 				break;
 		}
 	}
+	else 
+	{
+		// Read and process pak.lst
+		int len;
+		char *buffer;
+		const char *name;
+		fseek(listing, 0, SEEK_END);
+		len = ftell(listing);
+		fseek(listing, 0, SEEK_SET);
+		buffer = Z_Malloc(len+1);
+		fread(buffer, 1, len, listing);
+		buffer[len] = 0;
+		fclose(listing);
 
+		name = buffer;
+		com_modified = true;	//any reordering of paks should be frowned upon
+		while ((name = COM_Parse(name))) 
+		{
+			if (!*com_token)
+				continue;
+			if (strchr(com_token, '/') || strchr(com_token, '\\') || strchr(com_token, ':'))
+				continue;
+
+			// Skip pak0 and pak1 as they were already loaded
+			if (q_strncasecmp(com_token, "pak0.", 5) == 0 ||
+				q_strncasecmp(com_token, "pak1.", 5) == 0)
+				continue;
+
+			q_snprintf (pakfile, sizeof(pakfile), "%s/%s", com_gamedir, com_token);
+			q_snprintf (purename, sizeof(purename), "%s/%s", dir, com_token);
+			COM_AddPackage(searchdir, pakfile, purename);
+		}
+
+		Z_Free(buffer);
+	}
+
+	// Load wildcard paks if enabled
 	i = COM_CheckParm ("-nowildpaks");
-	if (!i)
+	if (!i) 
 	{
 		COM_ListSystemFiles(searchdir, com_gamedir, "pak", COM_AddEnumeratedPackage);
 		COM_ListSystemFiles(searchdir, com_gamedir, "pk3", COM_AddEnumeratedPackage);
@@ -3427,7 +3497,7 @@ _add_path:
 	searchdir->next = com_searchpaths;
 	com_searchpaths = searchdir;
 
-	if (!been_here && host_parms->userdir != host_parms->basedir)
+	if (!been_here && host_parms->userdir != host_parms->basedir) 
 	{
 		been_here = true;
 		q_strlcpy(com_gamedir, va("%s/%s", host_parms->userdir, dir), sizeof(com_gamedir));
