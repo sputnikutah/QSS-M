@@ -35,6 +35,14 @@ extern qboolean lightmaps_skipupdates;
 extern char	skybox_name[1024]; // woods -- #fastsky2
 extern qboolean externalskyloaded; // woods -- #fastsky2
 
+extern cvar_t r_skyspeed; // woods #skyspeed
+
+static float Sky_GetTime (void) // woods #skyspeed
+{
+	float clamped_skyspeed = CLAMP(0, r_skyspeed.value, 100);
+	return cl.time * clamped_skyspeed;
+}
+
 //==============================================================================
 //
 // SETUP CHAINS
@@ -2268,7 +2276,7 @@ static void RSceneCache_Draw(qboolean water)
 					{
 						lastprog = r_water[mode].program;
 						GL_UseProgramFunc (r_water[mode].program);
-						GL_Uniform1fFunc (r_water[mode].time, cl.time);
+						GL_Uniform1fFunc (r_water[mode].time, Sky_GetTime()); // woods #skyspeed
 
 						GL_Uniform1fFunc (r_water[mode].alpha_scale, r_skyalpha.value);
 						GL_Uniform3fFunc (r_water[mode].eyepos, r_origin[0], r_origin[1], r_origin[2]);

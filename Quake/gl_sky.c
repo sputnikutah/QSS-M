@@ -52,6 +52,7 @@ cvar_t r_fastskycolor = {"r_fastskycolor", "", CVAR_ARCHIVE}; // woods #fastskyc
 cvar_t r_sky_quality = {"r_sky_quality", "12", CVAR_NONE};
 cvar_t r_skyalpha = {"r_skyalpha", "1", CVAR_NONE};
 cvar_t r_skyfog = {"r_skyfog","0.5",CVAR_ARCHIVE};
+cvar_t r_skyspeed = {"r_skyspeed","1",CVAR_ARCHIVE}; // woods #skyspeed
 
 int		skytexorder[6] = {0,2,1,3,4,5}; //for skybox
 
@@ -624,6 +625,7 @@ void Sky_Init (void)
 	Cvar_RegisterVariable (&r_skyalpha);
 	Cvar_RegisterVariable (&r_skyfog);
 	Cvar_SetCallback (&r_skyfog, R_SetSkyfog_f);
+	Cvar_RegisterVariable (&r_skyspeed); // woods #skyspeed
 
 	Cmd_AddCommand ("sky",Sky_SkyCommand_f);
 	Cmd_AddCommand ("skyroom",Sky_SkyRoomCommand_f);
@@ -1103,6 +1105,8 @@ void Sky_GetTexCoord (vec3_t v, float speed, float *s, float *t)
 	vec3_t	dir;
 	float	length, scroll;
 
+	float clamped_skyspeed = CLAMP(0, r_skyspeed.value, 100); // woods #skyspeed
+
 	VectorSubtract (v, r_origin, dir);
 	dir[2] *= 3;	// flatten the sphere
 
@@ -1110,7 +1114,7 @@ void Sky_GetTexCoord (vec3_t v, float speed, float *s, float *t)
 	length = sqrt (length);
 	length = 6*63/length;
 
-	scroll = cl.time*speed;
+	scroll = cl.time * speed * clamped_skyspeed; // woods #skyspeed
 	scroll -= (int)scroll & ~127;
 
 	*s = (scroll + dir[0] * length) * (1.0/128);
