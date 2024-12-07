@@ -2385,6 +2385,8 @@ void CL_ParseProQuakeMessage(void)
 	}
 }
 
+static Uint32 last_vote_time = 0; // woods #autovote
+
 /* 
 =======================
 CL_ParseProQuakeString -- // begin rook / woods #pqteam
@@ -2406,6 +2408,7 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 	const char* observer = "null";
 	const char* observing = "null";
 	const char* mode = "null";
+	const char* spectator = "null"; // woods #autovote
 
 	if ((cl.gametype == GAME_DEATHMATCH) && (cls.state == ca_connected))
 	{// am I colored up?
@@ -2413,10 +2416,11 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 		char buf[10];
 		char buf2[10];
 		char buf3[10];
+		char buf4[10];
 		observer = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf)); // userinfo
 		observing = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observing", buf2, sizeof(buf2)); // userinfo
 		mode = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "mode", buf3, sizeof(buf3)); // userinfo
-
+		spectator = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*spectator", buf4, sizeof(buf4)); // woods #autovote
 	}
 
 	if (!q_strcasecmp(observer, "off") && !q_strcasecmp(observing, "off")) // use info keys to detect
@@ -2522,10 +2526,45 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 				}
 
 				char qfmatchlength[13] = { 237, 225, 244, 227, 232, 32, 236, 229, 238, 231, 244, 232,'\0' }; // woods -- quake font red 'match length'
+				
+				Uint32 current_time = SDL_GetTicks(); // get current time in milliseconds
 
-				if ((strstr(string, qfmatchlength) || (strstr(string, "match length"))))  // woods vote match length auto vote yes
+				if (cl_autovote.value) // woods #autovote --  yes on timelimit requests
 				{
-					Cbuf_AddText("impulse 115\n");
+					if ((current_time - last_vote_time) >= 31000 && !strstr(string, cl_name.string)) // check if 31 seconds
+					{
+						if ((strstr(string, qfmatchlength) || (strstr(string, "match length"))))  // hybrid, crx
+						{
+							if (Cmd_AliasExists("yes"))
+								Cbuf_AddText("yes\n");
+							else
+								Cbuf_AddText("impulse 115\n");
+							last_vote_time = current_time; // update last vote time
+						}
+					}
+				}
+
+				char qfrequests[13] = { 242, 229, 241, 245, 229, 243, 244, 243, ' ', 't', 'o', ' ', '\0' }; // "requests to" with " to" appended
+
+				if (cl_autovote.value == 2 && atoi(spectator) != 1) // yes vote on all requests
+				{
+					if ((current_time - last_vote_time) >= 31000 && !strstr(string, cl_name.string)) // check if 31 seconds
+					{
+						if (strstr(string, " requests to ") || strstr(string, "Request to ") || strstr(string, qfrequests)) // crx, crmod, hybrid
+						{
+							if (Cmd_AliasExists("yes"))
+								Cbuf_AddText("yes\n");
+							else
+								Cbuf_AddText("impulse 115\n");
+
+							last_vote_time = current_time; // update last vote time
+						}
+					}
+				}
+
+				if (strstr(string, "cancelled their request") || strstr(string, "The request has expired.") || strstr(string, "Vote cancelled")) // reset
+				{
+					last_vote_time = 0;
 				}
 
 				char qfClanRing[9] = { 195, 236, 225, 238, 210, 233, 238, 231, '\0' }; // woods -- quake font red 'ClanRing'

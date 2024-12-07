@@ -83,6 +83,7 @@ cvar_t  r_coloredpowerupglow = {"r_coloredpowerupglow", "1", CVAR_ARCHIVE}; // w
 cvar_t  cl_bobbing = {"cl_bobbing", "0", CVAR_ARCHIVE}; // woods (joequake #weaponbob)
 cvar_t	cl_web_download_url = {"cl_web_download_url", "q1tools.github.io", CVAR_ARCHIVE}; // woods #webdl
 cvar_t	cl_web_download_url2 = { "cl_web_download_url2", "maps.quakeworld.nu", CVAR_ARCHIVE }; // woods #webdl
+cvar_t	cl_autovote = {"cl_autovote", "0", CVAR_ARCHIVE}; // woods #autovote
 
 client_static_t	cls;
 client_state_t	cl;
@@ -2837,6 +2838,8 @@ void CL_Init (void)
 
 	Cvar_SetCallback (&cl_web_download_url, &WebCheckCallback_f); // woods #webdl
 	Cvar_SetCallback (&cl_web_download_url2, &Web2CheckCallback_f); // woods #webdl
+
+	Cvar_RegisterVariable (&cl_autovote); // woods #autovote
 
 	WebCheckInit (); // woods -- check if the web downloads servers are live at launch (threaded) #webdl
 
