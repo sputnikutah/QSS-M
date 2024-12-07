@@ -35,6 +35,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 void Host_Reconnect_Con_f (void);
 
+static Uint32 lastTime = 0; // woods #idle
+
 static void Sys_AtExit (void)
 {
 	SDL_Quit();
@@ -67,8 +69,6 @@ static quakeparms_t	parms;
 #if defined(USE_SDL2) && defined(__APPLE__)
 #define main SDL_main
 #endif
-
-unsigned int lastTime = 0, currentTime;
 
 int main(int argc, char *argv[])
 {
@@ -154,19 +154,30 @@ int main(int argc, char *argv[])
 			scr_skipupdate = 0;
 		}
 
-		if (cl_idle.value && cls.state == ca_disconnected)
+		if (cl_idle.value > 0 && cls.state == ca_disconnected) // woods #idle
 		{
-			char ticks[256];
-			currentTime = SDL_GetTicks();
-			sprintf(ticks, "%i\n", currentTime);
-			if (currentTime > lastTime + 60000 * cl_idle.value) // 60000 = 1 min
+			Uint32 currentTime = SDL_GetTicks();
+			int clampedValue = CLAMP(1, cl_idle.value, 60); // don't spam servers
+			Uint32 idleInterval = 60000 * clampedValue; // 60000 ms = 1 minute
+
+			if (lastTime == 0) // first reconnect attempt after disconnection
 			{
-				Con_Printf("%s", ticks);
-				//Host_Reconnect_Con_f ();
-				//Cmd_ExecuteString("reconnect", src_command);
+				Con_Printf("\nattempting reconnect... will retry every ^m%d^m %s if this fails\n\n",
+					clampedValue, (clampedValue == 1) ? "minute" : "minutes");
 				Cbuf_AddText("reconnect\n");
 				lastTime = currentTime;
 			}
+			else if ((currentTime - lastTime) >= idleInterval)
+			{
+				Con_Printf("\nidle reconnect triggered after ^m%d^m %s\n\n",
+					clampedValue, (clampedValue == 1) ? "minute" : "minutes");
+				Cbuf_AddText("reconnect\n");
+				lastTime = currentTime; // update lastTime to prevent continuous reconnection attempts
+			}
+		}
+		else
+		{
+			lastTime = 0; // reset lastTime when connected or idle reconnect is disabled
 		}
 
 		newtime = Sys_DoubleTime ();
