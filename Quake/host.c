@@ -307,7 +307,9 @@ void Host_Version_f (void)
 /* cvar callback functions : */
 void Host_Callback_Notify (cvar_t *var)
 {
-	if (sv.active)
+	extern qboolean speed_boost_active; // woods #fastnoclip
+	
+	if (sv.active && !speed_boost_active)
 		SV_BroadcastPrintf ("\"%s\" changed to \"%s\"\n", var->name, var->string);
 }
 

@@ -59,6 +59,20 @@ kbutton_t	in_up, in_down;
 
 int			in_impulse;
 
+qboolean speed_boost_active = false; // woods #fastnoclip
+
+extern cvar_t cl_forwardspeed; // woods #fastnoclip
+extern cvar_t cl_backspeed; // woods #fastnoclip
+extern cvar_t cl_sidespeed; // woods #fastnoclip
+extern cvar_t sv_maxspeed; // woods #fastnoclip
+
+extern edict_t* sv_player; // woods #fastnoclip
+
+static int original_sv_maxspeed = 0; // woods #fastnoclip
+static int original_cl_forwardspeed = 0; // woods #fastnoclip 
+static int original_cl_backspeed = 0; // woods #fastnoclip
+static int original_cl_sidespeed = 0; // woods #fastnoclip
+
 // JPG 1.05 - translate +jump to +moveup under water
 //extern cvar_t	pq_moveup;
 
@@ -99,6 +113,35 @@ void KeyDown (kbutton_t *b)
 	// JPG 1.05 - if jump is pressed underwater, translate it to a moveup
 	if (b == &in_jump /*&& pq_moveup.value*/ && cl.stats[STAT_HEALTH] > 0 && cl.inwater)
 		b = &in_up;
+
+	// woods #fastnoclip - handle speed boost when jump pressed in noclip
+	if (b == &in_jump && svs.clients->spawned && sv_player && !sv_player->free &&
+		sv_player->v.movetype == MOVETYPE_NOCLIP && sv_maxspeed.value < 720)
+	{
+		// Store original values before boosting
+		original_sv_maxspeed = sv_maxspeed.value;
+		original_cl_forwardspeed = cl_forwardspeed.value;
+		original_cl_backspeed = cl_backspeed.value;
+		original_cl_sidespeed = cl_sidespeed.value;
+
+		speed_boost_active = true;
+
+		float new_max = sv_maxspeed.value + 400;
+		if (new_max > 720) new_max = 720;
+		Cvar_SetQuick(&sv_maxspeed, va("%f", new_max));
+
+		float new_forward = cl_forwardspeed.value + 400;
+		if (new_forward > 720) new_forward = 720;
+		Cvar_SetQuick(&cl_forwardspeed, va("%f", new_forward));
+
+		float new_back = cl_backspeed.value + 400;
+		if (new_back > 720) new_back = 720;
+		Cvar_SetQuick(&cl_backspeed, va("%f", new_back));
+
+		float new_side = cl_sidespeed.value + 400;
+		if (new_side > 720) new_side = 720;
+		Cvar_SetQuick(&cl_sidespeed, va("%f", new_side));
+	}
 
 	if (k == b->down[0] || k == b->down[1])
 		return;		// repeating key
@@ -143,6 +186,15 @@ void KeyUp (kbutton_t *b)
 			// in case a -moveup got lost somewhere
 			in_up.down[0] = in_up.down[1] = 0;
 			in_up.state = 4;
+		}
+
+		if (speed_boost_active) // woods #fastnoclip - reset speeds when jump released
+		{
+			Cvar_SetQuick(&sv_maxspeed, va("%i", original_sv_maxspeed));
+			Cvar_SetQuick(&cl_forwardspeed, va("%i", original_cl_forwardspeed));
+			Cvar_SetQuick(&cl_backspeed, va("%i", original_cl_backspeed));
+			Cvar_SetQuick(&cl_sidespeed, va("%i", original_cl_sidespeed));
+			speed_boost_active = false;
 		}
 	}
 
@@ -397,7 +449,7 @@ void CL_AdjustAngles (void)
 		cl.viewangles[PITCH] = cl_maxpitch.value;
 	if (cl.viewangles[PITCH] < cl_minpitch.value)
 		cl.viewangles[PITCH] = cl_minpitch.value;
-	//johnfitz
+		//johnfitz
 
 	if (cl.viewangles[ROLL] > 50)
 		cl.viewangles[ROLL] = 50;
