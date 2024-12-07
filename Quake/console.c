@@ -1701,17 +1701,25 @@ static qboolean CompleteDownload(const char* partial, void* unused) // woods
 	Con_AddToTabList("ctf", partial, NULL, NULL); // #demolistsort add arg
 	Con_AddToTabList("ra", partial, NULL, NULL);  // #demolistsort add arg
 
-	// Most common maps
 	const char* maps[] =
 	{
+		"aggressr.bsp",
 		"aerowalk.bsp",
-		"ztndm3.bsp",
+		"aerowalkfrost.bsp",
+		"aztek.bsp",
+		"boom.bsp",
 		"bravado.bsp",
-		"skull.bsp",
-		"shifter_nq.bsp",
+		"castlev2.bsp",
+		"ctf9.bsp",
+		"kaboom.bsp",
+		"nova.bsp",
+		"pigremix.bsp",
+		"pocket.bsp",
+		"povdmm4.bsp",
 		"schloss.bsp",
-		"povdmm4.bsp"
-
+		"shifter_nq.bsp",
+		"skull.bsp",
+		"ztndm3.bsp"
 	};
 
 	for (int i = 0; i < sizeof(maps) / sizeof(maps[0]); ++i) {
