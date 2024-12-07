@@ -4710,14 +4710,32 @@ void SetChatInfo (int flags) // woods #chatinfo
 
 int LevenshteinDistance (const char* s, const char* t) // woods -- #smartquit -- function to calculate the Levenshtein Distance
 {
+	// Check for null pointers
+	if (!s || !t) return -1;
+
 	int len_s = strlen(s);
 	int len_t = strlen(t);
 
+	// Handle empty strings
+	if (len_s == 0) return len_t;
+	if (len_t == 0) return len_s;
+
 	// Allocate a matrix dynamically
-	int** matrix = malloc((len_s + 1) * sizeof(int*));
-	for (int i = 0; i <= len_s; i++)
-	{
-		matrix[i] = malloc((len_t + 1) * sizeof(int));
+	int** matrix = (int**)calloc(len_s + 1, sizeof(int*));
+	if (!matrix) return -1;  // Handle allocation failure
+
+	int distance = -1;
+
+	for (int i = 0; i <= len_s; i++) {
+		matrix[i] = (int*)calloc(len_t + 1, sizeof(int));
+		if (!matrix[i]) {
+			// Clean up previously allocated memory if allocation fails
+			for (int j = 0; j < i; j++) {
+				free(matrix[j]);
+			}
+			free(matrix);
+			return -1;
+		}
 	}
 
 	// Initialize the matrix
@@ -4740,7 +4758,7 @@ int LevenshteinDistance (const char* s, const char* t) // woods -- #smartquit --
 		}
 	}
 
-	int distance = matrix[len_s][len_t];
+	distance = matrix[len_s][len_t];
 
 	// Free the matrix
 	for (int i = 0; i <= len_s; i++) {

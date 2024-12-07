@@ -1474,6 +1474,9 @@ const char *Cmd_CompleteCommand (const char *partial)
 
 qboolean Cmd_IsQuitMistype (const char* input) // woods -- #smartquit
 {
+	if (!input)
+		return false;
+
 	if (Cvar_FindVar(input) || Cmd_Exists2(input) || Cmd_AliasExists(input))
 		return false;
 
@@ -1484,6 +1487,9 @@ qboolean Cmd_IsQuitMistype (const char* input) // woods -- #smartquit
 
 	int threshold = 2; 	// Define a threshold for mistypes (e.g., distance <= 2)
 	int distance = LevenshteinDistance(input, correct_cmd); // Calculate the Levenshtein distance
+
+	if (distance == -1)
+		return false;
 
 	return distance > 0 && distance <= threshold; 	// Return true if within the threshold, else false
 }
