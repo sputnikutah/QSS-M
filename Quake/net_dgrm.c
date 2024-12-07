@@ -2286,7 +2286,7 @@ static qsocket_t *_Datagram_Connect (struct qsockaddr *serveraddr)
 		int attemptsLeft = totalAttempts - reps - 1;
 		if (attemptsLeft > 0)
 		{
-			Con_SafePrintf("still trying... (%d attempts left)\n", attemptsLeft);
+			Con_SafePrintf("still trying... (%d attempt%s left)\n",attemptsLeft, attemptsLeft == 1 ? "" : "s");
 			SCR_UpdateScreen ();
 		}
 		start_time = SetNetTime();
