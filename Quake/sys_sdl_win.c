@@ -518,10 +518,11 @@ void Sys_Image_BGRA_To_Clipboard(byte* bmbits, int width, int height, int size) 
 }
 #endif
 
-const char *Sys_ConsoleInput (void)
+const char *Sys_ConsoleInput (void) // woods #arrowkeys
 {
 	static char	con_text[256];
 	static int	textlen;
+	static int  cursor_pos;
 	INPUT_RECORD	recs[1024];
 	int		ch;
 	DWORD		dummy, numread, numevents;
@@ -542,42 +543,101 @@ const char *Sys_ConsoleInput (void)
 
 		if (recs[0].EventType == KEY_EVENT)
 		{
-		    if (recs[0].Event.KeyEvent.bKeyDown == FALSE)
-		    {
-			ch = recs[0].Event.KeyEvent.uChar.AsciiChar;
-
-			switch (ch)
+			if (recs[0].Event.KeyEvent.bKeyDown == FALSE)
 			{
-			case '\r':
-				WriteFile(houtput, "\r\n", 2, &dummy, NULL);
-
-				if (textlen != 0)
+				if (recs[0].Event.KeyEvent.wVirtualKeyCode == VK_LEFT)
 				{
-					con_text[textlen] = 0;
-					textlen = 0;
-					return con_text;
+					if (cursor_pos > 0)
+					{
+						cursor_pos--;
+						WriteFile(houtput, "\b", 1, &dummy, NULL);
+					}
+					continue;
+				}
+				else if (recs[0].Event.KeyEvent.wVirtualKeyCode == VK_RIGHT)
+				{
+					if (cursor_pos < textlen)
+					{
+						WriteFile(houtput, &con_text[cursor_pos], 1, &dummy, NULL);
+						cursor_pos++;
+					}
+					continue;
 				}
 
-				break;
+				ch = recs[0].Event.KeyEvent.uChar.AsciiChar;
 
-			case '\b':
-				WriteFile(houtput, "\b \b", 3, &dummy, NULL);
-				if (textlen != 0)
-					textlen--;
-
-				break;
-
-			default:
-				if (ch >= ' ')
+				switch (ch)
 				{
-					WriteFile(houtput, &ch, 1, &dummy, NULL);
-					con_text[textlen] = ch;
-					textlen = (textlen + 1) & 0xff;
-				}
+				case '\r':
+					WriteFile(houtput, "\r\n", 2, &dummy, NULL);
 
-				break;
+					if (textlen != 0)
+					{
+						con_text[textlen] = 0;
+						textlen = 0;
+						cursor_pos = 0; // woods #arrowkeys
+						return con_text;
+					}
+
+					break;
+
+				case '\b':
+					if (cursor_pos > 0)
+					{
+						// Move characters after cursor back by one position
+						memmove(&con_text[cursor_pos - 1], &con_text[cursor_pos], textlen - cursor_pos);
+						cursor_pos--;
+						textlen--;
+						
+						// Rewrite the line from cursor position
+						WriteFile(houtput, "\b", 1, &dummy, NULL);
+						if (cursor_pos < textlen)
+						{
+							WriteFile(houtput, &con_text[cursor_pos], textlen - cursor_pos, &dummy, NULL);
+							WriteFile(houtput, " ", 1, &dummy, NULL);  // Clear last character
+							// Move cursor back to position
+							for (int i = 0; i < textlen - cursor_pos + 1; i++)
+								WriteFile(houtput, "\b", 1, &dummy, NULL);
+						}
+						else
+						{
+							WriteFile(houtput, " \b", 2, &dummy, NULL);  // Clear last character
+						}
+					}
+					break;
+
+				default:
+					if (ch >= ' ')
+					{
+						// Insert character at cursor position
+						if (cursor_pos < textlen)
+						{
+							// Make room for new character
+							memmove(&con_text[cursor_pos + 1], &con_text[cursor_pos], textlen - cursor_pos);
+							con_text[cursor_pos] = ch;
+							textlen++;
+							
+							// Write the new character and the rest of the line
+							WriteFile(houtput, &con_text[cursor_pos], textlen - cursor_pos, &dummy, NULL);
+							
+							// Move cursor back to just after inserted character
+							cursor_pos++;
+							for (int i = 0; i < textlen - cursor_pos; i++)
+								WriteFile(houtput, "\b", 1, &dummy, NULL);
+						}
+						else
+						{
+							// Append character at end of line
+							con_text[textlen] = ch;
+							WriteFile(houtput, &ch, 1, &dummy, NULL);
+							textlen++;
+							cursor_pos++;
+						}
+					}
+
+					break;
+				}
 			}
-		    }
 		}
 	}
 

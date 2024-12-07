@@ -47,6 +47,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "SDL.h"
 #endif
 
+#include <termios.h> // woods #arrowkeys
+#include <unistd.h> // woods #arrowkeys
 
 qboolean		isDedicated;
 cvar_t		sys_throttle = {"sys_throttle", "0.02", CVAR_ARCHIVE};
@@ -469,52 +471,157 @@ double Sys_DoubleTime (void)
 	return SDL_GetTicks() / 1000.0;
 }
 
-const char *Sys_ConsoleInput (void)
+const char *Sys_ConsoleInput (void) // woods #arrowkeys
 {
 	static char	con_text[256];
 	static int	textlen;
+    static int cursor_pos;  // Track cursor position separately from text length
 	char		c;
 	fd_set		set;
 	struct timeval	timeout;
+    static struct termios orig_termios, raw_termios;
+    static qboolean term_setup = false;
 
-	FD_ZERO (&set);
+    // Set up terminal once
+    if (!term_setup)
+    {
+        if (tcgetattr(0, &orig_termios) != -1)
+        {
+            raw_termios = orig_termios;
+            raw_termios.c_lflag &= ~(ICANON | ECHO);  // Disable canonical mode and echo
+            raw_termios.c_cc[VMIN] = 1;
+            raw_termios.c_cc[VTIME] = 0;
+            tcsetattr(0, TCSANOW, &raw_termios);
+            term_setup = true;
+            cursor_pos = 0;
+        }
+    }
+
+    FD_ZERO (&set);
 	FD_SET (0, &set);	// stdin
-	timeout.tv_sec = 0;
-	timeout.tv_usec = 0;
+    timeout.tv_sec = 0;
+    timeout.tv_usec = 0;
 
-	while (select (1, &set, NULL, NULL, &timeout))
-	{
-		read (0, &c, 1);
-		if (c == '\n' || c == '\r')
-		{
-			con_text[textlen] = '\0';
-			textlen = 0;
-			return con_text;
-		}
-		else if (c == 8)
-		{
-			if (textlen)
-			{
-				textlen--;
-				con_text[textlen] = '\0';
-			}
-			continue;
-		}
-		con_text[textlen] = c;
-		textlen++;
-		if (textlen < (int) sizeof(con_text))
-			con_text[textlen] = '\0';
-		else
-		{
-		// buffer is full
-			textlen = 0;
-			con_text[0] = '\0';
-			Sys_Printf("\nConsole input too long!\n");
-			break;
-		}
-	}
+    while (select (1, &set, NULL, NULL, &timeout))
+    {
+        ssize_t len = read(0, &c, 1);
+        if (len != 1)
+            continue;
 
-	return NULL;
+        // Handle escape sequences for arrow keys
+        if (c == 27) // ESC character
+        {
+            char seq[3] = {0};
+            struct timeval seq_timeout;
+            seq_timeout.tv_sec = 0;
+            seq_timeout.tv_usec = 10000;
+            
+            FD_ZERO(&set);
+            FD_SET(0, &set);
+            if (select(1, &set, NULL, NULL, &seq_timeout) > 0)
+            {
+                len = read(0, seq, 1);
+                if (len == 1 && seq[0] == '[')
+                {
+                    FD_ZERO(&set);
+                    FD_SET(0, &set);
+                    if (select(1, &set, NULL, NULL, &seq_timeout) > 0)
+                    {
+                        len = read(0, seq + 1, 1);
+                        if (len == 1)
+                        {
+                            switch (seq[1])
+                            {
+                                case 'D': // Left arrow
+                                    if (cursor_pos > 0)
+                                    {
+                                        cursor_pos--;
+                                        write(1, "\b", 1);
+                                    }
+                                    continue;
+                                case 'C': // Right arrow
+                                    if (cursor_pos < textlen)
+                                    {
+                                        write(1, &con_text[cursor_pos], 1);
+                                        cursor_pos++;
+                                    }
+                                    continue;
+                                case 'A': // Up arrow
+                                case 'B': // Down arrow
+                                    continue;
+                            }
+                        }
+                    }
+                }
+            }
+            continue;
+        }
+
+        if (c == '\n' || c == '\r')
+        {
+            write(1, "\n", 1);
+            con_text[textlen] = '\0';
+            textlen = 0;
+            cursor_pos = 0;
+            return con_text;
+        }
+        else if (c == 8 || c == 127)    // backspace or delete
+        {
+            if (cursor_pos > 0)
+            {
+                // Move characters after cursor back by one position
+                memmove(&con_text[cursor_pos - 1], &con_text[cursor_pos], textlen - cursor_pos);
+                cursor_pos--;
+                textlen--;
+                
+                // Rewrite the line from cursor position
+                write(1, "\b", 1);
+                if (cursor_pos < textlen)
+                {
+                    write(1, &con_text[cursor_pos], textlen - cursor_pos);
+                    write(1, " ", 1);  // Clear last character
+                    // Move cursor back to position
+                    for (int i = 0; i < textlen - cursor_pos + 1; i++)
+                        write(1, "\b", 1);
+                }
+                else
+                {
+                    write(1, " \b", 2);  // Clear last character
+                }
+            }
+            continue;
+        }
+
+        if (textlen < sizeof(con_text)-1 && c >= 32 && c < 127)
+        {
+            // Insert character at cursor position
+            if (cursor_pos < textlen)
+            {
+                // Make room for new character
+                memmove(&con_text[cursor_pos + 1], &con_text[cursor_pos], textlen - cursor_pos);
+                con_text[cursor_pos] = c;
+                textlen++;
+                
+                // Write the new character and the rest of the line
+                write(1, &con_text[cursor_pos], textlen - cursor_pos);
+                
+                // Move cursor back to just after inserted character
+                cursor_pos++;
+                for (int i = 0; i < textlen - cursor_pos; i++)
+                    write(1, "\b", 1);
+            }
+            else
+            {
+                // Append character at end of line
+                con_text[textlen] = c;
+                write(1, &c, 1);
+                textlen++;
+                cursor_pos++;
+            }
+        }
+    }
+
+    return NULL;
 }
 
 void Sys_Sleep (unsigned long msecs)
