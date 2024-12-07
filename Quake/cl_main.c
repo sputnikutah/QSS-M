@@ -428,6 +428,8 @@ void CL_SignonReply (void)
 
 		cl.realviewentity = cl.viewentity; // woods -- eyecam reports wrong viewentity, lets record real one
 
+		strncpy(cl.observer, "n", sizeof(cl.observer));
+
 		if (COM_FileExists("connect.cfg", NULL))
 			SDL_AddTimer(900, exec_connect_cfg, NULL); // 2 sec delay after connect #execdelay
 
