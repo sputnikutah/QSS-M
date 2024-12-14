@@ -4812,7 +4812,7 @@ void M_Quit_Draw (void) //johnfitz -- modified for new quit message -- woods mod
 
 int		lanConfig_cursor = -1;
 int     lanConfig_cursor_table_newgame[] = { 76, 86, 104 }; // Updated cursor positions for "New Game"
-int		lanConfig_cursor_table[] = { 76, 84, 92, 100, 108, 138 }; // woods #mousemenu #bookmarksmenu
+int		lanConfig_cursor_table[] = { 76, 84, 92, 108, 116, 146 }; // woods #mousemenu #bookmarksmenu
 int*	lanConfig_cursor_ptr = NULL; // Pointer to the current cursor table
 
 int     NUM_LANCONFIG_CMDS;
@@ -5040,6 +5040,8 @@ void M_LanConfig_Draw (void)
 
 	if (JoiningGame)
 	{
+		y += 8;
+		
 		M_Print (basex, y, "Search for local games...");
 		if (lanConfig_cursor == 1)
 			M_DrawCharacter (basex-8, y, 12+((int)(realtime*4)&1));
@@ -6285,7 +6287,18 @@ void M_GameOptions_Draw (void)
 	y+=8;
 
 	M_Print (0, y, "            Skill");
-	if (skill.value == 0)
+	if (!coop.value) // If deathmatch
+	{ 
+		char dimmed_text[128];
+		const char* text = "Normal difficulty";
+		int i;
+		for (i = 0; text[i]; i++)
+			dimmed_text[i] = text[i] + 128;
+		dimmed_text[i] = 0;
+
+		M_PrintRGBA(160, y, dimmed_text, CL_PLColours_Parse("0xffffff"), 0.5f);
+	}
+	else if (skill.value == 0)
 		M_Print (160, y, "Easy difficulty");
 	else if (skill.value == 1)
 		M_Print (160, y, "Normal difficulty");
@@ -6327,18 +6340,18 @@ void M_GameOptions_Draw (void)
 	if (hipnotic)
 	{
 		M_Print (160, y, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].description);
-		M_Print (160, y+8, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name);
+		M_PrintWhite (160, y+8, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name);
 	}
 	// PGM 01/07/97 added rogue episodes
 	else if (rogue)
 	{
 		M_Print (160, y, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].description);
-		M_Print (160, y+8, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name);
+		M_PrintWhite(160, y+8, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name);
 	}
 	else
 	{
 		M_Print (160, y, levels[episodes[startepisode].firstLevel + startlevel].description);
-		M_Print (160, y+8, levels[episodes[startepisode].firstLevel + startlevel].name);
+		M_PrintWhite(160, y+8, levels[episodes[startepisode].firstLevel + startlevel].name);
 	}
 	y+=8;
 
