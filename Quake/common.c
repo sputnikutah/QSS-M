@@ -3291,43 +3291,52 @@ qboolean AddHashedDirectories(void* ctx, const char* fname, time_t mtime, size_t
 COM_AddGameDirectory -- johnfitz -- modified based on topaz's tutorial, reworked (woods)
 =================
 */
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 //
 // Loading Order Within Each Game Directory:
 //
-// 1. Engine Paks (ALWAYS first)
+// 1. Base Pak 0 (ALWAYS first)
+//    - pak0.pak
+//    - Both .pak and .pk3 formats tried for each
+//
+// 2. Engine Paks (ALWAYS second)
 //    - quakespasm.pak
 //    - qssm.pak
 //    - Both .pak and .pk3 formats tried for each
 //
-// 2. Base Paks (ALWAYS second)
-//    - pak0.pak
+// 3. Base Pak 1 (ALWAYS after engine paks)
 //    - pak1.pak
 //    - Both .pak and .pk3 formats tried for each
 //
-// 3. Paks Listed in pak.lst
+// 4. Paks Listed in pak.lst
 //    - Loaded in the order specified in pak.lst
 //    - Should NOT include engine paks (quakespasm.pak, qssm.pak)
 //    - Should NOT include base paks (pak0.pak, pak1.pak)
 //    - If pak.lst doesn't exist, falls back to loading pak2+ numerically
+//    - Duplicate entries in pak.lst are ignored (first occurrence is used)
+//    - Non-existent files in pak.lst are skipped with a warning.
 //
-// 4. Unlisted Paks (unless -nowildpaks is specified)
+// 5. Unlisted Paks (unless -nowildpaks is specified)
 //    - Any .pak files not listed in pak.lst
 //    - Loaded in alphabetical order
 //    - Example: pak2.pak, custom.pak, etc.
 //    - Both .pak and .pk3 formats are included
+//    - Command-line parameter `-nowildpaks` skips loading these files.
 //
-// 5. #Directories Within Current Game Directory
+// 6. #Directories Within Current Game Directory
 //    - Special directories that load as virtual paks
 //    - Files in #folders override pak files in the same game directory
 //    - Multiple #folders load in alphabetical order
 //    - Example: #textures, #models override paks in current directory
 //    - Useful for development and easy file overrides
+//    - Files in #directories can still be overridden by loose files in 
+//      later game directories.
 //
-// 6. Loose Files in Regular Directories
+// 7. Loose Files in Regular Directories
 //    - Files in regular folders (e.g., id1/progs/, id1/maps/)
 //    - Searched last within the current game directory
 //    - Override by files in later game directories
+//    - Priority: Loose Files < #Directories < Paks (including pak.lst)
 //
 // Game Directory Priority:
 // - Each new game directory is added to the FRONT of the search path
@@ -3342,8 +3351,19 @@ COM_AddGameDirectory -- johnfitz -- modified based on topaz's tutorial, reworked
 // - The -nowildpaks command line parameter disables loading of unlisted paks
 // - Files in a later game directory will override ALL content 
 //   (including #directories and loose files) from earlier game directories
+// - If a .pak or .pk3 file cannot be loaded, it is skipped with a warning.
 //
-//////////////////////////////////////////////////////////////////////
+// Example:
+// The following files:
+// pak2.pak, text.pak, custom.pak, zelda.pak, pak3.pak
+// would be loaded in this order:
+//
+// 1. custom.pak
+// 2. pak2.pak
+// 3. pak3.pak
+// 4. text.pak
+// 5. zelda.pak
+////////////////////////////////////////////////////////////////////
 
 static void COM_AddGameDirectory (const char *dir)
 {
@@ -3392,7 +3412,17 @@ _add_path:
 	q_strlcpy (searchdir->filename, com_gamedir, sizeof(searchdir->filename));
 	q_strlcpy (searchdir->purename, dir, sizeof(searchdir->purename));
 
-	// First load engine paks
+	// Load pak0.pak
+	q_snprintf(pakfile, sizeof(pakfile), "%s/pak0.pak", com_gamedir);
+	q_snprintf(purename, sizeof(purename), "%s/pak0.pak", dir);
+	COM_AddPackage(searchdir, pakfile, purename);
+
+	// Load pak0.pk3
+	q_snprintf(pakfile, sizeof(pakfile), "%s/pak0.pk3", com_gamedir);
+	q_snprintf(purename, sizeof(purename), "%s/pak0.pk3", dir);
+	COM_AddPackage(searchdir, pakfile, purename);
+
+	//  Load engine paks
 	for (i = 0; i < num_enginepacks; i++) 
 	{
 		const char* enginepackname = enginepacknames[i];
@@ -3413,16 +3443,15 @@ _add_path:
 		com_modified = old;
 	}
 
-	// Then load pak0 and pak1 specifically
-	for (i = 0; i <= 1; i++) {
-		q_snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pak", com_gamedir, i);
-		q_snprintf(purename, sizeof(purename), "%s/pak%i.pak", dir, i);
-		COM_AddPackage(searchdir, pakfile, purename);
+	// Load pak1.pak
+	q_snprintf(pakfile, sizeof(pakfile), "%s/pak1.pak", com_gamedir);
+	q_snprintf(purename, sizeof(purename), "%s/pak1.pak", dir);
+	COM_AddPackage(searchdir, pakfile, purename);
 
-		q_snprintf(pakfile, sizeof(pakfile), "%s/pak%i.pk3", com_gamedir, i);
-		q_snprintf(purename, sizeof(purename), "%s/pak%i.pk3", dir, i);
-		COM_AddPackage(searchdir, pakfile, purename);
-	}
+	// Load pak1.pk3
+	q_snprintf(pakfile, sizeof(pakfile), "%s/pak1.pk3", com_gamedir);
+	q_snprintf(purename, sizeof(purename), "%s/pak1.pk3", dir);
+	COM_AddPackage(searchdir, pakfile, purename);
 
 	// Load additional paks not in pak.lst first
 	q_snprintf (pakfile, sizeof(pakfile), "%s/pak.lst", com_gamedir);
