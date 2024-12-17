@@ -70,6 +70,7 @@ cvar_t net_masters[] =
 cvar_t rcon_password = {"rcon_password", ""};
 extern cvar_t net_messagetimeout;
 extern cvar_t net_connecttimeout;
+extern cvar_t net_connectattempts; // woods #connectretry
 
 static struct
 {
@@ -2172,7 +2173,7 @@ static qsocket_t *_Datagram_Connect (struct qsockaddr *serveraddr)
 	SCR_UpdateScreen ();
 	start_time = net_time;
 
-	const int totalAttempts = 3; // woods
+	const int totalAttempts = q_max(1, (int)net_connectattempts.value); // woods, minimum 1 attempt #connectretry
 
 	for (reps = 0; reps < totalAttempts; reps++) // woods
 	{
