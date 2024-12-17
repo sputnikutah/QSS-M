@@ -62,6 +62,8 @@ qboolean		pak0; // woods #pak0only
 static void COM_Path_f (void);
 void Host_WriteConfig_f (void); // woods #writecfg
 
+extern qboolean progs_check_done; // woods #botdetect
+
 // if a packfile directory differs from this, it is assumed to be hacked
 #define PAK0_COUNT		339	/* id1/pak0.pak - v1.0x */
 #define PAK0_CRC_V100		13900	/* id1/pak0.pak - v1.00 */
@@ -3664,6 +3666,8 @@ static void COM_Game_f (void)
 		TextList_Rebuild (); // woods #textlist
 		M_CheckMods (); // woods #modsmenu (iw)
 
+		progs_check_done = false; // woods #botdetect
+
 		Con_Printf("\"game\" changed to \"%s\"\n", COM_GetGameNames(true));
 
 		VID_Lock ();
@@ -4830,4 +4834,44 @@ qboolean FS_IsCaseSensitive(void)
 	remove(testfile_upper); // Clean up uppercase version if it exists
 
 	return is_case_sensitive;
+}
+
+void* q_memmem(const void* haystack, size_t haystack_len,
+	const void* needle, size_t needle_len) // woods #botdetect
+{
+	const char* h = (const char*)haystack;
+	const char* n = (const char*)needle;
+
+	if (needle_len == 0)
+		return (void*)haystack;
+	if (haystack_len < needle_len)
+		return NULL;
+
+	for (size_t i = 0; i <= haystack_len - needle_len; i++) {
+		size_t j;
+		for (j = 0; j < needle_len; j++) {
+			if (h[i + j] != n[j])
+				break;
+		}
+		if (j == needle_len) {
+			// Found a substring match, now check word boundaries
+
+			// Check the character before the match
+			if (i > 0 && isalnum((unsigned char)h[i - 1])) {
+				// The previous character is alphanumeric, so this is not a whole word match
+				continue;
+			}
+
+			// Check the character after the match
+			if (i + needle_len < haystack_len && isalnum((unsigned char)h[i + needle_len])) {
+				// The next character is alphanumeric, so this is not a whole word match
+				continue;
+			}
+
+			// Passed the boundary checks, this is an exact whole word match
+			return (void*)(h + i);
+		}
+	}
+
+	return NULL;
 }

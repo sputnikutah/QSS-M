@@ -161,6 +161,9 @@ void M_SetSkillMenuMap(const char* name); // woods #skillmenu (iw)
 
 void FileList_Subtract(const char* name, filelist_item_t** list); // woods #historymenu
 
+static qboolean has_custom_progs = false; // woods #botdetect
+qboolean progs_check_done = false; // woods #botdetect
+
 /*
 ================
 M_DrawCharacter
@@ -804,13 +807,13 @@ void M_UpdateCursorWithTable(int mousey, const int* table, int numitems, int* cu
 	}
 }
 
-//=============================================================================
 
 // woods iw menu functions #modsmenu #skillmenu #mapsmenu #mousemenu
 
 /* Listbox */
 
 qboolean mapshint; // woods
+qboolean maps_from_gameoptions = false;
 
 typedef struct
 {
@@ -1197,6 +1200,8 @@ void M_Menu_Main_f (void)
 	key_dest = key_menu;
 	m_state = m_main;
 	m_entersound = true;
+
+	progs_check_done = false; // woods #botdetect
 
 	// woods #modsmenu (iw)
 
@@ -2032,7 +2037,15 @@ void M_Maps_Key(int key)
     case K_BBUTTON:
     case K_MOUSE4:
     case K_MOUSE2:
-        M_Menu_SinglePlayer_f();
+		if (maps_from_gameoptions)
+		{
+			maps_from_gameoptions = false;
+			M_Menu_GameOptions_f();
+		}
+		else
+		{
+			M_Menu_SinglePlayer_f();
+		}
         break;
     case K_BACKSPACE:
         if (mapsmenu.list.search.len > 0)
@@ -2046,12 +2059,23 @@ void M_Maps_Key(int key)
     case K_KP_ENTER:
     case K_ABUTTON:
     enter:
-        if (mapsmenu.list.numitems > 0 && mapsmenu.items[mapsmenu.filtered_indices[mapsmenu.list.cursor]].name[0])
-        {
-            M_SetSkillMenuMap(mapsmenu.items[mapsmenu.filtered_indices[mapsmenu.list.cursor]].name);
-            M_Menu_Skill_f();
-        }
-        else
+		if (mapsmenu.list.numitems > 0 && mapsmenu.items[mapsmenu.filtered_indices[mapsmenu.list.cursor]].name[0])
+		{
+			if (maps_from_gameoptions)
+			{
+				// Set the map and return to game options
+				M_SetSkillMenuMap(mapsmenu.items[mapsmenu.filtered_indices[mapsmenu.list.cursor]].name);
+				maps_from_gameoptions = false;
+				M_Menu_GameOptions_f();
+			}
+			else
+			{
+				// Original behavior - go to skill menu
+				M_SetSkillMenuMap(mapsmenu.items[mapsmenu.filtered_indices[mapsmenu.list.cursor]].name);
+				M_Menu_Skill_f();
+			}
+		}
+		else
             S_LocalSound ("misc/menu3.wav");
         break;
 
@@ -6220,9 +6244,69 @@ void M_Menu_GameOptions_f (void)
 }
 
 
-int gameoptions_cursor_table[] = {40, 56, 64, 72, 80, 88, 96, 104, 120, 128};
-#define	NUM_GAMEOPTIONS	10
+int gameoptions_cursor_table[] = {40, 56, 64, 72, 80, 88, 96, 104, 120, 128, 152};
+#define	NUM_GAMEOPTIONS	11
 int		gameoptions_cursor;
+
+qboolean HasBots(void) // woods -- check if deathmatch needs difficulty #botdetect
+{
+	if (!progs_check_done)
+	{
+		FILE* file;
+		byte* buffer;
+		long size;
+		unsigned short crc;
+
+		const unsigned short valid_crcs[] = { 32913, 10067, 51593 }; // shareware/steam/regisrted pak0, rogue, hipnotic
+		const size_t num_valid_crcs = sizeof(valid_crcs) / sizeof(valid_crcs[0]);
+
+		const char* custom_marker = "crx"; // custom progs without bots
+		size_t custom_marker_len = strlen(custom_marker);
+
+		if (COM_FOpenFile("progs.dat", &file, NULL) < 0 || !file)
+		{
+			progs_check_done = true;
+			return false;
+		}
+
+		fseek(file, 0, SEEK_END);
+		size = ftell(file);
+		fseek(file, 0, SEEK_SET);
+
+		buffer = (byte*)malloc(size);
+		if (!buffer)
+		{
+			fclose(file);
+			progs_check_done = true;
+			return false;
+		}
+
+		fread(buffer, 1, size, file);
+		fclose(file);
+
+		crc = CRC_Block(buffer, size);
+
+		qboolean is_valid_crc = false;
+		for (size_t i = 0; i < num_valid_crcs; i++)
+		{
+			if (crc == valid_crcs[i]) {
+				is_valid_crc = true;
+				break;
+			}
+		}
+
+		if (is_valid_crc) 
+			has_custom_progs = false;
+		else if (q_memmem(buffer, size, custom_marker, custom_marker_len) != NULL)
+			has_custom_progs = false;
+		else 
+			has_custom_progs = true;
+
+		free(buffer);
+		progs_check_done = true;
+	}
+	return has_custom_progs;
+}
 
 void M_GameOptions_Draw (void)
 {
@@ -6255,7 +6339,7 @@ void M_GameOptions_Draw (void)
 		M_Print (160, y, "Deathmatch");
 	y+=8;
 
-	M_Print (0, y, "        Teamplay");
+	M_Print (0, y, "         Teamplay");
 	if (rogue)
 	{
 		const char *msg;
@@ -6287,7 +6371,7 @@ void M_GameOptions_Draw (void)
 	y+=8;
 
 	M_Print (0, y, "            Skill");
-	if (!coop.value) // If deathmatch
+	if (!coop.value && !HasBots()) // woods #botdetect
 	{ 
 		char dimmed_text[128];
 		const char* text = "Normal difficulty";
@@ -6324,7 +6408,7 @@ void M_GameOptions_Draw (void)
 
 	y+=8;
 
-	M_Print (0, y, "         Episode");
+	M_Print (0, y, "          Episode");
 	// MED 01/06/97 added hipnotic episodes
 	if (hipnotic)
 		M_Print (160, y, hipnoticepisodes[startepisode].description);
@@ -6335,25 +6419,44 @@ void M_GameOptions_Draw (void)
 		M_Print (160, y, episodes[startepisode].description);
 	y+=8;
 
-	M_Print (0, y, "           Level");
+	M_Print (0, y, "            Level");
 	// MED 01/06/97 added hipnotic episodes
 	if (hipnotic)
 	{
 		M_Print (160, y, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].description);
-		M_PrintWhite (160, y+8, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name);
+		if (m_skill_mapname[0])  // Custom map selected - show faded level name
+			M_PrintRGBA(160, y + 8, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name,
+				CL_PLColours_Parse("0xffffff"), 0.5);
+		else  // No custom map - show normal level name
+			M_PrintWhite (160, y+8, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name);
 	}
 	// PGM 01/07/97 added rogue episodes
 	else if (rogue)
 	{
 		M_Print (160, y, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].description);
-		M_PrintWhite(160, y+8, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name);
+		if (m_skill_mapname[0])  // Custom map selected - show faded level name
+			M_PrintRGBA(160, y+8, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name,
+				CL_PLColours_Parse("0xffffff"), 0.5);
+		else  // No custom map - show normal level name
+			M_PrintWhite(160, y+8, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name);
 	}
 	else
 	{
 		M_Print (160, y, levels[episodes[startepisode].firstLevel + startlevel].description);
-		M_PrintWhite(160, y+8, levels[episodes[startepisode].firstLevel + startlevel].name);
+		if (m_skill_mapname[0])  // Custom map selected - show faded level name
+			M_PrintRGBA(160, y+8, levels[episodes[startepisode].firstLevel + startlevel].name,
+				CL_PLColours_Parse("0xffffff"), 0.5);
+		else  // No custom map - show normal level name
+			M_PrintWhite(160, y+8, levels[episodes[startepisode].firstLevel + startlevel].name);
 	}
-	y+=8;
+	y +=24;
+	// Add new option
+	M_Print(0, y, "     Custom Level");
+	if (m_skill_mapname[0])
+		M_PrintWhite(160, y, m_skill_mapname);
+	else
+		M_Print(160, y, "...");
+	y += 8;
 
 // line cursor
 	M_DrawCharacter (144, gameoptions_cursor_table[gameoptions_cursor], 12+((int)(realtime*4)&1));
@@ -6413,6 +6516,7 @@ void M_NetStart_Change (int dir)
 		break;
 
 	case 8:
+		m_skill_mapname[0] = 0;
 		startepisode += dir;
 	//MED 01/06/97 added hipnotic count
 		if (hipnotic)
@@ -6436,6 +6540,7 @@ void M_NetStart_Change (int dir)
 		break;
 
 	case 9:
+		m_skill_mapname[0] = 0;
 		startlevel += dir;
 	//MED 01/06/97 added hipnotic episodes
 		if (hipnotic)
@@ -6451,6 +6556,11 @@ void M_NetStart_Change (int dir)
 
 		if (startlevel >= count)
 			startlevel = 0;
+		break;
+
+	case 10: // Use Custom Map option
+		maps_from_gameoptions = true;
+		M_Menu_Maps_f();
 		break;
 	}
 }
@@ -6497,6 +6607,14 @@ void M_GameOptions_Key (int key)
 		M_NetStart_Change (1);
 		break;
 
+	case K_BACKSPACE:
+	case K_DEL:
+		if (gameoptions_cursor == 10)
+		{
+			m_skill_mapname[0] = 0;
+		}
+		break;
+
 	case K_ENTER:
 	case K_KP_ENTER:
 	case K_ABUTTON:
@@ -6510,12 +6628,19 @@ void M_GameOptions_Key (int key)
 			Cbuf_AddText ( va ("maxplayers %u\n", maxplayers) );
 			SCR_BeginLoadingPlaque ();
 
-			if (hipnotic)
-				Cbuf_AddText ( va ("map %s\n", hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name) );
-			else if (rogue)
-				Cbuf_AddText ( va ("map %s\n", roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name) );
-			else
-				Cbuf_AddText ( va ("map %s\n", levels[episodes[startepisode].firstLevel + startlevel].name) );
+			if (m_skill_mapname[0])  // If custom map is selected
+			{
+				Cbuf_AddText(va("map %s\n", m_skill_mapname));
+			}
+			else  // Use regular episode/level selection
+			{
+				if (hipnotic)
+					Cbuf_AddText ( va ("map %s\n", hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name) );
+				else if (rogue)
+					Cbuf_AddText ( va ("map %s\n", roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name) );
+				else
+					Cbuf_AddText ( va ("map %s\n", levels[episodes[startepisode].firstLevel + startlevel].name) );
+			}
 
 			return;
 		}

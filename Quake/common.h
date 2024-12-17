@@ -272,6 +272,8 @@ extern char* strremove(char* str, char* sub); // woods
 extern char* Q_strcasestr(const char* haystack, const char* needle); // woods
 char* Q_strnset (char* str, int c, size_t n); // woods
 void Write_Log (const char* log_message, const char* filename); // woods #serverlist
+void* q_memmem(const void* haystack, size_t haystack_len,
+	const void* needle, size_t needle_len); // woods #botdetect
 
 #define strcasecmp brokeninmsvc
 #define stricmp brokenportability
