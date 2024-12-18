@@ -1410,6 +1410,8 @@ void Host_Init (void)
 {
 	extern void LOC_PQ_Init (void);    // rook / woods #pqteam (added PQ to name)
 
+	srand((unsigned)time(NULL)); // woods -- initialization to for randomization
+
 	if (standard_quake)
 		minimum_memory = MINIMUM_MEMORY;
 	else	minimum_memory = MINIMUM_MEMORY_LEVELPAK;
