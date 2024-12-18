@@ -300,6 +300,7 @@ void R_Init (void)
 	Cvar_RegisterVariable (&r_drawviewmodel);
 	Cvar_RegisterVariable (&r_shadows);
 	Cvar_RegisterVariable (&r_shadows_groundcheck); // woods #shadow
+	Cvar_RegisterVariable (&r_shadows_bmodels); // woods #shadow
 	Cvar_RegisterVariable (&r_wateralpha);
 	Cvar_SetCallback (&r_wateralpha, R_SetWateralpha_f);
 	Cvar_RegisterVariable (&r_dynamic);

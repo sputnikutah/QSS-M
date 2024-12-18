@@ -3767,6 +3767,12 @@ void Mod_SetExtraFlags (qmodel_t *mod)
 		}
 	}
 
+	if (mod->type == mod_brush) // woods #shadow
+	{
+		if (nameInList(r_noshadow_list.string, mod->name))
+			mod->flags |= MOD_NOSHADOW;
+	}
+
 #ifdef PSET_SCRIPT
 	PScript_UpdateModelEffects(mod);
 #endif

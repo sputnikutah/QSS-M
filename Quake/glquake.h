@@ -169,6 +169,7 @@ extern	cvar_t	r_fullbright;
 extern	cvar_t	r_lightmap;
 extern	cvar_t	r_shadows;
 extern	cvar_t	r_shadows_groundcheck; // woods #shadow
+extern	cvar_t	r_shadows_bmodels; // woods #shadow
 extern	cvar_t	r_wateralpha;
 extern	cvar_t	r_lavaalpha;
 extern	cvar_t	r_telealpha;
@@ -449,6 +450,7 @@ void R_DeleteShaders (void);
 void GLWorld_CreateShaders (void);
 void GLAlias_CreateShaders (void);
 void GL_DrawAliasShadow (entity_t *e);
+void GL_DrawBrushShadow (entity_t* e); // woods #shadow
 void DrawGLTriangleFan (glpoly_t *p);
 void DrawGLPoly (glpoly_t *p);
 void DrawWaterPoly (glpoly_t *p);

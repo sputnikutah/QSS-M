@@ -76,6 +76,7 @@ cvar_t	r_fullbright = {"r_fullbright","0",CVAR_NONE};
 cvar_t	r_lightmap = {"r_lightmap","0",CVAR_ARCHIVE};
 cvar_t	r_shadows = {"r_shadows","0",CVAR_ARCHIVE};
 cvar_t	r_shadows_groundcheck = {"r_shadows_groundcheck","1",CVAR_ARCHIVE}; // woods #shadow
+cvar_t	r_shadows_bmodels = {"r_shadows_bmodels","0",CVAR_ARCHIVE}; // woods #shadow
 cvar_t	r_wateralpha = {"r_wateralpha","1",CVAR_ARCHIVE};
 cvar_t	r_dynamic = {"r_dynamic","1",CVAR_ARCHIVE};
 cvar_t	r_novis = {"r_novis","0",CVAR_ARCHIVE};
@@ -1559,7 +1560,10 @@ void R_DrawShadows (void)
 		if (currententity->model->type != mod_alias)
 			continue;
 
-		GL_DrawAliasShadow (currententity);
+		if (currententity->model->type == mod_alias) // woods #shadow
+			GL_DrawAliasShadow(currententity);
+		else if (currententity->model->type == mod_brush)
+			GL_DrawBrushShadow(currententity);
 	}
 
 	if (gl_stencilbits)

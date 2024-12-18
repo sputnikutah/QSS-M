@@ -1616,3 +1616,120 @@ void R_RebuildAllLightmaps (void)
 		lightmaps[i].rectchange.w = 0;
 	}
 }
+
+extern vec3_t	lightcolor; // woods #shadow
+extern	vec3_t	lightspot; // woods #shadow
+extern qboolean GL_DrawAliasShadowCheck (entity_t* e); // woods #shadow
+
+#define SHADOW_SKEW_X -0.7 //skew along x axis. -0.7 to mimic glquake shadows -- woods #shadow
+#define SHADOW_SKEW_Y 0.2 //skew along y axis. 0 to mimic glquake shadows -- woods #shadow
+#define SHADOW_VSCALE 0 //0=completely flat -- woods #shadow
+#define SHADOW_HEIGHT 0.1 //how far above the floor to render the shadow -- woods #shadow
+
+#define SHADOW_COMPUTED (1 << 0) // woods #shadow
+#define SHADOW_VALID    (1 << 1) // woods #shadow
+
+void GL_DrawBrushShadow (entity_t* e) // woods #shadow
+{
+    qmodel_t* clmodel;
+    float     entalpha;
+    float     shade, lheight;
+    float     shadowmatrix[16] = {
+        1,              0,              0,              0,
+        0,              1,              0,              0,
+        SHADOW_SKEW_X,  SHADOW_SKEW_Y,  SHADOW_VSCALE,  0,
+        0,              0,              SHADOW_HEIGHT,   1
+    };
+
+	if (!r_shadows_bmodels.value)
+		return;
+
+	clmodel = e->model;
+
+	if (R_CullModelForEntity(e))
+	{
+		return;
+	}
+
+	if (e == &cl.viewent ||
+		(e->effects & EF_NOSHADOW) ||
+		(e->model->flags & MOD_NOSHADOW) ||
+		clmodel == cl.worldmodel ||
+		!clmodel->nummodelsurfaces) 
+	{
+		return;
+	}
+
+	entalpha = ENTALPHA_DECODE(e->alpha);
+
+	if (entalpha < 1) {
+		return;
+	}
+
+	if (r_shadows_groundcheck.value && e->model->type == mod_brush) {
+		if (!(e->shadow_state & SHADOW_COMPUTED))
+			GL_DrawAliasShadowCheck(e);
+
+		if (!(e->shadow_state & SHADOW_VALID))
+			return;
+	}
+
+    // Determine lighting at entity origin
+    R_LightPoint(e->origin);
+    shade = ((lightcolor[0] + lightcolor[1] + lightcolor[2]) / 3) / 128.0f;
+    lheight = e->origin[2] - lightspot[2];
+
+    clmodel = e->model;
+
+    glPushMatrix();
+
+    // Apply entity transformations
+    R_RotateForEntity(e->origin, e->angles, e->netstate.scale);
+
+    // Move down to floor, apply shadow projection, then move back
+    glTranslatef(0, 0, -lheight);
+    glMultMatrixf(shadowmatrix);
+    glTranslatef(0, 0, lheight);
+
+    // Set up rendering states for shadow
+    glDepthMask(GL_FALSE);
+    glEnable(GL_BLEND);
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_CULL_FACE);
+    
+    // Enable polygon offset to prevent z-fighting
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(-1, -2);
+
+    // Draw fully black, but alpha scaled by shade and the r_shadows cvar
+    glColor4f(0, 0, 0, entalpha * shade * r_shadows.value);
+
+    // Draw the model geometry as a flat polygon silhouette
+    {
+        msurface_t* surf = &clmodel->surfaces[clmodel->firstmodelsurface];
+        int i;
+
+        for (i = 0; i < clmodel->nummodelsurfaces; i++, surf++)
+        {
+            glpoly_t* p = surf->polys;
+            float* v = p->verts[0];
+            int k;
+
+            glBegin(GL_POLYGON);
+            for (k = 0; k < p->numverts; k++, v += VERTEXSIZE)
+            {
+                glVertex3fv(v);
+            }
+            glEnd();
+        }
+    }
+
+    // Restore states
+    glEnable(GL_TEXTURE_2D);
+    glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
+    glEnable(GL_CULL_FACE);
+    glDisable(GL_POLYGON_OFFSET_FILL);
+
+    glPopMatrix();
+}
