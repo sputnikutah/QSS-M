@@ -6281,7 +6281,13 @@ qboolean HasBots(void) // woods -- check if deathmatch needs difficulty #botdete
 			return false;
 		}
 
-		fread(buffer, 1, size, file);
+		if (fread(buffer, 1, size, file) != (size_t)size)
+		{
+			free(buffer);
+			fclose(file);
+			progs_check_done = true;
+			return false;
+		}
 		fclose(file);
 
 		crc = CRC_Block(buffer, size);

@@ -3489,7 +3489,14 @@ _add_path:
 		len = ftell(listing);
 		fseek(listing, 0, SEEK_SET);
 		buffer = Z_Malloc(len+1);
-		fread(buffer, 1, len, listing);
+
+		if (fread(buffer, 1, len, listing) != (size_t)len) {
+			Con_Printf("Warning: Failed to read all data from %s\n", pakfile);
+			Z_Free(buffer);
+			fclose(listing);
+			return;
+		}
+
 		buffer[len] = 0;
 		fclose(listing);
 
