@@ -1772,6 +1772,8 @@ static qboolean CompleteIP(const char* partial, void* unused) // woods
 	return true;
 }
 
+extern qboolean CompletePAKList(const char* partial, void* unused); // woods #unpak
+
 qboolean CompleteImageList (const char* partial, void* unused); // woods
 qboolean CompleteSoundList (const char* partial, void* unused); // woods
 
@@ -1832,7 +1834,8 @@ static const arg_completion_type_t arg_completion_types[] =
 	{ "dir",					CompleteLS,				NULL },
 	{ "which",					CompleteLS,				NULL },
 	{ "flocate",				CompleteLS,				NULL },
-	{ "ip",						CompleteIP,				NULL }
+	{ "ip",						CompleteIP,				NULL },
+	{ "unpak",					CompletePAKList,		NULL }
 };
 
 static const int num_arg_completion_types =
