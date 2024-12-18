@@ -4836,7 +4836,7 @@ void M_Quit_Draw (void) //johnfitz -- modified for new quit message -- woods mod
 
 int		lanConfig_cursor = -1;
 int     lanConfig_cursor_table_newgame[] = { 76, 86, 104 }; // Updated cursor positions for "New Game"
-int		lanConfig_cursor_table[] = { 76, 84, 92, 108, 116, 146 }; // woods #mousemenu #bookmarksmenu
+int		lanConfig_cursor_table[] = { 76, 94, 102, 108, 116, 124 }; // woods #mousemenu #bookmarksmenu
 int*	lanConfig_cursor_ptr = NULL; // Pointer to the current cursor table
 
 int     NUM_LANCONFIG_CMDS;
