@@ -829,14 +829,8 @@ void Sky_ProcessPoly (glpoly_t	*p)
 	rs_brushpasses++;
 
 	//update sky bounds
-	if (r_fastsky.value == 0) // woods #fastsky2 | OG behavior --> true: r_fastsky does not work so if r_fastsky 0 this run, if r_fastsky 1 this does not run
-	{
-		for (i=0 ; i<p->numverts ; i++)
-			VectorSubtract (p->verts[i], r_origin, verts[i]);
-		Sky_ClipPoly (p->numverts, verts[0], 0);
-	}
-
-	if ((r_fastsky.value == 2) && (skybox_name[0])) // woods -- #fastsky2 | r_fastsky 2 gives skybox precedence over fastsky, but fallback if not skybox
+	if ((r_fastsky.value == 0) ||
+		(r_fastsky.value == 2 && (skybox_name[0] || externalskyloaded)))
 	{
 		for (i = 0; i < p->numverts; i++)
 			VectorSubtract(p->verts[i], r_origin, verts[i]);
@@ -1357,7 +1351,8 @@ void Sky_DrawSky (void)
 	else
 		glColor3fv (skyflatcolor);
 #ifndef SDL_THREADS_DISABLED
-	if (skybox_name[0] && (!r_fastsky.value || (r_fastsky.value == 2 && skybox_name[0])) && RSceneCache_DrawSkySurfDepth()) // woods -- #fastsky2
+	if (((skybox_name[0] || externalskyloaded) && (r_fastsky.value == 2) && RSceneCache_DrawSkySurfDepth()) ||
+		(skybox_name[0] && !r_fastsky.value && RSceneCache_DrawSkySurfDepth())) // woods -- #fastsky2
 	{	//we have no surfaces to process... fill all sides. its probably still faster.
 		for (i=0 ; i<6 ; i++)
 		{
@@ -1375,7 +1370,8 @@ void Sky_DrawSky (void)
 	//
 	// render slow sky: cloud layers or skybox
 	//
-	if ((r_fastsky.value != 1 && !(Fog_GetDensity() > 0 && skyfog >= 1)) && !(r_fastsky.value == 2 && !skybox_name[0])) // woods -- #fastsky2 | r_fastsky 2 gives skybox precedence over fastsky, but fallback if not skybox
+	if ((!r_fastsky.value && !(Fog_GetDensity() > 0 && skyfog >= 1)) ||
+		(r_fastsky.value == 2 && (skybox_name[0] || externalskyloaded) && !(Fog_GetDensity() > 0 && skyfog >= 1))) // woods -- #fastsky2 | r_fastsky 2 gives skybox precedence over fastsky, but fallback if not skybox
 	{
 		glDepthFunc(GL_GEQUAL);
 		glDepthMask(0);
