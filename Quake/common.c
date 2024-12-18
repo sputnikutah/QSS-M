@@ -45,6 +45,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "SDL.h"
 #endif
 
+#include "zlib.h" // woods #unpak
+
 static char	*largv[MAX_NUM_ARGVS + 1];
 static char	argvdummy[] = " ";
 
@@ -3777,6 +3779,938 @@ static qboolean COM_SameDirs(const char *dir1, const char *dir2)
 }
 
 /*
+================================================================================================
+ ZIP/PAK File Handling Utilities -- woods #unpak
+ 
+ ZIP_Extract: Extracts all files from a given ZIP archive into a specified directory.
+ COM_UnPAK_f: Handles extraction of PAK or PK3 archives based on input commands.
+ CompletePAKList: Searches for valid PAK/PK3 files in specified directories for tab completion.
+ 
+ Notes:
+ Supports both PAK, PK3, KPF formats with recursive directory creation.
+ Utilizes zlib for DEFLATE-compressed ZIP files.
+ ================================================================================================
+ */
+
+#define ARRAY_COUNT(arr) (sizeof(arr) / sizeof((arr)[0]))
+
+#define ZIP_EOCD_SIGNATURE  0x06054b50
+#define ZIP_CD_SIGNATURE    0x02014b50
+#define ZIP_LFH_SIGNATURE   0x04034b50
+
+#define ARCHIVE_MAX_SIZE       (1024 * 1024 * 1024)  // 1GB max archive size
+#define ARCHIVE_MAX_FILE_SIZE  (100 * 1024 * 1024)   // 100MB max per file
+#define ARCHIVE_MAX_FILES      65535                 // Maximum number of files
+#define ARCHIVE_MAX_FILENAME   256                   // Maximum filename length
+#define ARCHIVE_MAX_PATH_DEPTH 16                    // Maximum directory depth
+
+#define ZIP_EOCD_SIZE 22
+#define ZIP_CHUNK     16384
+
+#define PAK_MAX_SIZE         ARCHIVE_MAX_SIZE
+#define PAK_MAX_FILE_SIZE    ARCHIVE_MAX_FILE_SIZE
+#define ZIP_MAX_SIZE         ARCHIVE_MAX_SIZE
+#define ZIP_MAX_FILE_SIZE    ARCHIVE_MAX_FILE_SIZE
+#define PAK_MAX_FILES        ARCHIVE_MAX_FILES
+#define ZIP_MAX_FILES        ARCHIVE_MAX_FILES
+#define PAK_MAX_FILENAME     ARCHIVE_MAX_FILENAME
+#define ZIP_MAX_FILENAME     ARCHIVE_MAX_FILENAME
+#define MAX_PATH_DEPTH       ARCHIVE_MAX_PATH_DEPTH
+
+ /*
+======================================
+ZIP_ValidatePath
+
+Path Validation and Directory Creation
+======================================
+*/
+
+static qboolean ValidatePath(const char* filename, const char* outdir, size_t max_filename, const char* type)
+{
+	const char* p;
+	int depth = 0;
+	char resolved_path[MAX_OSPATH];
+	char clean_path[MAX_OSPATH];
+
+	// Check for NULL or empty filename
+	if (!filename || !filename[0]) {
+		Con_Printf("WARNING: Empty filename rejected\n");
+		return false;
+	}
+
+	// Check filename length
+	if (strlen(filename) >= max_filename) {
+		Con_Printf("WARNING: %s filename too long: %s\n", type, filename);
+		return false;
+	}
+
+	// Normalize path separators to forward slashes
+	size_t clean_len = 0;
+	for (p = filename; *p && clean_len < sizeof(clean_path) - 1; p++) {
+		if (*p == '\\') {
+			clean_path[clean_len++] = '/';
+		}
+		else {
+			clean_path[clean_len++] = *p;
+		}
+	}
+	clean_path[clean_len] = '\0';
+
+	// Check for dangerous characters
+	if (strstr(clean_path, "..") ||    // Directory traversal
+		strstr(clean_path, ":") ||     // Windows drive letter
+		strstr(clean_path, "|") ||     // Command injection
+		strstr(clean_path, ";") ||     // Command injection
+		strstr(clean_path, ">") ||     // Redirection
+		strstr(clean_path, "<")) {     // Redirection
+		Con_Printf("WARNING: Invalid characters in filename: %s\n", filename);
+		return false;
+	}
+
+	// Check for absolute paths
+	if (clean_path[0] == '/') {
+		Con_Printf("WARNING: Absolute path rejected: %s\n", filename);
+		return false;
+	}
+
+	// Check directory depth
+	for (p = clean_path; *p; p++) {
+		if (*p == '/') {
+			depth++;
+			if (depth > MAX_PATH_DEPTH) {
+				Con_Printf("WARNING: Directory depth exceeds maximum: %s\n", filename);
+				return false;
+			}
+		}
+	}
+
+	// Check for control characters
+	for (p = clean_path; *p; p++) {
+		if ((unsigned char)*p < 32) {
+			Con_Printf("WARNING: Control character in filename: %s\n", filename);
+			return false;
+		}
+	}
+
+	// Construct and verify full path
+	q_snprintf(resolved_path, sizeof(resolved_path), "%s/%s", outdir, clean_path);
+
+	// Ensure the final path stays within outdir
+	if (strstr(resolved_path, "..") || !strstr(resolved_path, outdir)) {
+		Con_Printf("WARNING: Path escapes output directory: %s\n", filename);
+		return false;
+	}
+
+	return true;
+}
+
+#define ZIP_ValidatePath(filename, outdir) ValidatePath(filename, outdir, ZIP_MAX_FILENAME, "ZIP")
+#define PAK_ValidatePath(filename, outdir) ValidatePath(filename, outdir, PAK_MAX_FILENAME, "PAK")
+
+static void CreateDirectoryPath(const char* path)
+{
+	char temp[MAX_OSPATH];
+	char* p;
+	size_t len;
+
+	// Make a temporary copy
+	len = strlen(path);
+	if (len >= sizeof(temp)) {
+		Con_Printf("ERROR: Path too long\n");
+		return;
+	}
+	strcpy(temp, path);
+
+	// Create each directory in the path
+	for (p = temp + 1; *p; p++) {
+		if (*p == '/' || *p == '\\') {
+			*p = 0;  // Temporarily terminate
+			Sys_mkdir(temp);
+			*p = '/';  // Restore slash (always use forward slash)
+		}
+	}
+	// Create the final directory
+	Sys_mkdir(temp);
+}
+
+/*
+===================
+ZIP_Extract
+
+Extraction Function
+===================
+*/
+
+qboolean ZIP_Extract(const char* zipfile, const char* outdir)
+{
+	Con_DPrintf("Extracting %s to %s\n", zipfile, outdir);
+
+	FILE* zip = fopen(zipfile, "rb");
+	if (!zip) {
+		Con_Printf("ERROR: Could not open ZIP file\n");
+		return false;
+	}
+
+	// Get file size
+	fseek(zip, 0, SEEK_END);
+	long filesize = ftell(zip);
+	fseek(zip, 0, SEEK_SET);
+
+	// Check archive size
+	if (filesize > ZIP_MAX_SIZE) {
+		Con_Printf("ERROR: Archive too large (%.2f MB > %.2f MB max)\n",
+			filesize / (1024.0 * 1024.0),
+			ZIP_MAX_SIZE / (1024.0 * 1024.0));
+		fclose(zip);
+		return false;
+	}
+
+	char mutable_outdir[MAX_OSPATH];
+	if (strlen(outdir) >= sizeof(mutable_outdir)) {
+		Con_Printf("ERROR: Output directory path too long\n");
+		fclose(zip);
+		return false;
+	}
+	strcpy(mutable_outdir, outdir);
+
+	CreateDirectoryPath(mutable_outdir);
+
+	// Look for ZIP end of central directory
+	unsigned char buffer[ZIP_EOCD_SIZE];
+	long pos;
+
+	// Search for end of central directory signature
+	for (pos = filesize - ZIP_EOCD_SIZE; pos >= 0; pos--) {
+		fseek(zip, pos, SEEK_SET);
+		if (fread(buffer, 1, 4, zip) != 4) continue;
+
+		unsigned int sig = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+		if (sig == ZIP_EOCD_SIGNATURE) {
+			break;
+		}
+	}
+
+	if (pos < 0) {
+		Con_Printf("ERROR: Could not find ZIP central directory\n");
+		fclose(zip);
+		return false;
+	}
+
+	// Read central directory info
+	fseek(zip, pos, SEEK_SET);
+	if (fread(buffer, 1, ZIP_EOCD_SIZE, zip) != ZIP_EOCD_SIZE) {
+		Con_Printf("ERROR: Could not read central directory\n");
+		fclose(zip);
+		return false;
+	}
+
+	// Parse EOCD record
+	unsigned short total_entries = buffer[10] | (buffer[11] << 8);
+	unsigned int cd_offset = buffer[16] | (buffer[17] << 8) | (buffer[18] << 16) | (buffer[19] << 24);
+
+	// Check number of files
+	if (total_entries > ZIP_MAX_FILES) {
+		Con_Printf("ERROR: Too many files (%d > %d max)\n",
+			total_entries, ZIP_MAX_FILES);
+		fclose(zip);
+		return false;
+	}
+
+	// Go to start of central directory
+	if (fseek(zip, cd_offset, SEEK_SET) != 0) {
+		Con_Printf("ERROR: Could not seek to central directory\n");
+		fclose(zip);
+		return false;
+	}
+
+	qboolean success = true;
+	int files_extracted = 0;
+	unsigned long total_bytes = 0;
+	unsigned long processed_bytes = 0;
+	float last_progress = 0;
+
+	// Calculate total size for progress tracking
+	long initial_pos = ftell(zip);
+	for (int i = 0; i < total_entries; i++) {
+		unsigned int cd_sig;
+		if (fread(&cd_sig, 1, 4, zip) != 4) break;
+
+		unsigned char header[42];
+		if (fread(header, 1, 42, zip) != 42) break;
+
+		unsigned int size = header[16] | (header[17] << 8) |
+			(header[18] << 16) | (header[19] << 24);
+		total_bytes += size;
+
+		// Skip name, extra, and comment
+		unsigned short name_len = header[24] | (header[25] << 8);
+		unsigned short extra_len = header[26] | (header[27] << 8);
+		unsigned short comment_len = header[28] | (header[29] << 8);
+		fseek(zip, name_len + extra_len + comment_len, SEEK_CUR);
+	}
+
+	// Return to start of central directory
+	fseek(zip, initial_pos, SEEK_SET);
+
+	Con_Printf("\n"); // Add newline before progress starts
+
+	// Process each file in the central directory
+	for (int i = 0; i < total_entries; i++) {
+		// Read signature first
+		unsigned int cd_sig;
+		if (fread(&cd_sig, 1, 4, zip) != 4) {
+			Con_Printf("ERROR: Could not read central directory signature\n");
+			break;
+		}
+
+		if (cd_sig != ZIP_CD_SIGNATURE) {
+			Con_Printf("ERROR: Invalid central directory signature\n");
+			break;
+		}
+
+		// Read rest of fixed-size central directory header
+		unsigned char cd_header[42];  // 46 - 4 (already read signature)
+		if (fread(cd_header, 1, 42, zip) != 42) {
+			Con_Printf("ERROR: Could not read central directory header\n");
+			break;
+		}
+
+		// Get file info from central directory
+		unsigned short compression_method = cd_header[6] | (cd_header[7] << 8);
+		unsigned int compressed_size = cd_header[16] | (cd_header[17] << 8) |
+			(cd_header[18] << 16) | (cd_header[19] << 24);
+		unsigned short name_length = cd_header[24] | (cd_header[25] << 8);
+		unsigned short extra_length = cd_header[26] | (cd_header[27] << 8);
+		unsigned short comment_length = cd_header[28] | (cd_header[29] << 8);
+		unsigned int local_header_offset = cd_header[38] | (cd_header[39] << 8) |
+			(cd_header[40] << 16) | (cd_header[41] << 24);
+
+		// Read filename
+		char filename[MAX_OSPATH];
+		if (name_length >= sizeof(filename)) {
+			Con_Printf("ERROR: Filename too long\n");
+			break;
+		}
+
+		if (fread(filename, 1, name_length, zip) != name_length) {
+			Con_Printf("ERROR: Could not read filename from central directory\n");
+			break;
+		}
+		filename[name_length] = 0;
+
+		// Skip extra field and comment in central directory
+		if (fseek(zip, extra_length + comment_length, SEEK_CUR) != 0) {
+			Con_Printf("ERROR: Could not skip extra/comment fields\n");
+			break;
+		}
+
+		// Remember current position in central directory
+		long current_pos = ftell(zip);
+
+		// Add security checks here
+		if (!ZIP_ValidatePath(filename, outdir)) {
+			Con_Printf("ERROR: Invalid filename rejected: %s\n", filename);
+			fseek(zip, current_pos, SEEK_SET);
+			continue;
+		}
+
+		// Check file size
+		if (compressed_size > ZIP_MAX_FILE_SIZE) {
+			Con_Printf("ERROR: File too large: %s (%.2f MB > %.2f MB max)\n",
+				filename,
+				compressed_size / (1024.0 * 1024.0),
+				ZIP_MAX_FILE_SIZE / (1024.0 * 1024.0));
+			fseek(zip, current_pos, SEEK_SET);
+			continue;
+		}
+
+		// Go to local file header
+		if (fseek(zip, local_header_offset, SEEK_SET) != 0) {
+			Con_Printf("ERROR: Could not seek to local header\n");
+			break;
+		}
+
+		// Read and verify local file header signature
+		unsigned int lfh_sig;
+		if (fread(&lfh_sig, 1, 4, zip) != 4 || lfh_sig != ZIP_LFH_SIGNATURE) {
+			Con_Printf("ERROR: Invalid local file header signature\n");
+			break;
+		}
+
+		// Skip rest of local header
+		unsigned char lfh[26];
+		if (fread(lfh, 1, 26, zip) != 26) {
+			Con_Printf("ERROR: Could not read local file header\n");
+			break;
+		}
+
+		// Skip local header name and extra field
+		unsigned short local_name_length = lfh[22] | (lfh[23] << 8);
+		unsigned short local_extra_length = lfh[24] | (lfh[25] << 8);
+
+		if (fseek(zip, local_name_length + local_extra_length, SEEK_CUR) != 0) {
+			Con_Printf("ERROR: Could not skip local header name/extra\n");
+			break;
+		}
+
+		// Create output path
+		char outpath[MAX_OSPATH];
+		q_snprintf(outpath, sizeof(outpath), "%s/%s", outdir, filename);
+		for (char* p = outpath; *p; p++) {
+			if (*p == '\\') *p = '/';
+		}
+
+		// Create parent directories
+		char dirpath[MAX_OSPATH];
+		q_strlcpy(dirpath, outpath, sizeof(dirpath));
+		char* last_slash = strrchr(dirpath, '/');
+		if (last_slash) {
+			*last_slash = 0;
+			CreateDirectoryPath(dirpath);
+			*last_slash = '/';
+		}
+
+		// If this is a directory entry, create it and continue
+		if (filename[strlen(filename) - 1] == '/') {
+			COM_CreatePath(outpath);
+			fseek(zip, current_pos, SEEK_SET);
+			continue;
+		}
+
+		// Open output file
+		FILE* outfile = fopen(outpath, "wb");
+		if (!outfile) {
+			Con_Printf("ERROR: Could not create file %s\n", outpath);
+			fseek(zip, current_pos, SEEK_SET);
+			continue;
+		}
+
+		Con_DPrintf("Extracting %s\n", filename);
+
+		// Extract file content based on compression method
+		qboolean extract_success = true;
+		if (compression_method == 0) {
+			// No compression - straight copy
+			byte buffer[ZIP_CHUNK];
+			size_t remaining = compressed_size;
+			while (remaining > 0 && extract_success) {
+				size_t to_read = q_min(remaining, ZIP_CHUNK);
+				size_t bytes_read = fread(buffer, 1, to_read, zip);
+				if (bytes_read != to_read || fwrite(buffer, 1, bytes_read, outfile) != bytes_read) {
+					extract_success = false;
+				}
+				remaining -= bytes_read;
+			}
+		}
+		else if (compression_method == 8) {
+			// DEFLATE compression
+			z_stream strm = { 0 };
+			byte in[ZIP_CHUNK];
+			byte out[ZIP_CHUNK];
+
+			if (inflateInit2(&strm, -MAX_WBITS) == Z_OK) {
+				size_t remaining = compressed_size;
+				do {
+					size_t to_read = q_min(remaining, ZIP_CHUNK);
+					strm.avail_in = fread(in, 1, to_read, zip);
+					if (strm.avail_in == 0) break;
+
+					remaining -= strm.avail_in;
+					strm.next_in = in;
+
+					do {
+						strm.avail_out = ZIP_CHUNK;
+						strm.next_out = out;
+						int ret = inflate(&strm, Z_NO_FLUSH);
+
+						if (ret != Z_OK && ret != Z_STREAM_END) {
+							extract_success = false;
+							break;
+						}
+
+						size_t have = ZIP_CHUNK - strm.avail_out;
+						if (fwrite(out, 1, have, outfile) != have) {
+							extract_success = false;
+							break;
+						}
+					} while (strm.avail_out == 0);
+
+				} while (remaining > 0 && extract_success);
+
+				inflateEnd(&strm);
+			}
+		}
+		else {
+			extract_success = false;
+		}
+
+		fclose(outfile);
+		if (!extract_success) {
+			remove(outpath);  // Delete failed file
+			Con_DPrintf("ERROR: Failed to extract %s\n", filename);
+		}
+		else {
+			files_extracted++;
+			processed_bytes += compressed_size;
+			if (total_bytes > 0) {
+				float current_progress = (float)processed_bytes / total_bytes * 100;
+				// Only show progress if it's increased by at least 5% or at 100%
+				if (current_progress - last_progress >= 5.0f || current_progress == 100.0f) {
+					Con_Printf("\rprogress: ^m%.1f%%^m", current_progress);
+					last_progress = current_progress;
+				}
+			}
+		}
+
+		// Return to central directory position
+		if (fseek(zip, current_pos, SEEK_SET) != 0) {
+			Con_Printf("ERROR: Could not return to central directory\n");
+			break;
+		}
+	}
+
+	// At the end of the function, replace the success message with:
+	if (files_extracted > 0) {
+		Con_Printf("\rsuccessfully unpacked ^m%d^m files (%.2f MB)\n\n",
+			files_extracted,
+			total_bytes / (1024.0 * 1024.0));
+	}
+	else {
+		Con_Printf("\rno files extracted%s\n\n", success ? "" : " due to errors");
+	}
+
+	fclose(zip);
+	return success;
+}
+
+/*
+======================
+TryOpenPakPath
+
+PAK Extraction Support
+======================
+*/
+
+static qboolean TryOpenPakPath(const char* dir, const char* base_name, char* out_path, size_t out_path_size,
+	const char* exts_to_try[], int exts_count)
+{
+	const char* provided_ext = COM_FileGetExtension(base_name);
+
+	if (!*provided_ext) {
+		// No extension provided, try each known extension
+		for (int ei = 0; ei < exts_count; ei++) {
+			q_snprintf(out_path, out_path_size, "%s/%s.%s", dir, base_name, exts_to_try[ei]);
+			{
+				int handle;
+				if (Sys_FileOpenRead(out_path, &handle) != -1) {
+					Sys_FileClose(handle);
+					return true;
+				}
+			}
+		}
+	}
+	else {
+		// Extension provided, try that exact file
+		q_snprintf(out_path, out_path_size, "%s/%s", dir, base_name);
+		{
+			int handle;
+			if (Sys_FileOpenRead(out_path, &handle) != -1) {
+				Sys_FileClose(handle);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+/*
+====================
+COM_UnPAK_f
+
+Main Unpack Function
+====================
+*/
+
+void COM_UnPAK_f(void)
+{
+	char pakpath[MAX_OSPATH];
+	char outdir[MAX_OSPATH];
+	const char* pakname;
+	const char* ext;
+	pack_t* pack;
+	int i;
+	qboolean success = true;
+	int files_extracted = 0;
+	unsigned long total_bytes = 0;
+	unsigned long processed_bytes = 0;
+
+	if (Cmd_Argc() != 2) {
+		Con_Printf("\nusage: unpak <filename>\n\n");
+		return;
+	}
+
+	pakname = Cmd_Argv(1);
+
+	// Helper arrays to try multiple directories and extensions
+	const char* dirs_to_try[] = {
+		com_gamedir,
+		com_basedir,
+		va("%s/id1", com_basedir)
+	};
+
+	const char* exts_to_try[] = { "pak", "pk3", "kpf" };
+
+	qboolean found_pak = false;
+	const char* provided_ext = COM_FileGetExtension(pakname);
+
+	if (!*provided_ext) {
+		// If no extension given, try each directory with all known extensions
+		for (int di = 0; di < (int)ARRAY_COUNT(dirs_to_try); di++) {
+			if (TryOpenPakPath(dirs_to_try[di], pakname, pakpath, sizeof(pakpath),
+				exts_to_try, (int)ARRAY_COUNT(exts_to_try))) {
+				found_pak = true;
+				break;
+			}
+		}
+	}
+	else {
+		// Extension provided: just try com_gamedir and then com_basedir
+		if (TryOpenPakPath(com_gamedir, pakname, pakpath, sizeof(pakpath),
+			exts_to_try, (int)ARRAY_COUNT(exts_to_try)) ||
+			TryOpenPakPath(com_basedir, pakname, pakpath, sizeof(pakpath),
+				exts_to_try, (int)ARRAY_COUNT(exts_to_try))) {
+			found_pak = true;
+		}
+	}
+
+	if (!found_pak) {
+		Con_Printf("\ncould not find file ^m%s^m in game, base, or id1 directories\n\n", pakname);
+		return;
+	}
+
+	// Check file type
+	ext = COM_FileGetExtension(pakpath);
+	if (q_strcasecmp(ext, "pak") && q_strcasecmp(ext, "pk3") && q_strcasecmp(ext, "kpf")) {
+		Con_Printf("ERROR: Unsupported file type for %s\n", pakpath);
+		return;
+	}
+
+	// Create output directory (remove extension)
+	q_strlcpy(outdir, pakpath, sizeof(outdir));
+	COM_StripExtension(outdir, outdir, sizeof(outdir));
+	Sys_mkdir(outdir);
+
+	Con_Printf("\nunpacking ^m%s^m to %s\n", pakname, outdir);
+
+	// Handle PK3/KPF (ZIP-based) files
+	if (!q_strcasecmp(ext, "pk3") || !q_strcasecmp(ext, "kpf")) {
+		ZIP_Extract(pakpath, outdir);
+		return;
+	}
+
+	// Handle PAK files
+	pack = COM_LoadPackFile(pakpath);
+	if (!pack) {
+		Con_Printf("ERROR: Could not open file %s\n", pakpath);
+		return;
+	}
+
+
+	// Get file size using standard file operations
+	FILE* f = fopen(pakpath, "rb");
+	if (!f) {
+		Con_Printf("ERROR: Could not open file for size check %s\n", pakpath);
+		Sys_FileClose(pack->handle);
+		Z_Free(pack->files);
+		Z_Free(pack);
+		return;
+	}
+
+	// Get file size
+	fseek(f, 0, SEEK_END);
+	long filesize = ftell(f);
+	fclose(f);
+
+	// Check PAK file size
+	if (filesize > PAK_MAX_SIZE) {
+		Con_Printf("ERROR: PAK file too large (%.2f MB > %.2f MB max)\n",
+			(double)filesize / (1024.0 * 1024.0),
+			(double)PAK_MAX_SIZE / (1024.0 * 1024.0));
+		Sys_FileClose(pack->handle);
+		Z_Free(pack->files);
+		Z_Free(pack);
+		return;
+	}
+
+	// Check number of files
+	if (pack->numfiles > PAK_MAX_FILES) {
+		Con_Printf("ERROR: Too many files in PAK (%d > %d max)\n",
+			pack->numfiles, PAK_MAX_FILES);
+		Sys_FileClose(pack->handle);
+		Z_Free(pack->files);
+		Z_Free(pack);
+		return;
+	}
+
+	Con_Printf("\n");
+
+	// Calculate total size (add after pack is loaded, before extraction loop)
+	for (i = 0; i < pack->numfiles; i++) {
+		if (pack->files[i].name[0] &&
+			(strlen(pack->files[i].name) == 0 ||
+				pack->files[i].name[strlen(pack->files[i].name) - 1] != '/')) {
+			total_bytes += pack->files[i].filelen;
+		}
+	}
+
+	// Extract each file
+	float last_progress = 0;  // Track last shown progress
+	for (i = 0; i < pack->numfiles; i++) {
+		char outpath[MAX_OSPATH];
+		char dirpath[MAX_OSPATH];
+		byte* buffer;
+		char* p;
+
+		if (!pack->files[i].name[0])
+			continue;
+
+		// Skip directory entries
+		size_t fnlen = strlen(pack->files[i].name);
+		if (fnlen > 0 && pack->files[i].name[fnlen - 1] == '/')
+			continue;
+
+		// Validate filename
+		if (!PAK_ValidatePath(pack->files[i].name, outdir)) {
+			Con_DPrintf("ERROR: Invalid filename rejected: %s\n", pack->files[i].name);
+			success = false;
+			continue;
+		}
+
+		// Check individual file size
+		if (pack->files[i].filelen > PAK_MAX_FILE_SIZE) {
+			Con_DPrintf("ERROR: File too large: %s (%.2f MB > %.2f MB max)\n",
+				pack->files[i].name,
+				(double)pack->files[i].filelen / (1024.0 * 1024.0),
+				(double)PAK_MAX_FILE_SIZE / (1024.0 * 1024.0));
+			success = false;
+			continue;
+		}
+
+		// Create full output path
+		q_snprintf(outpath, sizeof(outpath), "%s/%s", outdir, pack->files[i].name);
+
+		// Create directories
+		q_strlcpy(dirpath, outpath, sizeof(dirpath));
+		for (p = dirpath + 1; *p; p++) {
+			if (*p == '/' || *p == '\\') {
+				char save = *p;
+				*p = 0;
+				Sys_mkdir(dirpath);
+				*p = save;
+			}
+		}
+
+		buffer = (byte*)malloc(pack->files[i].filelen);
+		if (!buffer) {
+			Con_DPrintf("ERROR: Not enough memory to extract %s (%d bytes)\n",
+				pack->files[i].name, (int)pack->files[i].filelen);
+			success = false;
+			continue;
+		}
+
+		Sys_FileSeek(pack->handle, pack->files[i].filepos);
+		if (Sys_FileRead(pack->handle, buffer, pack->files[i].filelen) == pack->files[i].filelen) {
+			FILE* outfile = fopen(outpath, "wb");
+			if (outfile) {
+				if (fwrite(buffer, 1, pack->files[i].filelen, outfile) == (size_t)pack->files[i].filelen) {
+					files_extracted++;
+					processed_bytes += pack->files[i].filelen;
+					if (total_bytes > 0) {
+						float current_progress = (float)processed_bytes / total_bytes * 100;
+						// Only show progress if it's increased by at least 5% or at 100%
+						if (current_progress - last_progress >= 5.0f || current_progress == 100.0f) {
+							Con_Printf("\rprogress: ^m%.1f%%^m", current_progress);
+							last_progress = current_progress;
+						}
+					}
+					Con_DPrintf("  %s\n", pack->files[i].name);
+				}
+				else {
+					Con_DPrintf("ERROR: Failed to write %s\n", pack->files[i].name);
+					success = false;
+				}
+				fclose(outfile);
+			}
+			else {
+				Con_DPrintf("ERROR: Could not create file %s\n", outpath);
+				success = false;
+			}
+		}
+		else {
+			Con_DPrintf("ERROR: Failed to extract %s\n", pack->files[i].name);
+			success = false;
+		}
+
+		free(buffer);
+	}
+
+	// Clean up
+	Sys_FileClose(pack->handle);
+	Z_Free(pack->files);
+	Z_Free(pack);
+
+	Con_Printf("\r%80s\r", ""); // Clear progress line
+	if (success) {
+		Con_Printf("successfully unpacked ^m%d^m files (%.2f MB)\n\n",
+			files_extracted,
+			total_bytes / (1024.0 * 1024.0));
+	}
+	else {
+		Con_Printf("finished unpacking %d files (%.2f MB) from %s with errors\n\n",
+			files_extracted,
+			total_bytes / (1024.0 * 1024.0),
+			pakname);
+	}
+}
+
+/*
+================================
+CompletePAKList
+
+Tab Completion for PAK/PK3/KPF Files
+================================
+*/
+
+qboolean CompletePAKList(const char* partial, void* unused)
+{
+#ifdef _WIN32
+	WIN32_FIND_DATA fdat;
+	HANDLE fhnd;
+#else
+	DIR* dir_p;
+	struct dirent* dir_t;
+#endif
+	char filestring[MAX_OSPATH];
+	char pakname[32];
+	qboolean found = false;
+
+	// Ensure com_gamedir and com_basedir are valid
+	if (com_gamedir[0] == '\0' && com_basedir[0] == '\0')
+		return false;
+
+	// Helper macro to process files
+#define PROCESS_FILE(file, partial, found_flag) \
+    do { \
+        const char* ext = COM_FileGetExtension(file); \
+        if (q_strcasecmp(ext, "pak") == 0 || \
+            q_strcasecmp(ext, "pk3") == 0 || \
+            q_strcasecmp(ext, "kpf") == 0) { \
+            COM_StripExtension(file, pakname, sizeof(pakname)); \
+            Con_AddToTabList(file, partial, NULL, NULL); \
+            found_flag = true; \
+        } \
+    } while (0)
+
+	// Search in com_gamedir
+	if (com_gamedir[0] != '\0')
+	{
+#ifdef _WIN32
+		q_snprintf(filestring, sizeof(filestring), "%s\\*.*", com_gamedir);
+		fhnd = FindFirstFile(filestring, &fdat);
+		if (fhnd != INVALID_HANDLE_VALUE)
+		{
+			do
+			{
+				PROCESS_FILE(fdat.cFileName, partial, found);
+			} while (FindNextFile(fhnd, &fdat));
+			FindClose(fhnd);
+		}
+#else
+		q_snprintf(filestring, sizeof(filestring), "%s", com_gamedir);
+		dir_p = opendir(filestring);
+		if (dir_p)
+		{
+			while ((dir_t = readdir(dir_p)) != NULL)
+			{
+				if (!strcmp(dir_t->d_name, ".") || !strcmp(dir_t->d_name, ".."))
+					continue;
+
+				PROCESS_FILE(dir_t->d_name, partial, found);
+			}
+			closedir(dir_p);
+		}
+#endif
+	}
+
+	// Search in com_basedir
+	if (com_basedir[0] != '\0')
+	{
+#ifdef _WIN32
+		q_snprintf(filestring, sizeof(filestring), "%s\\*.*", com_basedir);
+		fhnd = FindFirstFile(filestring, &fdat);
+		if (fhnd != INVALID_HANDLE_VALUE)
+		{
+			do
+			{
+				PROCESS_FILE(fdat.cFileName, partial, found);
+			} while (FindNextFile(fhnd, &fdat));
+			FindClose(fhnd);
+		}
+#else
+		q_snprintf(filestring, sizeof(filestring), "%s", com_basedir);
+		dir_p = opendir(filestring);
+		if (dir_p)
+		{
+			while ((dir_t = readdir(dir_p)) != NULL)
+			{
+				if (!strcmp(dir_t->d_name, ".") || !strcmp(dir_t->d_name, ".."))
+					continue;
+
+				PROCESS_FILE(dir_t->d_name, partial, found);
+			}
+			closedir(dir_p);
+		}
+#endif
+	}
+
+	// Search in com_basedir/id1
+	if (com_basedir[0] != '\0')
+	{
+#ifdef _WIN32
+		q_snprintf(filestring, sizeof(filestring), "%s\\id1\\*.*", com_basedir);
+		fhnd = FindFirstFile(filestring, &fdat);
+		if (fhnd != INVALID_HANDLE_VALUE)
+		{
+			do
+			{
+				PROCESS_FILE(fdat.cFileName, partial, found);
+			} while (FindNextFile(fhnd, &fdat));
+			FindClose(fhnd);
+		}
+#else
+		q_snprintf(filestring, sizeof(filestring), "%s/id1", com_basedir);
+		dir_p = opendir(filestring);
+		if (dir_p)
+		{
+			while ((dir_t = readdir(dir_p)) != NULL)
+			{
+				if (!strcmp(dir_t->d_name, ".") || !strcmp(dir_t->d_name, ".."))
+					continue;
+
+				PROCESS_FILE(dir_t->d_name, partial, found);
+			}
+			closedir(dir_p);
+		}
+#endif
+	}
+
+#undef PROCESS_FILE
+
+	return found;
+}
+
+/*
 =================
 COM_InitFilesystem
 =================
@@ -3798,6 +4732,7 @@ void COM_InitFilesystem (void) //johnfitz -- modified based on topaz's tutorial
 	Cmd_AddCommand ("gamedir", COM_Game_f); //Spike -- alternative name for it, consistent with quakeworld and a few other engines
 	Cmd_AddCommand ("open", COM_Dir_Open_f); // woods #openfolder
 	Cmd_AddCommand ("writeconfig", Host_WriteConfig_f); // woods #writecfg
+	Cmd_AddCommand ("unpak", COM_UnPAK_f); // woods #unpak
 
 	i = COM_CheckParm ("-basedir");
 	if (i && i < com_argc-1)
