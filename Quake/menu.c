@@ -4097,13 +4097,24 @@ void M_Keys_Draw (void)
 		if (i == keysmenu.list.cursor && bind_grab && keys[2] != -1)
 			keys[0] = -1;
 
-		const char* keyStr = keys[0] == -1 ? "???" : Key_KeynumToString(keys[0]);
-		print_fn(136, y, keyStr);
+		int x_pos = 136;
+		if (keys[0] != -1) {
+			const char* keyStr = Key_KeynumToString(keys[0]);
+			print_fn(x_pos, y, keyStr);
+			x_pos += (strlen(keyStr) * 8) + 8;
 
-		for (int j = 1; j <= 2 && keys[j] != -1; j++) {
-			print_fn(136 + strlen(keyStr) * 8 + 8, y, "or");
-			keyStr = Key_KeynumToString(keys[j]);
-			print_fn(136 + strlen(keyStr) * 8 + 32, y, keyStr);
+			for (int j = 1; j < 3 && keys[j] != -1; j++) 
+			{
+				print_fn(x_pos, y, "or");
+				x_pos += 24; // Space for "or" plus padding
+				keyStr = Key_KeynumToString(keys[j]);
+				print_fn(x_pos, y, keyStr);
+				x_pos += (strlen(keyStr) * 8) + 8;
+			}
+		}
+		else 
+		{
+			print_fn(x_pos, y, "???");
 		}
 
 		if (i == keysmenu.list.cursor) 
