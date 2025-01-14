@@ -157,7 +157,7 @@ static void IN_EndIgnoringMouseEvents(void)
 #endif
 
 #ifdef MACOS_X_ACCELERATION_HACK
-static cvar_t in_disablemacosxmouseaccel = {"in_disablemacosxmouseaccel", "1", CVAR_ARCHIVE};
+cvar_t in_disablemacosxmouseaccel = {"in_disablemacosxmouseaccel", "1", CVAR_ARCHIVE}; // woods - remove static
 static double originalMouseSpeed = -1.0;
 
 static io_connect_t IN_GetIOHandle(void)

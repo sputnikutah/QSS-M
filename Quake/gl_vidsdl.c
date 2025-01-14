@@ -169,7 +169,7 @@ static cvar_t	vid_height = {"vid_height", "600", CVAR_ARCHIVE};	// QuakeSpasm, w
 static cvar_t	vid_bpp = {"vid_bpp", "16", CVAR_ARCHIVE};
 static cvar_t	vid_refreshrate = {"vid_refreshrate", "60", CVAR_ARCHIVE};
 static cvar_t	vid_vsync = {"vid_vsync", "0", CVAR_ARCHIVE};
-static cvar_t	vid_fsaa = {"vid_fsaa", "0", CVAR_ARCHIVE}; // QuakeSpasm
+cvar_t	vid_fsaa = {"vid_fsaa", "0", CVAR_ARCHIVE}; // QuakeSpasm -- woods remove static
 static cvar_t	vid_desktopfullscreen = {"vid_desktopfullscreen", "0", CVAR_ARCHIVE}; // QuakeSpasm
 static cvar_t	vid_borderless = {"vid_borderless", "0", CVAR_ARCHIVE}; // QuakeSpasm
 //johnfitz
@@ -2028,9 +2028,12 @@ void VID_SyncCvars (void)
 
 //==========================================================================
 //
-//  NEW VIDEO MENU -- johnfitz
+//  NEW VIDEO MENU -- johnfitz -- woods (edited)
 //
 //==========================================================================
+
+extern cvar_t host_maxfps;
+static char fps_string[16];
 
 enum {
 	VID_OPT_MODE,
@@ -2038,10 +2041,20 @@ enum {
 	VID_OPT_REFRESHRATE,
 	VID_OPT_FULLSCREEN,
 	VID_OPT_VSYNC,
+	VID_OPT_FPSLIMIT,
 	VID_OPT_TEST,
 	VID_OPT_APPLY,
 	VIDEO_OPTIONS_ITEMS
 };
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} videomenu;
 
 static int	video_options_cursor = 0;
 
@@ -2305,6 +2318,81 @@ static void VID_Menu_ChooseNextRate (int dir)
 	Cvar_SetValue ("vid_refreshrate",(float)vid_menu_rates[i]);
 }
 
+static int numberOfVideoItems = VIDEO_OPTIONS_ITEMS;
+
+static const char* VID_Menu_GetItemText(int index)
+{
+	switch (index)
+	{
+	case VID_OPT_MODE:
+		return "Video Mode";
+	case VID_OPT_BPP:
+		return "Color Depth";
+	case VID_OPT_REFRESHRATE:
+		return "Refresh Rate";
+	case VID_OPT_FULLSCREEN:
+		return "Display Mode";
+	case VID_OPT_VSYNC:
+		return "Vertical Sync";
+	case VID_OPT_FPSLIMIT:
+		return "FPS Limit";
+	case VID_OPT_TEST:
+		return "Test Changes";
+	case VID_OPT_APPLY:
+		return "Apply Changes";
+	default:
+		return NULL;
+	}
+}
+
+typedef enum {
+	DISPLAYMODE_FULLSCREEN,
+	DISPLAYMODE_WINDOWED,
+	DISPLAYMODE_BORDERLESS
+} windowmode_t;
+
+static windowmode_t VID_Menu_CycleDisplayMode(qboolean cycle)
+{
+	windowmode_t current;
+
+	// Get current mode
+	if (vid_fullscreen.value)
+		current = DISPLAYMODE_FULLSCREEN;
+	else if (vid_borderless.value)
+		current = DISPLAYMODE_BORDERLESS;
+	else
+		current = DISPLAYMODE_WINDOWED;
+
+	if (cycle)
+	{
+		switch (current)
+		{
+		case DISPLAYMODE_FULLSCREEN:
+			// Fullscreen -> Windowed
+			Cvar_SetValueQuick(&vid_fullscreen, 0);
+			Cvar_SetValueQuick(&vid_borderless, 0);
+			current = DISPLAYMODE_WINDOWED;
+			break;
+
+		case DISPLAYMODE_WINDOWED:
+			// Windowed -> Borderless
+			Cvar_SetValueQuick(&vid_fullscreen, 0);
+			Cvar_SetValueQuick(&vid_borderless, 1);
+			current = DISPLAYMODE_BORDERLESS;
+			break;
+
+		case DISPLAYMODE_BORDERLESS:
+			// Borderless -> Fullscreen
+			Cvar_SetValueQuick(&vid_fullscreen, 1);
+			Cvar_SetValueQuick(&vid_borderless, 0);
+			current = DISPLAYMODE_FULLSCREEN;
+			break;
+		}
+	}
+
+	return current;
+}
+
 /*
 ================
 VID_MenuKey
@@ -2312,6 +2400,94 @@ VID_MenuKey
 */
 static void VID_MenuKey (int key)
 {
+	if (video_options_cursor == VID_OPT_FPSLIMIT)
+	{
+		if (key == K_BACKSPACE)
+		{
+			if (strlen(fps_string))
+				fps_string[strlen(fps_string) - 1] = 0;
+			return;
+		}
+
+		// Allow number input when on FPS field
+		if (key >= '0' && key <= '9')
+		{
+			int l = strlen(fps_string);
+			if (l < 4)  // Limit to 4 digits (9999)
+			{
+				fps_string[l + 1] = 0;
+				fps_string[l] = key;
+			}
+			return;
+		}
+	}
+
+	// Handle search functionality (only when not on FPS input)
+	if (video_options_cursor != VID_OPT_FPSLIMIT)
+	{
+		if (key == K_ESCAPE)
+		{
+			if (videomenu.search.len > 0)
+			{
+				videomenu.search.len = 0;
+				videomenu.search.text[0] = 0;
+				numberOfVideoItems = VIDEO_OPTIONS_ITEMS;
+				return;
+			}
+			VID_SyncCvars();
+			S_LocalSound("misc/menu1.wav");
+			M_Menu_Options_f();
+			return;
+		}
+		else if (key == K_BACKSPACE)
+		{
+			if (videomenu.search.len > 0)
+			{
+				videomenu.search.text[--videomenu.search.len] = 0;
+				if (videomenu.search.len > 0)
+				{
+					numberOfVideoItems = 0;
+					for (int i = 0; i < VIDEO_OPTIONS_ITEMS; i++)
+					{
+						const char* itemtext = VID_Menu_GetItemText(i);
+						if (itemtext && q_strcasestr(itemtext, videomenu.search.text))
+						{
+							numberOfVideoItems++;
+							if (numberOfVideoItems == 1)
+								video_options_cursor = i;
+						}
+					}
+				}
+				else
+				{
+					numberOfVideoItems = VIDEO_OPTIONS_ITEMS;
+				}
+				return;
+			}
+		}
+		else if (key >= 32 && key < 127)
+		{
+			if (videomenu.search.len < sizeof(videomenu.search.text) - 1)
+			{
+				videomenu.search.text[videomenu.search.len++] = key;
+				videomenu.search.text[videomenu.search.len] = 0;
+
+				numberOfVideoItems = 0;
+				for (int i = 0; i < VIDEO_OPTIONS_ITEMS; i++)
+				{
+					const char* itemtext = VID_Menu_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, videomenu.search.text))
+					{
+						numberOfVideoItems++;
+						if (numberOfVideoItems == 1)
+							video_options_cursor = i;
+					}
+				}
+				return;
+			}
+		}
+	}
+
 	switch (key)
 	{
 	case K_ESCAPE:
@@ -2325,6 +2501,15 @@ static void VID_MenuKey (int key)
 
 	case K_UPARROW:
 		S_LocalSound ("misc/menu1.wav");
+		if (video_options_cursor == VID_OPT_FPSLIMIT)
+		{
+			// When leaving field empty, set to 0
+			if (strlen(fps_string) == 0)
+			{
+				strcpy(fps_string, "0");
+				Cvar_SetValue("host_maxfps", 0);
+			}
+		}
 		video_options_cursor--;
 		if (video_options_cursor < 0)
 			video_options_cursor = VIDEO_OPTIONS_ITEMS-1;
@@ -2332,6 +2517,15 @@ static void VID_MenuKey (int key)
 
 	case K_DOWNARROW:
 		S_LocalSound ("misc/menu1.wav");
+		if (video_options_cursor == VID_OPT_FPSLIMIT)
+		{
+			// When leaving field empty, set to 0
+			if (strlen(fps_string) == 0)
+			{
+				strcpy(fps_string, "0");
+				Cvar_SetValue("host_maxfps", 0);
+			}
+		}
 		video_options_cursor++;
 		if (video_options_cursor >= VIDEO_OPTIONS_ITEMS)
 			video_options_cursor = 0;
@@ -2352,7 +2546,7 @@ static void VID_MenuKey (int key)
 			VID_Menu_ChooseNextRate (1);
 			break;
 		case VID_OPT_FULLSCREEN:
-			Cbuf_AddText ("toggle vid_fullscreen\n");
+			VID_Menu_CycleDisplayMode(true);  // Use the single helper function
 			break;
 		case VID_OPT_VSYNC:
 			Cbuf_AddText ("toggle vid_vsync\n"); // kristian
@@ -2377,13 +2571,31 @@ static void VID_MenuKey (int key)
 			VID_Menu_ChooseNextRate (-1);
 			break;
 		case VID_OPT_FULLSCREEN:
-			Cbuf_AddText ("toggle vid_fullscreen\n");
+			VID_Menu_CycleDisplayMode(true);  // Use the single helper function
 			break;
 		case VID_OPT_VSYNC:
 			Cbuf_AddText ("toggle vid_vsync\n");
 			break;
+		case VID_OPT_FPSLIMIT:
+		{
+			int value = host_maxfps.value + 10;
+			if (value > 1000) value = 1000;
+			Cvar_SetValue("host_maxfps", value);
+			break;
+		}
 		default:
 			break;
+		}
+		break;
+
+	case K_BACKSPACE:
+		if (video_options_cursor == VID_OPT_FPSLIMIT)
+		{
+			int value = host_maxfps.value / 10;
+			if (value == 0)
+				Cvar_SetValue("host_maxfps", 0);
+			else
+				Cvar_SetValue("host_maxfps", value * 10);
 		}
 		break;
 
@@ -2404,7 +2616,7 @@ static void VID_MenuKey (int key)
 			VID_Menu_ChooseNextRate (1);
 			break;
 		case VID_OPT_FULLSCREEN:
-			Cbuf_AddText ("toggle vid_fullscreen\n");
+			VID_Menu_CycleDisplayMode(true);  // Use the single helper function
 			break;
 		case VID_OPT_VSYNC:
 			Cbuf_AddText ("toggle vid_vsync\n");
@@ -2418,6 +2630,13 @@ static void VID_MenuKey (int key)
 			m_state = m_none;
 			IN_UpdateGrabs();
 			break;
+		case VID_OPT_FPSLIMIT:
+		{
+			int value = host_maxfps.value + 10;
+			if (value > 1000) value = 0;  // cycle back to unlimited
+			Cvar_SetValue("host_maxfps", value);
+			break;
+		}
 		default:
 			break;
 		}
@@ -2428,6 +2647,33 @@ static void VID_MenuKey (int key)
 	}
 }
 
+
+qboolean VID_Menu_TextEntry(void)
+{
+	return (video_options_cursor == VID_OPT_FPSLIMIT);
+}
+
+void VID_Menu_Char(int key)
+{
+	if (video_options_cursor == VID_OPT_FPSLIMIT)
+	{
+		if (key >= '0' && key <= '9')
+		{
+			int l = strlen(fps_string);
+			if (l < 4)  // Limit to 4 digits
+			{
+				fps_string[l + 1] = 0;
+				fps_string[l] = key;
+
+				// Update cvar immediately
+				int value = atoi(fps_string);
+				if (value > 1000) value = 1000;
+				Cvar_SetValue("host_maxfps", value);
+			}
+		}
+	}
+}
+
 /*
 ================
 VID_MenuMouse -- woods #mousemenu (iw)
@@ -2435,14 +2681,28 @@ VID_MenuMouse -- woods #mousemenu (iw)
 */
 static void VID_MenuMouse(int cx, int cy)
 {
-	int cursor = (cy - 48) / 8;
-	// Handle the visual gap between the last option and "Test changes"
-	if (cursor > VID_OPT_TEST)
-		--cursor; // past the gap, correct the index
-	else if (cursor == VID_OPT_TEST)
-		return; // inside the gap, do nothing
-	cursor = CLAMP(0, cursor, VIDEO_OPTIONS_ITEMS);
-	video_options_cursor = cursor;
+    int cursor = (cy - 48) / 8;
+    
+    // Adjust for gaps
+    if (cursor > 4)  // After vsync
+        cursor--;
+    if (cursor > 6)  // Before test
+        cursor--;
+        
+    // Prevent selecting gaps
+    if (cursor < 0 || cursor >= VIDEO_OPTIONS_ITEMS)
+        return;
+        
+    if (video_options_cursor == VID_OPT_FPSLIMIT && cursor != VID_OPT_FPSLIMIT)
+    {
+        if (strlen(fps_string) == 0)
+        {
+            strcpy(fps_string, "0");
+            Cvar_SetValue("host_maxfps", 0);
+        }
+    }
+
+    video_options_cursor = cursor;
 }
 
 /*
@@ -2462,7 +2722,6 @@ static void VID_MenuDraw (void)
 	p = Draw_CachePic ("gfx/qplaque.lmp");
 	M_DrawTransPic (16, y, p);
 
-	//p = Draw_CachePic ("gfx/vidmodes.lmp");
 	p = Draw_CachePic ("gfx/p_option.lmp");
 	M_DrawPic ( (320-p->width)/2, y, p);
 
@@ -2477,44 +2736,146 @@ static void VID_MenuDraw (void)
 	// options
 	for (i = 0; i < VIDEO_OPTIONS_ITEMS; i++)
 	{
+		const char* text = NULL;
+		const char* value = NULL;
+
 		switch (i)
 		{
 		case VID_OPT_MODE:
-			M_Print (16, y, "        Video mode");
-			M_Print (184, y, va("%ix%i", (int)vid_width.value, (int)vid_height.value));
+			text = "        Video mode";
+			value = va("%ix%i", (int)vid_width.value, (int)vid_height.value);
 			break;
+
 		case VID_OPT_BPP:
-			M_Print (16, y, "       Color depth");
-			M_Print (184, y, va("%i", (int)vid_bpp.value));
+			text = "       Color depth";
+			value = va("%i", (int)vid_bpp.value);
 			break;
+
 		case VID_OPT_REFRESHRATE:
-			M_Print (16, y, "      Refresh rate");
-			M_Print (184, y, va("%i", (int)vid_refreshrate.value));
+			text = "      Refresh rate";
+			value = va("%i", (int)vid_refreshrate.value);
 			break;
+
 		case VID_OPT_FULLSCREEN:
-			M_Print (16, y, "        Fullscreen");
-			M_DrawCheckbox (184, y, (int)vid_fullscreen.value);
+			text = "      Display Mode";
+			switch (VID_Menu_CycleDisplayMode(false))
+			{
+			case DISPLAYMODE_FULLSCREEN:
+				value = "Fullscreen";
+				break;
+			case DISPLAYMODE_WINDOWED:
+				value = "Windowed";
+				break;
+			case DISPLAYMODE_BORDERLESS:
+				value = "Borderless";
+				break;
+			}
 			break;
+
 		case VID_OPT_VSYNC:
-			M_Print (16, y, "     Vertical sync");
+			text = "     Vertical sync";
 			if (gl_swap_control)
-				M_DrawCheckbox (184, y, (int)vid_vsync.value);
+				value = vid_vsync.value ? "on" : "off";
 			else
-				M_Print (184, y, "N/A");
+				value = "N/A";
 			break;
+
+		case VID_OPT_FPSLIMIT:
+			y += 8;
+			text = "         FPS Limit";
+			break;
+
 		case VID_OPT_TEST:
 			y += 8; //separate the test and apply items
-			M_Print (16, y, "      Test changes");
+			text = "      Test changes";
 			break;
+
 		case VID_OPT_APPLY:
-			M_Print (16, y, "     Apply changes");
+			text = "     Apply changes";
 			break;
 		}
 
+		if (text)
+		{
+			// Check if this item matches the search
+			if (videomenu.search.len > 0)
+			{
+				const char* itemtext = VID_Menu_GetItemText(i);
+				if (itemtext && q_strcasestr(itemtext, videomenu.search.text))
+				{
+					M_PrintHighlight(16, y, text, videomenu.search.text, videomenu.search.len);
+				}
+				else
+				{
+					M_Print(16, y, text);
+				}
+			}
+			else
+			{
+				M_Print(16, y, text);
+			}
+
+			// Draw the value portion
+			if (i == VID_OPT_FPSLIMIT)
+			{
+				M_DrawTextBox(180, y - 8, 5, 1);  // Box will now be properly spaced
+
+				if (video_options_cursor == VID_OPT_FPSLIMIT)
+				{
+					// Show what user is typing
+					M_Print(188, y, fps_string);
+					M_DrawCharacter(188 + 8 * strlen(fps_string), y, 10 + ((int)(realtime * 4) & 1));
+				}
+				else
+				{
+					// When cursor is elsewhere, show current value
+					if (strlen(fps_string) == 0)
+					{
+						M_Print(188, y, "0");
+					}
+					else
+					{
+						M_Print(188, y, fps_string);
+					}
+				}
+
+				// Show "off" if current string is empty or "0"
+				if (strlen(fps_string) == 0 || atoi(fps_string) == 0)
+				{
+					M_Print(242, y, "off");
+				}
+			}
+			else if (i == VID_OPT_VSYNC && gl_swap_control)
+			{
+				M_DrawCheckbox(184, y, (int)vid_vsync.value);
+			}
+			else if (value)
+			{
+				M_Print(184, y, value);
+			}
+		}
+
+		// Draw the cursor if this is the currently selected item
 		if (video_options_cursor == i)
-			M_DrawCharacter (168, y, 12+((int)(realtime*4)&1));
+		{
+			M_DrawCharacter(172, y, 12 + ((int)(realtime * 4) & 1));
+		}
 
 		y += 8;
+	}
+
+	// Draw search box if search is active
+	if (videomenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 170, 32, 1);
+		M_PrintHighlight(24, 178, videomenu.search.text,
+			videomenu.search.text,
+			videomenu.search.len);
+		int cursor_x = 24 + 8 * videomenu.search.len;
+		if (numberOfVideoItems == 0)
+			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
 	}
 }
 
@@ -2528,7 +2889,13 @@ static void VID_Menu_f (void)
 	key_dest = key_menu;
 	m_state = m_video;
 	m_entersound = true;
+	video_options_cursor = 0;
+	videomenu.cursor = 0;
+	videomenu.search.len = 0;
+	videomenu.search.text[0] = 0;
 	IN_UpdateGrabs();
+
+	q_snprintf(fps_string, sizeof(fps_string), "%d", (int)host_maxfps.value);
 
 	//set all the cvars to match the current mode when entering the menu
 	VID_SyncCvars ();

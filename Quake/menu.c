@@ -47,7 +47,7 @@ void M_Menu_Main_f (void);
 		void M_Menu_Skill_f(void);
 	void M_Menu_MultiPlayer_f (void);
 		void M_Menu_Setup_f (void);
-	void M_Menu_NameMaker_f(void); // woods #namemaker
+		void M_Menu_NameMaker_f(void); // woods #namemaker
 		void M_Menu_Net_f (void);
 		void M_Menu_LanConfig_f (void);
 		void M_Menu_GameOptions_f (void);
@@ -58,8 +58,15 @@ void M_Menu_Main_f (void);
 		void M_Menu_Bookmarks_Edit_f(void); // woods #bookmarksmenu
 	void M_Menu_Options_f (void);
 		void M_Menu_Keys_f (void);
-		void M_Menu_Extras_f (void);
+		void M_Menu_Mouse_f (void);
 		void M_Menu_Video_f (void);
+		void M_Menu_Graphics_f (void);
+		void M_Menu_Sound_f (void);
+		void M_Menu_Game_f (void);
+		void M_Menu_HUD_f (void);
+			void M_Menu_Crosshair_f (void);
+		void M_Menu_Console_f (void);
+		void M_Menu_Extras_f (void);
 	void M_Menu_Mods_f(void); // woods #modsmenu (iw)
 	void M_Menu_Demos_f (void); // woods #demosmenu
 	void M_Menu_Help_f (void);
@@ -73,7 +80,7 @@ void M_Main_Draw (void);
 		void M_Skill_Draw (void);
 	void M_MultiPlayer_Draw (void);
 		void M_Setup_Draw (void);
-void M_NameMaker_Draw(void); // woods #namemaker
+		void M_NameMaker_Draw(void); // woods #namemaker
 		void M_Net_Draw (void);
 		void M_LanConfig_Draw (void);
 		void M_GameOptions_Draw (void);
@@ -84,7 +91,15 @@ void M_NameMaker_Draw(void); // woods #namemaker
 		void M_Bookmarks_Edit_Draw(void); // woods #bookmarksmenu
 	void M_Options_Draw (void);
 		void M_Keys_Draw (void);
+		void M_Mouse_Draw (void);
 		void M_Video_Draw (void);
+		void M_Graphics_Draw (void);
+		void M_Sound_Draw (void);
+		void M_Game_Draw (void);
+		void M_HUD_Draw (void);
+		void M_Extras_Draw (void);
+			void M_Crosshair_Draw (void);
+		void M_Console_Draw (void);
 	void M_Mods_Draw(void); // woods #modsmenu (iw)
 	void M_Demos_Draw (void); // woods #demosmenu
 	void M_Help_Draw (void);
@@ -108,8 +123,16 @@ void M_Main_Key (int key);
 		void M_Bookmarks_Edit_Key(int key); // woods #bookmarksmenu
 	void M_Options_Key (int key);
 		void M_Keys_Key (int key);
-	void M_Mods_Key(int key);
+		void M_Mouse_Key (int key);
 		void M_Video_Key (int key);
+		void M_Graphics_Key (int key);
+		void M_Sound_Key (int key);
+		void M_Game_Key (int key);
+		void M_HUD_Key (int key);
+		void M_Extras_Key (int key);
+			void M_Crosshair_Key (int key);
+		void M_Console_Key (int key);
+	void M_Mods_Key (int key);
 	void M_Help_Key (int key);
 	void M_Quit_Key (int key);
 	void M_NameMaker_Key(int key); // woods #namemaker
@@ -118,25 +141,32 @@ void M_Main_Key (int key);
 	
 	void M_Main_Mousemove(int cx, int cy);
 	void M_SinglePlayer_Mousemove(int cx, int cy);
-	void M_Load_Mousemove(int cx, int cy);
-	void M_Save_Mousemove(int cx, int cy);
-	void M_Maps_Mousemove(int cx, int cy);
-	void M_Skill_Mousemove(int cx, int cy);
+		void M_Load_Mousemove(int cx, int cy);
+		void M_Save_Mousemove(int cx, int cy);
+		void M_Maps_Mousemove(int cx, int cy);
+			void M_Skill_Mousemove(int cx, int cy);
 	void M_MultiPlayer_Mousemove(int cx, int cy);
-	void M_Setup_Mousemove(int cx, int cy);
-	void M_NameMaker_Mousemove(int cx, int cy);
-	void M_Net_Mousemove(int cx, int cy);
-	void M_LanConfig_Mousemove(int cx, int cy);
-	void M_GameOptions_Mousemove(int cx, int cy);
-	//void M_Search_Mousemove (int cx, int cy);
-	void M_ServerList_Mousemove(int cx, int cy);
-	void M_History_Mousemove(int cx, int cy); // woods #historymenu
-	void M_Bookmarks_Mousemove(int cx, int cy); // woods #bookmarksmenu
-	void M_Bookmarks_Edit_Mousemove(int cx, int cy); // woods #bookmarksmenu
+		void M_Setup_Mousemove(int cx, int cy);
+		void M_NameMaker_Mousemove(int cx, int cy);
+		void M_Net_Mousemove(int cx, int cy);
+		void M_LanConfig_Mousemove(int cx, int cy);
+		void M_GameOptions_Mousemove(int cx, int cy);
+		//void M_Search_Mousemove (int cx, int cy);
+		void M_ServerList_Mousemove(int cx, int cy);
+		void M_History_Mousemove(int cx, int cy); // woods #historymenu
+		void M_Bookmarks_Mousemove(int cx, int cy); // woods #bookmarksmenu
+		void M_Bookmarks_Edit_Mousemove(int cx, int cy); // woods #bookmarksmenu
 	void M_Options_Mousemove(int cx, int cy);
-	void M_Keys_Mousemove(int cx, int cy);
-	void M_Video_Mousemove (int cx, int cy);
-	void M_Extras_Mousemove(int cx, int cy);
+		void M_Keys_Mousemove(int cx, int cy);
+		void M_Mouse_Mousemove (int cx, int cy);
+		void M_Video_Mousemove (int cx, int cy);
+		void M_Graphics_Mousemove (int cx, int cy);
+		void M_Sound_Mousemove (int cx, int cy);
+		void M_Game_Mousemove (int cx, int cy);
+		void M_HUD_Mousemove (int cx, int cy);
+			void M_Crosshair_Mousemove (int cx, int cy);
+		void M_Console_Mousemove (int cx, int cy);
+		void M_Extras_Mousemove(int cx, int cy);
 	//void M_Gamepad_Mousemove (int cx, int cy);
 	void M_Mods_Mousemove(int cx, int cy);
 	void M_Demos_Mousemove(int cx, int cy);
@@ -196,11 +226,14 @@ void M_DrawCharacterRGBA (int cx, int line, int num, plcolour_t c, float alpha) 
 	Draw_CharacterRGBA (cx, line, num, c, alpha);
 }
 
-void M_PrintRGBA (int cx, int cy, const char* str, plcolour_t c, float alpha) // woods
+void M_PrintRGBA (int cx, int cy, const char* str, plcolour_t c, float alpha, qboolean mask) // woods
 {
 	while (*str)
 	{
-		M_DrawCharacterRGBA (cx, cy, (*str), c, alpha);
+		if (mask)
+			M_DrawCharacterRGBA(cx, cy, (*str) + 128, c, alpha);  // Add 128 for masked version
+		else
+			M_DrawCharacterRGBA(cx, cy, (*str), c, alpha);
 		str++;
 		cx += 8;
 	}
@@ -499,192 +532,181 @@ void M_PrintScroll(int x, int y, int maxwidth, const char* str, double time, qbo
 	}
 }
 
-void M_PrintScroll2(int x, int y, int maxwidth, const char* str, const char* str2, double time) // woods
+void M_PrintScroll2(int x, int y, int maxwidth, const char* str, const char* str2, double time)
 {
 	int maxchars = maxwidth / 8;
-	char masked_str[13];
-	int len_str = strlen(str);
-	int effective_len_str = len_str > 12 ? 12: len_str; // Determine the effective length after potential truncation
+	int len_str = (int)strlen(str);
 
-	for (int i = 0; i < effective_len_str; ++i) {
-		masked_str[i] = str[i] ^ 128;
-	}
+	// Determine effective name length based on scroll state
+	int effective_len_str = (time != 0.0) ? len_str : q_min(len_str, 12);
+
+	// Create masked version of name
+	char masked_str[MAX_QPATH];
+	for (int i = 0; i < effective_len_str; i++)
+		masked_str[i] = (char)(str[i] ^ 128);
 	masked_str[effective_len_str] = '\0';
 
-	int padding_width = max_word_length + 1; // Add one space after 'str'
-	if (padding_width > 13) 
-		padding_width = 13;
+	// Calculate padding width (capped at 13)
+	int padding_width = q_min(max_word_length + 1, 13);
 
+	// Build combined string
 	char combined[MAX_CHAT_SIZE_EX];
+	if (time != 0.0 && len_str > 12)
+		q_snprintf(combined, sizeof(combined), "%-*s %s", padding_width, masked_str, str2);
+	else
+		q_snprintf(combined, sizeof(combined), "%-*s%s", padding_width, masked_str, str2);
 
-	snprintf(combined, sizeof(combined), "%-*s%s", padding_width, masked_str, str2);
+	int combined_len = (int)strlen(combined);
 
-	int combined_len = strlen(combined);
-
-	if (combined_len <= maxchars) 
-	{
+	// Non-scrolling display if text fits
+	if (combined_len <= maxchars) {
 		M_PrintWhite(x, y, combined);
 		return;
 	}
 
-	int ofs = (int)floor(time * 4.0) % (combined_len + 5);
+	// Scrolling display
+	static const char gap[] = " /// ";
+	int scroll_len = combined_len + 5;
+	int ofs = ((int)(time * 4.0)) % scroll_len;
 	if (ofs < 0)
-		ofs += combined_len + 5;
+		ofs += scroll_len;
 
+	// Draw scrolling text
 	for (int i = 0; i < maxchars; i++) {
-		char c = (ofs < combined_len) ? combined[ofs] : " /// "[ofs - combined_len];
+		char c;
+		if (ofs < combined_len)
+			c = combined[ofs];
+		else
+			c = gap[ofs - combined_len];
+
 		M_DrawCharacter(x + (i * 8), y, c);
-		if (++ofs >= combined_len + 5)
-			ofs = 0;
+		ofs = (ofs + 1) % scroll_len;
 	}
 }
 
-void M_PrintHighlightScroll2(int x, int y, int maxwidth, const char* str, const char* str2, const char* highlight, double time)
+void M_PrintHighlightScroll2(int x, int y, int maxwidth,
+	const char* str, const char* str2,
+	const char* highlight, double time)
 {
-    int maxchars = maxwidth / 8;
-    int len_str = strlen(str);
-    int effective_len_str = len_str > 12 ? 12 : len_str;
+	// How many visible characters fit on one line
+	int maxchars = maxwidth / 8;
 
-    // Copy the original string without masking
-    char name_str[13];
-	strncpy(name_str, str, sizeof(name_str) - 1);
-	name_str[sizeof(name_str) - 1] = '\0';
+	// Safe string handling for name portion
+	char name_str[256];
+	int len_str = (int)strlen(str);
+	int effective_len_str = (time != 0.0) ? len_str : (len_str > 12 ? 12 : len_str);
 
-    int padding_width = max_word_length + 1;
-    if (padding_width > 13)
-        padding_width = 13;
+	// Safely copy the name portion
+	q_strlcpy(name_str, str, sizeof(name_str));
+	if (effective_len_str < len_str)
+		name_str[effective_len_str] = '\0';
 
-    // Keep the padding when creating the combined string
-    char combined[MAX_CHAT_SIZE_EX];
-    snprintf(combined, sizeof(combined), "%-*s%s", padding_width, name_str, str2);
+	// Build the name portion with proper padding
+	char name_portion[256];
+	if (time != 0.0 && len_str > 12)
+		q_snprintf(name_portion, sizeof(name_portion), "%s ", name_str);
+	else {
+		int padding_width = max_word_length + 1;
+		if (padding_width > 13)
+			padding_width = 13;
+		q_snprintf(name_portion, sizeof(name_portion), "%-*s", padding_width, name_str);
+	}
 
-    int combined_len = strlen(combined);
-    int name_end = padding_width;  // Position where name part ends in combined
+	// Build combined string
+	char combined[1024];
+	q_snprintf(combined, sizeof(combined), "%s%s", name_portion, str2);
 
-    // Compute highlight positions in the name
-    int name_highlight_start = -1, name_highlight_end = -1;
-    const char* name_match = q_strcasestr(name_str, highlight);
-    if (name_match && highlight[0])
-    {
-        name_highlight_start = name_match - name_str;
-        name_highlight_end = name_highlight_start + strlen(highlight);
-        if (name_highlight_end > effective_len_str)
-            name_highlight_end = effective_len_str;
-    }
+	int actual_name_len = (int)strlen(name_portion);
+	int combined_len = (int)strlen(combined);
+	int name_end = actual_name_len;
 
-    // Compute highlight positions in the desc
-    int desc_highlight_start = -1, desc_highlight_end = -1;
-    const char* desc_match = q_strcasestr(str2, highlight);
-    if (desc_match && highlight[0])
-    {
-		desc_highlight_start = desc_match - str2;
-		desc_highlight_end = desc_highlight_start + strlen(highlight);
-        int len_str2 = strlen(str2);
-        if (desc_highlight_end > len_str2)
-			desc_highlight_end = len_str2;
-    }
+	// Find highlight positions
+	int name_highlight_start = -1, name_highlight_end = -1;
+	if (highlight && highlight[0]) {
+		const char* nm = q_strcasestr(name_str, highlight);
+		if (nm) {
+			name_highlight_start = (int)(nm - name_str);
+			name_highlight_end = name_highlight_start + (int)strlen(highlight);
+			if (name_highlight_end > effective_len_str)
+				name_highlight_end = effective_len_str;
+		}
+	}
 
-    if (combined_len <= maxchars) // Non-scrolling case
-    {
-        for (int i = 0; i < padding_width; i++) // Draw name with padding
-        {
-            qboolean is_highlighted = false;
+	int desc_highlight_start = -1, desc_highlight_end = -1;
+	if (highlight && highlight[0]) {
+		const char* dm = q_strcasestr(str2, highlight);
+		if (dm) {
+			desc_highlight_start = (int)(dm - str2);
+			desc_highlight_end = desc_highlight_start + (int)strlen(highlight);
+			if (desc_highlight_end > (int)strlen(str2))
+				desc_highlight_end = (int)strlen(str2);
+		}
+	}
 
-            if (i < effective_len_str)
-            {
-                int name_pos = i;
+	// Non-scrolling display if text fits
+	if (combined_len <= maxchars) {
+		// Draw name portion
+		for (int i = 0; i < actual_name_len; i++) {
+			char ch = combined[i];
+			qboolean is_highlighted = (i < effective_len_str &&
+				name_highlight_start != -1 &&
+				i >= name_highlight_start &&
+				i < name_highlight_end);
+			qboolean is_bronzed = (i < effective_len_str) || (time == 0.0);
 
-                if (name_highlight_start != -1 &&
-                    name_pos >= name_highlight_start && name_pos < name_highlight_end)
-                    is_highlighted = true;
+			M_DrawCharacter(x + i * 8, y, ch | (is_highlighted ? 0 : (is_bronzed ? 128 : 0)));
+		}
 
-                char ch = name_str[i];
+		// Draw description portion
+		int desc_x = x + actual_name_len * 8;
+		for (int i = 0; i < (int)strlen(str2); i++) {
+			char ch = str2[i];
+			qboolean is_highlighted = (desc_highlight_start != -1 &&
+				i >= desc_highlight_start &&
+				i < desc_highlight_end);
 
-                if (is_highlighted)
-                    M_DrawCharacter(x + i * 8, y, ch & 127); // Draw character in white (unmasked)
-                else
-                    M_DrawCharacter(x + i * 8, y, ch | 128); // Apply bronze effect
-            }
-            else
-                M_DrawCharacter(x + i * 8, y, ' ' | 128); // Draw padding spaces with bronze effect
-        }
+			M_DrawCharacter(desc_x + i * 8, y, ch | (is_highlighted ? 128 : 0));
+		}
+		return;
+	}
 
-        int desc_x = x + padding_width * 8; // Draw desc
-        int len_str2 = strlen(str2);
-        for (int i = 0; i < len_str2; i++)
-        {
-            qboolean is_highlighted = false;
-            int desc_pos = i;
+	// Scrolling display
+	int scroll_len = combined_len + 5;
+	int ofs = ((int)(time * 4.0)) % scroll_len;
+	if (ofs < 0)
+		ofs += scroll_len;
 
-            if (desc_highlight_start != -1 &&
-				desc_pos >= desc_highlight_start && desc_pos < desc_highlight_end)
-            {
-                is_highlighted = true;
-            }
+	for (int i = 0; i < maxchars; i++) {
+		int pos = (ofs + i) % scroll_len;
+		if (pos >= combined_len) {
+			M_DrawCharacter(x + i * 8, y, ' ' | 128);
+			continue;
+		}
 
-            char ch = str2[i];
+		char ch = combined[pos];
+		qboolean is_highlighted = false;
+		qboolean is_bronzed = false;
 
-            if (is_highlighted)
-                M_DrawCharacter(desc_x + i * 8, y, ch | 128); // Apply highlight (e.g., set high bit)
-            else
-                M_DrawCharacter(desc_x + i * 8, y, ch & 127); // Draw character normally
-        }
-        return;
-    }
+		if (pos < name_end) {
+			if (pos < effective_len_str) {
+				is_highlighted = (name_highlight_start != -1 &&
+					pos >= name_highlight_start &&
+					pos < name_highlight_end);
+				is_bronzed = !is_highlighted;
+			}
+			else {
+				is_bronzed = true;
+			}
+		}
+		else {
+			int desc_pos = pos - name_end;
+			is_highlighted = (desc_highlight_start != -1 &&
+				desc_pos >= desc_highlight_start &&
+				desc_pos < desc_highlight_end);
+		}
 
-    int scroll_len = combined_len + 5;  // Handle scrolling text, extra spaces for scrolling
-    int ofs = ((int)(time * 4.0)) % scroll_len;
-    if (ofs < 0)
-        ofs += scroll_len;
-
-    for (int i = 0; i < maxchars; i++)
-    {
-        int pos_in_combined = (ofs + i) % scroll_len;
-
-        if (pos_in_combined >= combined_len) // Display scrolling spaces after the text
-        {
-            char scroll_chars[] = "     "; // 5 spaces for scrolling
-            M_DrawCharacter(x + i * 8, y, scroll_chars[pos_in_combined - combined_len] | 128);
-        }
-        else
-        {
-            char ch = combined[pos_in_combined];
-
-            qboolean is_highlighted = false;
-            qboolean is_bronzed = false;
-
-            if (pos_in_combined < name_end)
-            {
-                // In name section
-                int name_pos = pos_in_combined;
-
-                // Check if this character is within the highlight in the name
-                if (name_highlight_start != -1 &&
-                    name_pos >= name_highlight_start && name_pos < name_highlight_end)
-                    is_highlighted = true;
-                else if (name_pos >= effective_len_str)
-                    is_bronzed = true; // Padding spaces in the name section
-                else
-                    is_bronzed = true;
-            }
-            else
-            {
-                int desc_pos = pos_in_combined - name_end; // In desc section
-
-                // Check if this character is within the highlight in the desc
-                if (desc_highlight_start != -1 &&
-					desc_pos >= desc_highlight_start && desc_pos < desc_highlight_end)
-                    is_highlighted = true;
-            }
-
-            if (is_highlighted) // Apply the effects when drawing
-                M_DrawCharacter(x + i * 8, y, ch & 127); // Draw character with highlight (e.g., set high bit)
-            else if (is_bronzed)
-                M_DrawCharacter(x + i * 8, y, ch | 128); // Apply bronze effect
-            else
-                M_DrawCharacter(x + i * 8, y, ch & 127); // Draw character normally
-        }
-    }
+		M_DrawCharacter(x + i * 8, y, ch | (is_highlighted ? 0 : (is_bronzed ? 128 : 0)));
+	}
 }
 
 void M_PrintHighlightScroll(int x, int y, int maxwidth, const char* str, const char* highlight, double time)
@@ -1169,8 +1191,11 @@ void M_List_Mousemove(menulist_t* list, int yrel)
 int m_save_demonum;
 
 
-//=============================================================================
-/* MAIN MENU */
+/*
+==================
+Main Menu
+==================
+*/
 
 int	m_main_cursor;
 int m_main_mods; // woods #modsmenu (iw)
@@ -1431,8 +1456,11 @@ void M_Main_Mousemove(int cx, int cy) // woods #mousemenu
 		++m_main_cursor;
 }
 
-//=============================================================================
-/* SINGLE PLAYER MENU */
+/*
+==================
+Singleplayer Menu
+==================
+*/
 
 qboolean m_singleplayer_showlevels;
 int	m_singleplayer_cursor;
@@ -1597,8 +1625,11 @@ void M_SinglePlayer_Mousemove(int cx, int cy) // woods #mousemenu
 	M_UpdateCursor(cy, 32, 20, SINGLEPLAYER_ITEMS, &m_singleplayer_cursor);
 }
 
-//=============================================================================
-/* LOAD/SAVE MENU */
+/*
+==================
+Load/Save Menu
+==================
+*/
 
 int		load_cursor;		// 0 < load_cursor < MAX_SAVEGAMES
 
@@ -1795,14 +1826,11 @@ void M_Save_Mousemove(int cx, int cy) // woods #mousemenu
 	M_UpdateCursor(cy, 32, 8, MAX_SAVEGAMES, &load_cursor);
 }
 
-
-
-
-// ============================================================================
-
-// woods #mapsmenu (iw)
-
-/* maps menu */
+/*
+==================
+Maps Menu (iw)
+==================
+*/
 
 #define MAX_VIS_MAPS	17
 
@@ -2112,9 +2140,11 @@ void M_Maps_Mousemove(int cx, int cy)
 	M_List_Mousemove(&mapsmenu.list, cy);
 }
 
-//=============================================================================
-/* SKILL MENU */ 
-// woods #skillmenu (iw)
+/*
+==================
+Skill Menu (iw)
+==================
+*/
 
 int				m_skill_cursor;
 qboolean		m_skill_usegfx;
@@ -2289,8 +2319,11 @@ void M_Skill_Mousemove(int cx, int cy)
 
 }
 
-//=============================================================================
-/* MULTIPLAYER MENU */
+/*
+==================
+Multiplayer Menu
+==================
+*/
 
 int	m_multiplayer_cursor;
 #define	MULTIPLAYER_ITEMS	3
@@ -2333,7 +2366,7 @@ void M_MultiPlayer_Draw (void)
 		M_Print(f, 104, "currently connected to:");
 
 		if (realtime - cl.last_received_message > scr_shownet.value)
-			M_PrintRGBA(f, 112, lastmphost, CL_PLColours_Parse("0xffffff"), 0.2f);
+			M_PrintRGBA(f, 112, lastmphost, CL_PLColours_Parse("0xffffff"), 0.2f, false);
 		else
 			M_PrintWhite(f, 112, lastmphost);
 	}
@@ -2414,8 +2447,11 @@ void M_MultiPlayer_Mousemove(int cx, int cy) // woods #mousemenu
 	M_UpdateCursor(cy, 32, 20, MULTIPLAYER_ITEMS, &m_multiplayer_cursor);
 }
 
-//=============================================================================
-/* SETUP MENU */
+/*
+==================
+Setup Menu
+==================
+*/
 
 static int		setup_cursor = 5; // woods 4 to 5 #
 
@@ -2648,7 +2684,7 @@ void M_Setup_Draw (void)
 	M_DrawColorBar_Bot (64, 118, atoi(CL_PLColours_ToString (setup_bottom))); // woods #colorbar
 
 	if (!rgbactive && (setup_cursor == 3 || setup_cursor == 4)) // woods
-		M_PrintRGBA (64, 170, "+shift for RGB colors", CL_PLColours_Parse ("0xffffff"), 0.6f); // woods
+		M_PrintRGBA (64, 170, "+shift for RGB colors", CL_PLColours_Parse ("0xffffff"), 0.6f, false); // woods
 
 	M_DrawTextBox (64, 142, 14, 1);  // woods 140 to 152 #namemaker
 	M_Print (72, 150, "Accept Changes"); // woods #colorbar
@@ -2716,7 +2752,7 @@ void M_Setup_Key (int k)
 		if (setup_cursor == 3) // 2 to 3 woods #namemaker
 		{
 			M_AdjustColour(&setup_top, -1);
-			strncpy(lastColorSelected, CL_PLColours_ToString(setup_top), sizeof((CL_PLColours_ToString(setup_top))));
+			q_strlcpy (lastColorSelected, CL_PLColours_ToString(setup_top), sizeof(lastColorSelected));
 			if (chase_active.value && !cls.demoplayback && host_initialized && !flyme) // woods #3rdperson
 				if (!CL_PLColours_Equals(setup_top, setup_oldtop) || !CL_PLColours_Equals(setup_bottom, setup_oldbottom))
 				{
@@ -2727,7 +2763,7 @@ void M_Setup_Key (int k)
 		if (setup_cursor == 4) // 3 to 4 woods #namemaker
 		{
 			M_AdjustColour(&setup_bottom, -1);
-			strncpy(lastColorSelected, CL_PLColours_ToString(setup_bottom), sizeof((CL_PLColours_ToString(setup_bottom))));
+			q_strlcpy (lastColorSelected, CL_PLColours_ToString(setup_bottom), sizeof(lastColorSelected));
 			if (chase_active.value && !cls.demoplayback && host_initialized && !flyme) // woods #3rdperson
 				if (!CL_PLColours_Equals(setup_top, setup_oldtop) || !CL_PLColours_Equals(setup_bottom, setup_oldbottom))
 				{
@@ -2745,7 +2781,7 @@ void M_Setup_Key (int k)
 		if (setup_cursor == 3) // 2 to 3 woods #namemaker
 		{
 			M_AdjustColour(&setup_top, +1);
-			strncpy (lastColorSelected, CL_PLColours_ToString (setup_top), sizeof ((CL_PLColours_ToString (setup_top))));
+			q_strlcpy (lastColorSelected, CL_PLColours_ToString(setup_top), sizeof(lastColorSelected));
 			if (chase_active.value && !cls.demoplayback && host_initialized && !flyme) // woods #3rdperson
 				if (!CL_PLColours_Equals(setup_top, setup_oldtop) || !CL_PLColours_Equals(setup_bottom, setup_oldbottom))
 				{
@@ -2756,7 +2792,7 @@ void M_Setup_Key (int k)
 		if (setup_cursor == 4) // 3 to 4 woods #namemaker
 		{
 			M_AdjustColour(&setup_bottom, +1);
-			strncpy (lastColorSelected, CL_PLColours_ToString (setup_bottom), sizeof ((CL_PLColours_ToString (setup_bottom))));
+			q_strlcpy (lastColorSelected, CL_PLColours_ToString(setup_bottom), sizeof(lastColorSelected));
 			if (chase_active.value && !cls.demoplayback && host_initialized && !flyme) // woods #3rdperson
 				if (!CL_PLColours_Equals(setup_top, setup_oldtop) || !CL_PLColours_Equals(setup_bottom, setup_oldbottom))
 				{
@@ -2867,9 +2903,12 @@ void M_Setup_Mousemove(int cx, int cy) // woods #mousemenu
 	M_UpdateCursorWithTable(cy, setup_cursor_table, NUM_SETUP_CMDS, &setup_cursor);
 }
 
-//=============================================================================
-/* NAME MAKER MENU */ // woods #namemaker from joequake, qrack
-//=============================================================================
+/*
+=============================================================
+Name Maker Menu #namemaker from joequake, qrack
+=============================================================
+*/
+
 int	namemaker_cursor_x, namemaker_cursor_y;
 #define	NAMEMAKER_TABLE_SIZE	16
 #define NAMEMAKER_TOTAL_ROWS (NAMEMAKER_TABLE_SIZE + 1) // Added to include the new row
@@ -3086,8 +3125,11 @@ void M_NameMaker_Mousemove(int cx, int cy) // woods #mousemenu
 	namemaker_cursor_y = temp_cursor_y;
 }
 
-//=============================================================================
-/* NET MENU */
+/*
+==================
+Net Menu
+==================
+*/
 
 int	m_net_cursor;
 int m_net_items;
@@ -3207,52 +3249,36 @@ void M_Net_Mousemove(int cx, int cy) // woods #mousemenu
 		m_net_cursor = 0;
 }
 
-//=============================================================================
-/* OPTIONS MENU */
+/*
+==================
+Options Menu
+==================
+*/
+
+extern cvar_t scr_menuscale;
 
 enum
 {
 	OPT_CUSTOMIZE = 0,
-	OPT_EXTRAS, // 1
-	OPT_VIDEO, // 2
-	OPT_SPACE,
+	OPT_MOUSE,
+	OPT_VIDEO,
+	OPT_GRAPHICS,
+	OPT_SOUND,
+	OPT_GAME,
+	OPT_HUD,
+	OPT_CONSOLEM,    // Moved up, before OPT_EXTRAS
+	OPT_EXTRAS,
+	OPT_SPACE,       // Spacer
+	OPT_MENUSCALE,
 	OPT_CONSOLE,
-	OPT_DEFAULTS,
-	OPT_SCALE,
-	OPT_SCRSIZE,
-	OPT_GAMMA,
-	OPT_CONTRAST,
-	OPT_MOUSESPEED,
-	OPT_SBALPHA,
-	OPT_SNDVOL,
-	OPT_MUSICVOL,
-	OPT_MUSICEXT,
-	OPT_ALWAYRUN,
-	OPT_INVMOUSE,
-#if 0 // woods
-	OPT_ALWAYSMLOOK,
-	OPT_LOOKSPRING,
-	OPT_LOOKSTRAFE,
-#endif
-//#ifdef _WIN32
-//	OPT_USEMOUSE,
-//#endif
 	OPTIONS_ITEMS
-};
-
-enum
-{
-	ALWAYSRUN_OFF = 0,
-	ALWAYSRUN_VANILLA,
-	ALWAYSRUN_QUAKESPASM,
-	ALWAYSRUN_ITEMS
 };
 
 #define	SLIDER_RANGE	6
 
 int		options_cursor;
 qboolean slider_grab; // woods #mousemenu
-float target_scale_frac; // woods #mousemenu
+static float pending_scale_value;
 
 struct // woods #mousemenu
 {
@@ -3292,121 +3318,20 @@ void M_Menu_Options_f (void)
 
 void M_AdjustSliders (int dir)
 {
-	int	curr_alwaysrun, target_alwaysrun;
-	float	f, l;
+	float	f;
 
 	S_LocalSound ("misc/menu3.wav");
 
 	switch (options_cursor)
 	{
-	case OPT_SCALE:	// console and menu scale
-		l = ((vid.width + 31) / 32) / 10.0;
-		f = scr_conscale.value + dir * .1;
-		if (f < 1)	f = 1;
-		else if(f > l)	f = l;
-		Cvar_SetValue ("scr_conscale", f);
-		Cvar_SetValue ("scr_menuscale", f);
-		Cvar_SetValue ("scr_sbarscale", f);
-		Cvar_SetValue ("scr_crosshairscale", f);
+	case OPT_MENUSCALE:
+		f = scr_menuscale.value + dir;
+		if (f > 6) f = 6;
+		else if (f < 1) f = 1;
+		Cvar_SetValue("scr_menuscale", f);
 		break;
-	case OPT_SCRSIZE:	// screen size
-		f = scr_viewsize.value + dir * 10;
-		if (f > 130)	f = 130;
-		else if(f < 30)	f = 30;
-		Cvar_SetValue ("viewsize", f);
-		break;
-	case OPT_GAMMA:	// gamma
-		f = vid_gamma.value - dir * 0.05;
-		if (f < 0.5)	f = 0.5;
-		else if (f > 1)	f = 1;
-		Cvar_SetValue ("gamma", f);
-		break;
-	case OPT_CONTRAST:	// contrast
-		f = vid_contrast.value + dir * 0.1;
-		if (f < 1)	f = 1;
-		else if (f > 2)	f = 2;
-		Cvar_SetValue ("contrast", f);
-		break;
-	case OPT_MOUSESPEED:	// mouse speed
-		f = sensitivity.value + dir * 0.5;
-		if (f > 11)	f = 11;
-		else if (f < 1)	f = 1;
-		Cvar_SetValue ("sensitivity", f);
-		break;
-	case OPT_SBALPHA:	// statusbar alpha
-		f = scr_sbaralpha.value - dir * 0.05;
-		if (f < 0)	f = 0;
-		else if (f > 1)	f = 1;
-		Cvar_SetValue ("scr_sbaralpha", f);
-		break;
-	case OPT_MUSICVOL:	// music volume
-		f = bgmvolume.value + dir * 0.05f;
-		if (f < 0)	f = 0;
-		else if (f > 1)	f = 1;
-		Cvar_SetValue ("bgmvolume", f);
-		break;
-	case OPT_MUSICEXT:	// enable external music vs cdaudio
-		Cvar_Set ("bgm_extmusic", bgm_extmusic.value ? "0" : "1");
-		break;
-	case OPT_SNDVOL:	// sfx volume
-		f = sfxvolume.value + dir * 0.05f;
-		if (f < 0)	f = 0;
-		else if (f > 1)	f = 1;
-		Cvar_SetValue ("volume", f);
-		break;
-
-	case OPT_ALWAYRUN:	// always run
-		if (cl_alwaysrun.value)
-			curr_alwaysrun = ALWAYSRUN_QUAKESPASM;
-		else if (cl_forwardspeed.value > 200)
-			curr_alwaysrun = ALWAYSRUN_VANILLA;
-		else
-			curr_alwaysrun = ALWAYSRUN_OFF;
-			
-		target_alwaysrun = (ALWAYSRUN_ITEMS + curr_alwaysrun + dir) % ALWAYSRUN_ITEMS;
-			
-		if (target_alwaysrun == ALWAYSRUN_VANILLA)
-		{
-			Cvar_SetValue ("cl_alwaysrun", 0);
-			Cvar_SetValue ("cl_forwardspeed", 400);
-			Cvar_SetValue ("cl_backspeed", 400);
-		}
-		else if (target_alwaysrun == ALWAYSRUN_QUAKESPASM)
-		{
-			Cvar_SetValue ("cl_alwaysrun", 1);
-			Cvar_SetValue ("cl_forwardspeed", 200);
-			Cvar_SetValue ("cl_backspeed", 200);
-		}
-		else // ALWAYSRUN_OFF
-		{
-			Cvar_SetValue ("cl_alwaysrun", 0);
-			Cvar_SetValue ("cl_forwardspeed", 200);
-			Cvar_SetValue ("cl_backspeed", 200);
-		}
-		break;
-
-	case OPT_INVMOUSE:	// invert mouse
-		Cvar_SetValue ("m_pitch", -m_pitch.value);
-		break;
-#if 0 
-	case OPT_ALWAYSMLOOK:
-		if (in_mlook.state & 1)
-			Cbuf_AddText("-mlook");
-		else
-			Cbuf_AddText("+mlook");
-		break;
-// woods
-	case OPT_LOOKSPRING:	// lookspring
-		Cvar_Set ("lookspring", lookspring.value ? "0" : "1");
-		break;
-
-	case OPT_LOOKSTRAFE:	// lookstrafe
-		Cvar_Set ("lookstrafe", lookstrafe.value ? "0" : "1");
-		break;
-#endif
 	}
 }
-
 
 void M_DrawSlider (int x, int y, float range, float value, const char* format)
 {
@@ -3444,50 +3369,14 @@ void M_DrawCheckbox (int x, int y, int on)
 
 qboolean M_SetSliderValue(int option, float f) // woods #mousemenu
 {
-	float l;
 	f = CLAMP(0.f, f, 1.f);
 
 	switch (option)
 	{
-	case OPT_SCALE:	// console and menu scale
-		target_scale_frac = f;
-		l = (vid.width / 320.0) - 1;
-		f = l > 0 ? f * l + 1 : 0;
-		// Delay the actual update until we release the mouse button
-		// to keep the UI layout stable while adjusting the scale
-		Cvar_SetValue("scr_conscale", f);
-		Cvar_SetValue("scr_crosshairscale", f);
-		Cvar_SetValue("scr_sbarscale", f);
-		if (!slider_grab)
-			Cvar_SetValue("scr_menuscale", f);
-		return true;
-	case OPT_SCRSIZE:	// screen size
-		f = f * (130 - 30) + 30;
-		if (f >= 100)
-			f = floor(f / 10 + 0.5) * 10;
-		Cvar_SetValue("viewsize", f);
-		return true;
-	case OPT_GAMMA:	// gamma
-		f = 1.f - f * 0.5f;
-		Cvar_SetValue("gamma", f);
-		return true;
-	case OPT_CONTRAST:	// contrast
-		f += 1.f;
-		Cvar_SetValue("contrast", f);
-		return true;
-	case OPT_MOUSESPEED:	// mouse speed
-		f = f * 10.f + 1.f;
-		Cvar_SetValue("sensitivity", f);
-		return true;
-	case OPT_SBALPHA:	// statusbar alpha
-		f = 1.f - f;
-		Cvar_SetValue("scr_sbaralpha", f);
-		return true;
-	case OPT_MUSICVOL:	// music volume
-		Cvar_SetValue("bgmvolume", f);
-		return true;
-	case OPT_SNDVOL:	// sfx volume
-		Cvar_SetValue("volume", f);
+	case OPT_MENUSCALE:
+		f = f * 5.0f + 1.0f;  // Convert 0-1 range to 1-6
+		f = (int)f;  // Round to nearest integer
+		Cvar_SetValue("scr_menuscale", f);
 		return true;
 	default:
 		return false;
@@ -3505,10 +3394,14 @@ void M_ReleaseSliderGrab(void) // woods #mousemenu
 {
 	if (!slider_grab)
 		return;
+
+	if (options_cursor == OPT_MENUSCALE)
+	{
+		Cvar_SetValue("scr_menuscale", pending_scale_value);
+	}
+
 	slider_grab = false;
 	S_LocalSound("misc/menu1.wav");
-	if (options_cursor == OPT_SCALE)
-		M_SetSliderValue(OPT_SCALE, target_scale_frac);
 }
 
 qboolean M_SliderClick(int cx, int cy) // woods #mousemenu
@@ -3516,12 +3409,18 @@ qboolean M_SliderClick(int cx, int cy) // woods #mousemenu
 	cx -= 220;
 	if (cx < -12 || cx > SLIDER_RANGE * 8 + 4)
 		return false;
-	// HACK: we set the flag to true before updating the slider
-	// to avoid changing the UI scale and implicitly the layout
-	if (options_cursor == OPT_SCALE)
+
+	if (options_cursor == OPT_MENUSCALE)
+	{
+		float f = M_MouseToSliderFraction(cx);
+		f = f * 5.0f + 1.0f;
+		f = (int)f;
+		pending_scale_value = f;  // Store initial value
 		slider_grab = true;
-	if (!M_SetSliderValue(options_cursor, M_MouseToSliderFraction(cx)))
-		return false;
+		S_LocalSound("misc/menu3.wav");
+		return true;
+	}
+
 	slider_grab = true;
 	S_LocalSound("misc/menu3.wav");
 	return true;
@@ -3529,7 +3428,7 @@ qboolean M_SliderClick(int cx, int cy) // woods #mousemenu
 
 void M_Options_Draw (void)
 {
-	float		r, l;
+	float		r;
 	qpic_t  *p;
 
 	if (slider_grab && !keydown[K_MOUSE1]) // woods #mousemenu
@@ -3548,53 +3447,49 @@ void M_Options_Draw (void)
 		// Get menu item text based on index
 		switch (i) {
 		case OPT_CUSTOMIZE:
-			text = "              Controls   ...";
+			text = "             Key Setup   ...";
 			break;
-		case OPT_EXTRAS:
-			text = "         Extra Options   ...";
+		case OPT_MOUSE:
+			text = "                 Mouse   ...";
 			break;
 		case OPT_VIDEO:
 			if (vid_menudrawfn)
-				text = "         Video Options   ...";
+			text = "               Display   ...";
+			break;
+		case OPT_GRAPHICS:
+			if (vid_menudrawfn)
+			text = "              Graphics   ...";
+			break;
+		case OPT_SOUND:
+			text = "                 Sound   ...";
+			break;
+		case OPT_GAME:
+			text = "                  Game   ...";
+			break;
+		case OPT_HUD:
+			text = "                   HUD   ...";
+			break;
+		case OPT_CONSOLEM:
+			text = "               Console   ...";
+			break;
+		case OPT_EXTRAS:
+			text = "                  Misc   ...";
+			break;
+		case OPT_MENUSCALE:
+			text = "            Menu Scale";
+			if (slider_grab && options_cursor == OPT_MENUSCALE)
+			{
+				r = (pending_scale_value - 1) / 5;
+				M_DrawSlider(220, y, r, pending_scale_value, "%.0f");
+			}
+			else
+			{
+				r = (scr_menuscale.value - 1) / 5;
+				M_DrawSlider(220, y, r, scr_menuscale.value, "%.0f");
+			}
 			break;
 		case OPT_CONSOLE:
 			text = "          Goto console";
-			break;
-		case OPT_DEFAULTS:
-			text = "          Reset config";
-			break;
-		case OPT_SCALE:
-			text = "                 Scale";
-			break;
-		case OPT_SCRSIZE:
-			text = "           Screen size";
-			break;
-		case OPT_GAMMA:
-			text = "            Brightness";
-			break;
-		case OPT_CONTRAST:
-			text = "              Contrast";
-			break;
-		case OPT_MOUSESPEED:
-			text = "           Mouse Speed";
-			break;
-		case OPT_SBALPHA:
-			text = "       Statusbar alpha";
-			break;
-		case OPT_SNDVOL:
-			text = "          Sound Volume";
-			break;
-		case OPT_MUSICVOL:
-			text = "          Music Volume";
-			break;
-		case OPT_MUSICEXT:
-			text = "        External Music";
-			break;
-		case OPT_ALWAYRUN:
-			text = "            Always Run";
-			break;
-		case OPT_INVMOUSE:
-			text = "          Invert Mouse";
 			break;
 		}
 
@@ -3615,68 +3510,9 @@ void M_Options_Draw (void)
 
 		// Draw the values/sliders
 		switch (i) {
-		case OPT_SCALE:
-			l = (vid.width / 320.0) - 1;
-			r = l > 0 ? (scr_conscale.value - 1) / l : 0;
-			if (slider_grab && options_cursor == OPT_SCALE)
-				r = target_scale_frac;
-			M_DrawSlider(220, y, r, scr_conscale.value, "%.1f");
-			break;
 
-		case OPT_SCRSIZE:
-			r = (scr_viewsize.value - 30) / (130 - 30);
-			M_DrawSlider(220, y, r, scr_viewsize.value, "%.0f");
-			break;
-
-		case OPT_GAMMA:
-			r = (1.0 - vid_gamma.value) / 0.5;
-			M_DrawSlider(220, y, r, 10.f * r, "%.0f");
-			break;
-
-		case OPT_CONTRAST:
-			r = vid_contrast.value - 1.0;
-			M_DrawSlider(220, y, r, 10.f * r, "%.0f");
-			break;
-
-		case OPT_MOUSESPEED:
-			r = (sensitivity.value - 1) / 10;
-			M_DrawSlider(220, y, r, sensitivity.value, "%.1f");
-			break;
-
-		case OPT_SBALPHA:
-			r = (1.0 - scr_sbaralpha.value);
-			M_DrawSlider(220, y, r, 100.0f * r, "%.0f%%");
-			break;
-
-		case OPT_SNDVOL:
-			r = sfxvolume.value;
-			M_DrawSlider(220, y, r, 100.f * sfxvolume.value, "%.0f%%");
-			break;
-
-		case OPT_MUSICVOL:
-			r = bgmvolume.value;
-			M_DrawSlider(220, y, r, 100.f * bgmvolume.value, "%.0f%%");
-			break;
-
-		case OPT_MUSICEXT:
-			M_DrawCheckbox(220, y, bgm_extmusic.value);
-			break;
-
-		case OPT_ALWAYRUN:
-			if (cl_alwaysrun.value)
-				M_Print(220, y, "qs/power hop");
-			else if (cl_forwardspeed.value > 200.0)
-				M_Print(220, y, "vanilla");
-			else
-				M_Print(220, y, "off");
-			break;
-
-		case OPT_INVMOUSE:
-			M_DrawCheckbox(220, y, m_pitch.value < 0);
-			break;
 	}
 }
-
 	// Draw cursor
 	M_DrawCharacter(200, 32 + options_cursor * 8, 12 + ((int)(realtime * 4) & 1));
 
@@ -3699,37 +3535,28 @@ static const char* M_Options_GetItemText(int index)
 	switch (index)
 	{
 	case OPT_CUSTOMIZE:
-		return "              Controls   ...";
-	case OPT_EXTRAS:
-		return "         Extra Options   ...";
+		return "             Key Setup   ...";
+	case OPT_MOUSE:
+		return "                 Mouse   ...";
 	case OPT_VIDEO:
-		return "         Video Options   ...";
+		return "               Display   ...";
+	case OPT_GRAPHICS:
+		return "              Graphics   ...";
+	case OPT_SOUND:
+		return "                 Sound   ...";
+	case OPT_GAME:
+		return "                  Game   ...";
+	case OPT_HUD:
+		return "                   HUD   ...";
+	case OPT_CONSOLEM:
+		return "               Console   ...";
+	case OPT_EXTRAS:
+		return "                  Misc   ...";
+	case OPT_MENUSCALE:
+		return "            Menu Scale";
 	case OPT_CONSOLE:
 		return "          Goto console";
-	case OPT_DEFAULTS:
-		return "          Reset config";
-	case OPT_SCALE:
-		return "                 Scale";
-	case OPT_SCRSIZE:
-		return "           Screen size";
-	case OPT_GAMMA:
-		return "            Brightness";
-	case OPT_CONTRAST:
-		return "              Contrast";
-	case OPT_MOUSESPEED:
-		return "           Mouse Speed";
-	case OPT_SBALPHA:
-		return "       Statusbar alpha";
-	case OPT_SNDVOL:
-		return "          Sound Volume";
-	case OPT_MUSICVOL:
-		return "          Music Volume";
-	case OPT_MUSICEXT:
-		return "        External Music";
-	case OPT_ALWAYRUN:
-		return "            Always Run";
-	case OPT_INVMOUSE:
-		return "          Invert Mouse";
+
 	default:
 		return "";
 	}
@@ -3820,23 +3647,33 @@ void M_Options_Key (int k)
 		case OPT_CUSTOMIZE:
 			M_Menu_Keys_f ();
 			break;
+		case OPT_MOUSE:
+			M_Menu_Mouse_f();
+			break;
+		case OPT_VIDEO:
+			M_Menu_Video_f();
+			break;
+		case OPT_GRAPHICS:
+			M_Menu_Graphics_f();
+			break;
+		case OPT_SOUND:
+			M_Menu_Sound_f();
+			break;
+		case OPT_GAME:
+			M_Menu_Game_f();
+			break;
+		case OPT_HUD:
+			M_Menu_HUD_f();
+			break;
+		case OPT_CONSOLEM:
+			M_Menu_Console_f();
+			break;
+		case OPT_EXTRAS:
+			M_Menu_Extras_f();
+			break;
 		case OPT_CONSOLE:
 			m_state = m_none;
 			Con_ToggleConsole_f ();
-			break;
-		case OPT_DEFAULTS:
-			if (SCR_ModalMessage("This will reset all controls\n"
-					"and stored cvars. Continue? (y/n)\n", 15.0f))
-			{
-				Cbuf_AddText ("resetcfg\n");
-				Cbuf_AddText ("exec default.cfg\n");
-			}
-			break;
-		case OPT_EXTRAS:
-			M_Menu_Extras_f ();
-			break;
-		case OPT_VIDEO:
-			M_Menu_Video_f ();
 			break;
 		default:
 			M_AdjustSliders (1);
@@ -3849,6 +3686,8 @@ void M_Options_Key (int k)
 		options_cursor--;
 		if (options_cursor < 0)
 			options_cursor = OPTIONS_ITEMS-1;
+		if (options_cursor == OPT_SPACE)  // Skip space when going up
+			options_cursor--;
 		break;
 
 	case K_DOWNARROW:
@@ -3856,6 +3695,8 @@ void M_Options_Key (int k)
 		options_cursor++;
 		if (options_cursor >= OPTIONS_ITEMS)
 			options_cursor = 0;
+		if (options_cursor == OPT_SPACE)  // Skip space when going down
+			options_cursor++;
 		break;
 
 	case K_LEFTARROW:
@@ -3869,9 +3710,15 @@ void M_Options_Key (int k)
 		break;
 
 	case K_MOUSE1: // woods #mousemenu
-		if (!M_SliderClick(m_mousex, m_mousey))
+		if (options_cursor == OPT_MENUSCALE && m_mousex >= 220 && m_mousex <= 220 + SLIDER_RANGE * 8)
+		{
+			if (!M_SliderClick(m_mousex, m_mousey))
+				goto enter;
+		}
+		else
+		{
 			goto enter;
-		break;
+		}
 	}
 
 	if (options_cursor == OPTIONS_ITEMS - 1 && vid_menudrawfn == NULL)
@@ -3892,15 +3739,40 @@ void M_Options_Mousemove(int cx, int cy) // woods #mousemenu
 			M_ReleaseSliderGrab();
 			return;
 		}
+
+		if (options_cursor == OPT_MENUSCALE)
+		{
+			float f = M_MouseToSliderFraction(cx - 220);
+			f = f * 5.0f + 1.0f;  // Convert 0-1 range to 1-6
+			f = (int)f;  // Round to nearest integer
+			pending_scale_value = f;  // Store the value but don't apply it yet
+			return;
+		}
+
 		M_SetSliderValue(options_cursor, M_MouseToSliderFraction(cx - 220));
 		return;
 	}
 
+	int old_cursor = options_cursor;
+
 	M_UpdateCursor(cy, 36, 8, OPTIONS_ITEMS, &options_cursor);
+
+	if (options_cursor == OPT_SPACE)
+	{
+		// If moving down
+		if (old_cursor < OPT_SPACE)
+			options_cursor++;
+		// If moving up
+		else if (old_cursor > OPT_SPACE)
+			options_cursor--;
+	}
 }
 
-//=============================================================================
-/* KEYS MENU */
+/*
+==================
+Keys Menu
+==================
+*/
 
 const char *quakebindnames[][2] = // woods use iw quake bind names
 {
@@ -3937,11 +3809,20 @@ const char *quakebindnames[][2] = // woods use iw quake bind names
 #define	NUMQUAKECOMMANDS	(sizeof(quakebindnames)/sizeof(quakebindnames[0]))
 
 
-#define MAX_VIS_KEYS	18 // woods #mousemenu
+#define MAX_VIS_KEYS	15 // woods #mousemenu
 
 static struct
 {
-	menulist_t			list; // woods #mousemenu
+	menulist_t           list;
+	struct {
+		char text[32];
+		int len;
+		int maxlen;
+	} search;
+	int* filtered_indices;
+	int num_filtered;
+	qboolean scrollbar_grab;  // Add this
+	int x, y, cols;          // Add these for scrollbar positioning
 } keysmenu;
 
 typedef struct { // woods #mousemenu
@@ -3998,7 +3879,96 @@ void M_Keys_Populate(void) // woods #mousemenu -- modified
 	}
 }
 
-void M_Menu_Keys_f (void)
+void M_Keys_UpdateFilter(void)
+{
+	keysmenu.num_filtered = 0;
+	keysmenu.list.scroll = 0;  // Reset scroll position when filtering
+
+	// First pass: count matches
+	for (int i = 0; i < numbindnames; i++)
+	{
+		if (keysmenu.search.len == 0)
+		{
+			keysmenu.num_filtered = numbindnames;
+			break;
+		}
+		else
+		{
+			const char* desc = bindnames[i].desc;
+			const char* cmd = bindnames[i].cmd;
+			const char* search = keysmenu.search.text;
+
+			char desc_lower[128] = { 0 };
+			char cmd_lower[128] = { 0 };
+			char search_lower[32] = { 0 };
+
+			Q_strncpy(desc_lower, desc, sizeof(desc_lower) - 1);
+			Q_strncpy(cmd_lower, cmd, sizeof(cmd_lower) - 1);
+			Q_strncpy(search_lower, search, sizeof(search_lower) - 1);
+
+			// Convert to lowercase
+			for (char* p = desc_lower; *p; p++) *p = q_tolower(*p);
+			for (char* p = cmd_lower; *p; p++) *p = q_tolower(*p);
+			for (char* p = search_lower; *p; p++) *p = q_tolower(*p);
+
+			if (strstr(desc_lower, search_lower) || strstr(cmd_lower, search_lower))
+			{
+				keysmenu.num_filtered++;
+			}
+		}
+	}
+
+	// Allocate or reallocate filtered indices array
+	if (keysmenu.filtered_indices)
+		Z_Free(keysmenu.filtered_indices);
+	keysmenu.filtered_indices = (int*)Z_Malloc(keysmenu.num_filtered * sizeof(int));
+
+	// Second pass: fill indices
+	if (keysmenu.search.len == 0)
+	{
+		// No search, just copy all indices
+		for (int i = 0; i < numbindnames; i++)
+			keysmenu.filtered_indices[i] = i;
+	}
+	else
+	{
+		// Fill with matching indices
+		int filter_idx = 0;
+		for (int i = 0; i < numbindnames; i++)
+		{
+			const char* desc = bindnames[i].desc;
+			const char* cmd = bindnames[i].cmd;
+			const char* search = keysmenu.search.text;
+
+			char desc_lower[128] = { 0 };
+			char cmd_lower[128] = { 0 };
+			char search_lower[32] = { 0 };
+
+			Q_strncpy(desc_lower, desc, sizeof(desc_lower) - 1);
+			Q_strncpy(cmd_lower, cmd, sizeof(cmd_lower) - 1);
+			Q_strncpy(search_lower, search, sizeof(search_lower) - 1);
+
+			// Convert to lowercase
+			for (char* p = desc_lower; *p; p++) *p = q_tolower(*p);
+			for (char* p = cmd_lower; *p; p++) *p = q_tolower(*p);
+			for (char* p = search_lower; *p; p++) *p = q_tolower(*p);
+
+			if (strstr(desc_lower, search_lower) || strstr(cmd_lower, search_lower))
+			{
+				keysmenu.filtered_indices[filter_idx++] = i;
+			}
+		}
+	}
+
+	// Update menu list state
+	keysmenu.list.numitems = keysmenu.num_filtered;
+	if (keysmenu.list.cursor >= keysmenu.num_filtered)
+		keysmenu.list.cursor = keysmenu.num_filtered - 1;
+	if (keysmenu.list.cursor < 0)
+		keysmenu.list.cursor = 0;
+}
+
+void M_Menu_Keys_f(void)
 {
 	key_dest = key_menu;
 	m_state = m_keys;
@@ -4006,24 +3976,68 @@ void M_Menu_Keys_f (void)
 
 	M_Keys_Populate();
 
-	keysmenu.list.viewsize = MAX_VIS_KEYS; // woods #mousemenu
-	keysmenu.list.cursor = -1;
+	keysmenu.list.viewsize = MAX_VIS_KEYS;
+	keysmenu.list.cursor = 0;
 	keysmenu.list.scroll = 0;
 	keysmenu.list.numitems = numbindnames;
 
+	keysmenu.search.len = 0;
+	keysmenu.search.text[0] = 0;
+	keysmenu.search.maxlen = sizeof(keysmenu.search.text) - 1;
+
+	keysmenu.scrollbar_grab = false;
+	keysmenu.x = 0;
+	keysmenu.y = 48;
+	keysmenu.cols = 36;
+
+	// Initialize filtered indices array
+	if (keysmenu.filtered_indices)
+		Z_Free(keysmenu.filtered_indices);
+	keysmenu.filtered_indices = (int*)Z_Malloc(numbindnames * sizeof(int));
+	keysmenu.num_filtered = numbindnames;
+	for (int i = 0; i < numbindnames; i++)
+		keysmenu.filtered_indices[i] = i;
+
 	IN_UpdateGrabs();
+}
+
+qboolean IsCompleteCommand(const char* binding, const char* command)
+{
+	// Check if commands are exactly equal
+	if (!strcmp(binding, command))
+		return true;
+
+	// For impulse commands, ensure we're matching complete numbers
+	if (strstr(command, "impulse ") == command)
+	{
+		// If binding also starts with "impulse "
+		if (strstr(binding, "impulse ") == binding)
+		{
+			// Compare the numbers after "impulse "
+			const char* bind_num = binding + 8;
+			const char* cmd_num = command + 8;
+
+			// Check if the numbers match exactly
+			char* bind_end;
+			char* cmd_end;
+			int bind_val = strtol(bind_num, &bind_end, 10);
+			int cmd_val = strtol(cmd_num, &cmd_end, 10);
+
+			// Make sure we consumed all digits and the numbers match
+			return (*bind_end == '\0' && *cmd_end == '\0' && bind_val == cmd_val);
+		}
+	}
+	return false;
 }
 
 void M_FindKeysForCommand (const char *command, int *threekeys)
 {
 	int		count;
 	int		j;
-	int		l;
 	char	*b;
 	int		bindmap = 0;
 
 	threekeys[0] = threekeys[1] = threekeys[2] = -1;
-	l = strlen(command);
 	count = 0;
 
 	for (j = 0; j < MAX_KEYS; j++)
@@ -4031,7 +4045,7 @@ void M_FindKeysForCommand (const char *command, int *threekeys)
 		b = keybindings[bindmap][j];
 		if (!b)
 			continue;
-		if (!strncmp (b, command, l) )
+		if (IsCompleteCommand(b, command))
 		{
 			threekeys[count] = j;
 			count++;
@@ -4044,160 +4058,4245 @@ void M_FindKeysForCommand (const char *command, int *threekeys)
 void M_UnbindCommand (const char *command)
 {
 	int		j;
-	int		l;
 	char	*b;
 	int		bindmap = 0;
-
-	l = strlen(command);
 
 	for (j = 0; j < MAX_KEYS; j++)
 	{
 		b = keybindings[bindmap][j];
 		if (!b)
 			continue;
-		if (!strncmp (b, command, l) )
-			Key_SetBinding (j, NULL, bindmap);
+		if (IsCompleteCommand(b, command))
+			Key_SetBinding(j, NULL, bindmap);
 	}
 }
 
 extern qpic_t	*pic_up, *pic_down;
 
-void M_Keys_Draw (void)
+void M_Keys_Draw(void)
 {
-	int		firstvis, numvis, i, x, y, cols; // woods #mousemenu
-	qpic_t* p; // woods #mousemenu
+	int firstvis, numvis, x, y, cols;
+	qpic_t* p;
 
-	p = Draw_CachePic ("gfx/ttl_cstm.lmp");
-	M_DrawPic ( (320-p->width)/2, 4, p);
+	p = Draw_CachePic("gfx/ttl_cstm.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
 	if (bind_grab)
-		M_Print (12, 32, "Press a key or button for this action");
+		M_Print(12, 32, "Press a key or button for this action");
 	else
-		M_Print (18, 32, "Enter to change, backspace to clear");
+		M_Print(18, 32, "Enter to change, backspace to clear");
 
 	x = 0;
 	y = 48;
 	cols = 36;
-	if (M_List_GetOverflow(&keysmenu.list) > 0) { // woods #mousemenu
-		if (keysmenu.list.scroll > 0)
-			M_DrawEllipsisBar(x, y - 8, cols);
-		if (keysmenu.list.scroll + keysmenu.list.viewsize < keysmenu.list.numitems)
-			M_DrawEllipsisBar(x, y + keysmenu.list.viewsize * 8, cols);
+
+	// Get visible range
+	M_List_GetVisibleRange(&keysmenu.list, &firstvis, &numvis);
+
+	// Draw scroll indicators
+	if (keysmenu.list.scroll > 0)
+		M_DrawEllipsisBar(x, y - 8, cols);
+	if (keysmenu.list.scroll + keysmenu.list.viewsize < keysmenu.num_filtered)
+		M_DrawEllipsisBar(x, y + keysmenu.list.viewsize * 8, cols);
+
+	if (M_List_GetOverflow(&keysmenu.list) > 0)
+	{
+		M_List_DrawScrollbar(&keysmenu.list, keysmenu.x + keysmenu.cols * 8 - 8, keysmenu.y);
 	}
 
-	y+=2;
+	y += 2;
 
-	M_List_GetVisibleRange(&keysmenu.list, &firstvis, &numvis); // woods #mousemenu
-	for (i = firstvis; numvis-- > 0; i++) 
+	// Draw visible items
+	 // Draw visible items
+	for (int i = 0; i < numvis; i++)
 	{
-		void (*print_fn)(int, int, const char*) = (i == keysmenu.list.cursor && bind_grab) ? M_PrintWhite : M_Print;
-		print_fn(0, y, bindnames[i].desc);
+		int list_index = firstvis + i;
+		if (list_index >= keysmenu.num_filtered)
+			break;
+
+		int actual_idx = keysmenu.filtered_indices[list_index];
+		qboolean is_selected = (list_index == keysmenu.list.cursor && bind_grab);
+
+		void (*print_fn)(int, int, const char*) = is_selected ? M_PrintWhite : M_Print;
+		print_fn(0, y, bindnames[actual_idx].desc);
 
 		int keys[3];
-		M_FindKeysForCommand(bindnames[i].cmd, keys);
-		if (i == keysmenu.list.cursor && bind_grab && keys[2] != -1)
+		M_FindKeysForCommand(bindnames[actual_idx].cmd, keys);
+		if (list_index == keysmenu.list.cursor && bind_grab && keys[2] != -1)
 			keys[0] = -1;
 
 		int x_pos = 136;
-		if (keys[0] != -1) {
+		if (keys[0] != -1)
+		{
 			const char* keyStr = Key_KeynumToString(keys[0]);
 			print_fn(x_pos, y, keyStr);
-			x_pos += (strlen(keyStr) * 8) + 8;
+			x_pos += (strlen(keyStr) * 8);
 
-			for (int j = 1; j < 3 && keys[j] != -1; j++) 
+			for (int j = 1; j < 3 && keys[j] != -1; j++)
 			{
-				print_fn(x_pos, y, "or");
-				x_pos += 24; // Space for "or" plus padding
+				qboolean masked = !is_selected;
+				float alpha = 0.5f;
+				M_PrintRGBA(x_pos, y, ",", CL_PLColours_Parse("0xffffff"), alpha, masked);
+				x_pos += 8;  // Comma width
+				M_PrintRGBA(x_pos, y, " ", CL_PLColours_Parse("0xffffff"), alpha, masked);
+				x_pos += 8;  // Space width
 				keyStr = Key_KeynumToString(keys[j]);
 				print_fn(x_pos, y, keyStr);
-				x_pos += (strlen(keyStr) * 8) + 8;
+				x_pos += (strlen(keyStr) * 8);
 			}
 		}
-		else 
+		else
 		{
-			print_fn(x_pos, y, "???");
+			qboolean masked = !is_selected;
+			float alpha = masked ? 0.5f : 1.0f;
+			M_PrintRGBA(x_pos, y, "???", CL_PLColours_Parse("0xffffff"), alpha, masked);
 		}
 
-		if (i == keysmenu.list.cursor) 
+		if (list_index == keysmenu.list.cursor)
 		{
 			M_DrawCharacter(128, y, bind_grab ? '=' : 12 + ((int)(realtime * 4) & 1));
 		}
 		y += 8;
 	}
+
+	// Draw search box
+	if (keysmenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 174, 32, 1);
+		M_PrintHighlight(24, 182, keysmenu.search.text,
+			keysmenu.search.text,
+			keysmenu.search.len);
+		int cursor_x = 24 + 8 * keysmenu.search.len;
+		if (keysmenu.num_filtered == 0)
+			M_DrawCharacter(cursor_x, 182, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 182, 10 + ((int)(realtime * 4) & 1));
+	}
 }
 
-void M_Keys_Key (int k)
+void M_Keys_Key(int k)
 {
-	char	cmd[80];
-	if (bind_grab)
-	{	// defining a key
-		S_LocalSound ("misc/menu1.wav");
-		if (k != K_ESCAPE && k != '`') // woods #mousemenu
+	int x, y;
+
+	if (keysmenu.scrollbar_grab)
+	{
+		switch (k)
 		{
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			keysmenu.scrollbar_grab = false;
+			break;
+		}
+		return;
+	}
+	
+	char    cmd[80];
+	if (bind_grab)
+	{   // defining a key
+		S_LocalSound("misc/menu1.wav");
+		if (k != K_ESCAPE && k != '`')
+		{
+			int actual_idx = keysmenu.filtered_indices[keysmenu.list.cursor];
 			int keys[3];
-			M_FindKeysForCommand(bindnames[keysmenu.list.cursor].cmd, keys);
+			M_FindKeysForCommand(bindnames[actual_idx].cmd, keys);
 			if (keys[2] != -1)
-				M_UnbindCommand(bindnames[keysmenu.list.cursor].cmd);
-			sprintf (cmd, "bind \"%s\" \"%s\"\n", Key_KeynumToString (k), bindnames[keysmenu.list.cursor].cmd);
-			Cbuf_InsertText (cmd);
+				M_UnbindCommand(bindnames[actual_idx].cmd);
+			sprintf(cmd, "bind \"%s\" \"%s\"\n", Key_KeynumToString(k), bindnames[actual_idx].cmd);
+			Cbuf_InsertText(cmd);
 		}
 		bind_grab = false;
 		IN_UpdateGrabs();
 		return;
 	}
-	if (M_List_Key(&keysmenu.list, k)) // woods #mousemenu
+
+	// Handle search functionality first
+	if (k >= 32 && k < 127) // Printable characters
+	{
+		if (keysmenu.search.len < keysmenu.search.maxlen)
+		{
+			keysmenu.search.text[keysmenu.search.len++] = k;
+			keysmenu.search.text[keysmenu.search.len] = 0;
+			M_Keys_UpdateFilter();
+			return;
+		}
+	}
+
+	if (k == K_BACKSPACE)
+	{
+		if (keysmenu.search.len > 0)
+		{
+			keysmenu.search.text[--keysmenu.search.len] = 0;
+			M_Keys_UpdateFilter();
+			return;
+		}
+	}
+
+	if (M_List_Key(&keysmenu.list, k))
 		return;
+
 	switch (k)
 	{
 	case K_ESCAPE:
+		if (keysmenu.search.len > 0)
+		{
+			// Clear search but stay in menu
+			keysmenu.search.len = 0;
+			keysmenu.search.text[0] = 0;
+			M_Keys_UpdateFilter();
+			return;
+		}
+		// Fall through to exit menu if search is already empty
 	case K_BBUTTON:
-	case K_MOUSE4: // woods #mousemenu
+	case K_MOUSE4:
 	case K_MOUSE2:
-		M_Menu_Options_f ();
+		M_Menu_Options_f();
 		break;
 
-	case K_ENTER:		// go into bind mode
+	case K_ENTER:
 	case K_KP_ENTER:
 	case K_ABUTTON:
 	case K_MOUSE1:
-		S_LocalSound("misc/menu2.wav");
-		bind_grab = true;
-		M_List_AutoScroll(&keysmenu.list); // woods #mousemenu
-		IN_UpdateGrabs();
+		x = m_mousex - keysmenu.x - (keysmenu.cols - 1) * 8;
+		y = m_mousey - keysmenu.y;
+		if (x < -8 || !M_List_UseScrollbar(&keysmenu.list, y))
+		{
+			// Handle normal click
+			S_LocalSound("misc/menu2.wav");
+			bind_grab = true;
+			M_List_AutoScroll(&keysmenu.list);
+			IN_UpdateGrabs();
+		}
+		else
+		{
+			keysmenu.scrollbar_grab = true;
+			M_Keys_Mousemove(m_mousex, m_mousey);
+		}
 		break;
 
-	case K_BACKSPACE:	// delete bindings
+	case K_BACKSPACE:
 	case K_DEL:
-		S_LocalSound ("misc/menu2.wav");
-		M_UnbindCommand (bindnames[keysmenu.list.cursor].cmd); // woods #mousemenu
+		if (!keysmenu.search.len)  // Only delete binding if not searching
+		{
+			S_LocalSound("misc/menu2.wav");
+			int actual_idx = keysmenu.filtered_indices[keysmenu.list.cursor];
+			M_UnbindCommand(bindnames[actual_idx].cmd);
+		}
 		break;
 	}
 }
 
-void M_Keys_Mousemove(int cx, int cy) // woods #mousemenu
+void M_Keys_Mousemove(int cx, int cy)
 {
-	M_List_Mousemove(&keysmenu.list, cy - 50);
+	cy -= keysmenu.y;
+
+	if (keysmenu.scrollbar_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			keysmenu.scrollbar_grab = false;
+			return;
+		}
+		M_List_UseScrollbar(&keysmenu.list, cy);
+		// Note: no return, we also update the cursor
+	}
+
+	M_List_Mousemove(&keysmenu.list, cy);
 }
 
-//=============================================================================
-/* QSS's EXTRAS MENU */
+/*
+==================
+Mouse Menu
+==================
+*/
+
+extern cvar_t cl_minpitch, cl_maxpitch;
+
+#ifdef __APPLE__
+#define MACOS_X_ACCELERATION_HACK
+#endif
+
+#ifdef MACOS_X_ACCELERATION_HACK
+extern cvar_t in_disablemacosxmouseaccel;
+#endif
+
+static enum mouse_e
+{
+	MOUSE_SPEED,
+	MOUSE_INVERT,
+	MOUSE_ALWAYSMLOOK,
+	MOUSE_PITCHMODE,
+#ifdef MACOS_X_ACCELERATION_HACK
+	MOUSE_ACCELERATION,
+#endif
+	MOUSE_COUNT
+} mouse_cursor;
+
+#define MOUSE_ITEMS (MOUSE_COUNT)
+int numberOfMouseItems = MOUSE_ITEMS;
+
+
+static void M_Mouse_SetPitchMode(qboolean netquake)
+{
+	if (netquake)
+	{
+		Cvar_SetValue("cl_minpitch", -69.99);
+		Cvar_SetValue("cl_maxpitch", 79.99);
+	}
+	else
+	{
+		Cvar_SetValue("cl_minpitch", -90);
+		Cvar_SetValue("cl_maxpitch", 90);
+	}
+}
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} mousemenu;
+
+static qboolean mouse_slider_grab;
+
+static const char* M_Mouse_GetItemText(int index)
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case MOUSE_SPEED:
+		return "Mouse Speed";
+	case MOUSE_INVERT:
+		return "Invert Mouse";
+	case MOUSE_ALWAYSMLOOK:
+		return "Mouse Look";
+#ifdef MACOS_X_ACCELERATION_HACK
+	case MOUSE_ACCELERATION:
+		return "Acceleration";
+#endif
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_Mouse_f(void)
+{
+	key_dest = key_menu;
+	m_state = m_mouse;
+	m_entersound = true;
+	mouse_cursor = 0;
+	mousemenu.cursor = 0;
+	mousemenu.search.len = 0;
+	mousemenu.search.text[0] = 0;
+	numberOfMouseItems = MOUSE_ITEMS;
+
+	IN_UpdateGrabs();
+}
+
+static void M_Mouse_AdjustSliders(int dir)
+{
+	float f;
+	S_LocalSound("misc/menu3.wav");
+
+	switch (mouse_cursor)
+	{
+	case MOUSE_SPEED:
+		f = sensitivity.value + dir * 0.5;
+		if (f > 11) f = 11;
+		else if (f < 1) f = 1;
+		Cvar_SetValue("sensitivity", f);
+		break;
+
+	case MOUSE_INVERT:
+		Cvar_SetValue("m_pitch", -m_pitch.value);
+		break;
+
+	case MOUSE_ALWAYSMLOOK:
+		if (in_mlook.state & 1)
+			Cbuf_AddText("-mlook");
+		else
+			Cbuf_AddText("+mlook");
+		break;
+
+	case MOUSE_PITCHMODE:
+		// Toggle between NetQuake and Quakespasm pitch modes
+		if (cl_maxpitch.value >= 89)  // If currently Quakespasm mode
+			M_Mouse_SetPitchMode(true);  // Switch to NetQuake
+		else
+			M_Mouse_SetPitchMode(false); // Switch to Quakespasm
+		break;
+#ifdef MACOS_X_ACCELERATION_HACK
+	case MOUSE_ACCELERATION:
+		Cvar_SetValue("in_disablemacosxmouseaccel", !in_disablemacosxmouseaccel.value);
+		break;
+#endif
+	default:
+		break;
+	}
+}
+
+void M_Mouse_Draw(void)
+{
+	qpic_t* p;
+	float r;
+	enum mouse_e i;
+
+	p = Draw_CachePic("gfx/p_option.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
+
+	const char* title = "Mouse Options";
+	M_PrintWhite((320 - 8 * strlen(title)) / 2, 32, title);
+
+	for (i = 0; i < MOUSE_ITEMS; i++)
+	{
+		int y = 48 + 8 * i;
+		const char* text = NULL;
+		const char* value = NULL;
+
+		switch (i)
+		{
+		case MOUSE_SPEED:
+			text = "     Sensitivity";
+			r = (sensitivity.value - 1) / 10;
+			M_DrawSlider(186, y, r, sensitivity.value, "%.1f");
+			break;
+
+		case MOUSE_INVERT:
+			text = "    Invert Mouse";
+			M_DrawCheckbox(178, y, m_pitch.value < 0);
+			break;
+
+		case MOUSE_ALWAYSMLOOK:
+			text = "      Mouse Look";
+			M_DrawCheckbox(178, y, in_mlook.state & 1);
+			break;
+
+		case MOUSE_PITCHMODE:
+			text = "      Pitch Mode";
+			// Check current pitch settings to determine mode
+			if (cl_maxpitch.value >= 89)
+				value = "qs (straight up/down)";
+			else
+				value = "traditional ";
+			M_Print(178, y, value);
+			break;
+#ifdef MACOS_X_ACCELERATION_HACK
+		case MOUSE_ACCELERATION:
+			text = "    Acceleration";
+			M_DrawCheckbox(178, y, !in_disablemacosxmouseaccel.value);
+			break;
+#endif
+		default:
+			break;
+		}
+
+		if (text)
+		{
+			if (mousemenu.search.len > 0 &&
+				q_strcasestr(text, mousemenu.search.text))
+			{
+				M_PrintHighlight(16, y, text,
+					mousemenu.search.text,
+					mousemenu.search.len);
+			}
+			else
+			{
+				M_Print(16, y, text);
+			}
+		}
+	}
+
+	// Draw cursor
+	M_DrawCharacter(168, 48 + mouse_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+
+	// Draw search box if search is active
+	if (mousemenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 170, 32, 1);
+		M_PrintHighlight(24, 178, mousemenu.search.text,
+			mousemenu.search.text,
+			mousemenu.search.len);
+		int cursor_x = 24 + 8 * mousemenu.search.len;
+		if (numberOfMouseItems == 0)
+			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
+	}
+}
+
+void M_Mouse_Key(int k)
+{
+	// Handle slider grab release
+	if (!keydown[K_MOUSE1])
+		mouse_slider_grab = false;
+
+	if (mouse_slider_grab)
+	{
+		switch (k)
+		{
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			mouse_slider_grab = false;
+			break;
+		}
+		return;
+	}
+
+	// Handle search functionality first
+	if (k == K_ESCAPE)
+	{
+		if (mousemenu.search.len > 0)
+		{
+			mousemenu.search.len = 0;
+			mousemenu.search.text[0] = 0;
+			numberOfMouseItems = MOUSE_ITEMS;
+			return;
+		}
+		M_Menu_Options_f();
+		return;
+	}
+	else if (k == K_BACKSPACE)
+	{
+		if (mousemenu.search.len > 0)
+		{
+			mousemenu.search.text[--mousemenu.search.len] = 0;
+			if (mousemenu.search.len > 0)
+			{
+				numberOfMouseItems = 0;
+				for (int i = 0; i < MOUSE_ITEMS; i++)
+				{
+					const char* itemtext = M_Mouse_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, mousemenu.search.text))
+					{
+						numberOfMouseItems++;
+						if (numberOfMouseItems == 1)
+							mouse_cursor = i;
+					}
+				}
+			}
+			else
+			{
+				numberOfMouseItems = MOUSE_ITEMS;
+			}
+			return;
+		}
+	}
+	else if (k >= 32 && k < 127)
+	{
+		if (mousemenu.search.len < sizeof(mousemenu.search.text) - 1)
+		{
+			mousemenu.search.text[mousemenu.search.len++] = k;
+			mousemenu.search.text[mousemenu.search.len] = 0;
+
+			numberOfMouseItems = 0;
+			for (int i = 0; i < MOUSE_ITEMS; i++)
+			{
+				const char* itemtext = M_Mouse_GetItemText(i);
+				if (itemtext && q_strcasestr(itemtext, mousemenu.search.text))
+				{
+					numberOfMouseItems++;
+					if (numberOfMouseItems == 1)
+						mouse_cursor = i;
+				}
+			}
+			return;
+		}
+	}
+
+	switch (k)
+	{
+	case K_ESCAPE:
+	case K_BBUTTON:
+	case K_MOUSE4:
+	case K_MOUSE2:
+		M_Menu_Options_f();
+		break;
+
+	case K_MOUSE1:
+		m_entersound = true;
+
+		// Check if click is in search box area
+		if (mousemenu.search.len > 0 && m_mousey >= 170)
+			break;
+
+		// Check if click is in valid menu area
+		if (m_mousey >= 48 && m_mousey < 48 + (MOUSE_ITEMS * 8))
+		{
+			mouse_cursor = (m_mousey - 48) / 8;
+
+			if (mouse_cursor == MOUSE_SPEED)
+			{
+				mouse_slider_grab = true;
+			}
+			else
+			{
+				M_Mouse_AdjustSliders(1);
+			}
+		}
+		break;
+
+	case K_ENTER:
+	case K_KP_ENTER:
+	case K_ABUTTON:
+		m_entersound = true;
+		M_Mouse_AdjustSliders(1);
+		break;
+
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		mouse_cursor--;
+		if (mouse_cursor < 0)
+			mouse_cursor = numberOfMouseItems - 1;
+		break;
+
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		mouse_cursor++;
+		if (mouse_cursor >= numberOfMouseItems)
+			mouse_cursor = 0;
+		break;
+
+	case K_LEFTARROW:
+	case K_MWHEELDOWN:
+		M_Mouse_AdjustSliders(-1);
+		break;
+
+	case K_RIGHTARROW:
+	case K_MWHEELUP:
+		M_Mouse_AdjustSliders(1);
+		break;
+	}
+}
+
+void M_Mouse_Mousemove(int cx, int cy)
+{
+	if (mouse_slider_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			mouse_slider_grab = false;
+			return;
+		}
+
+		float f;
+		switch (mouse_cursor)
+		{
+		case MOUSE_SPEED:
+			f = 1.f + M_MouseToSliderFraction(cx - 187) * 10.f;
+			Cvar_SetValue("sensitivity", f);
+			break;
+		case MOUSE_INVERT:
+		case MOUSE_ALWAYSMLOOK:
+		case MOUSE_PITCHMODE:
+		case MOUSE_COUNT:
+			break;
+		default:
+			break;
+		}
+		return;
+	}
+
+	// Don't process mouse movement if it's in the search box area
+	if (mousemenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 48) / 8;
+
+	// Make sure the item is within valid range
+	if (item >= 0 && item < MOUSE_ITEMS)
+	{
+		// Update the cursor position
+		mouse_cursor = item;
+	}
+}
+
+/*
+==================
+Graphics Menu
+==================
+*/
+
+extern cvar_t r_particles, gl_load24bit, r_replacemodels, r_lerpmodels, r_lerpmove, r_scale,
+vid_gamma, vid_contrast, vid_fsaa, r_particledesc, gl_loadlitfiles, r_rocketlight, r_explosionlight;
+
+static enum graphics_e
+{
+	GRAPHICS_BRIGHTNESS,
+	GRAPHICS_CONTRAST,
+	GRAPHICS_FILTERING,
+	GRAPHICS_ANTIALIASING,
+	GRAPHICS_EXTERNALTEX,
+	GRAPHICS_REPLACEMENTMODELS,
+	GRAPHICS_ROCKETLIGHT,     // Added
+	GRAPHICS_EXPLOSIONLIGHT,  // Added
+	GRAPHICS_MODELLERP,
+	GRAPHICS_RENDERSCALE,
+	GRAPHICS_CLASSICPARTICLES,
+	GRAPHICS_CUSTOMPARTICLES,    // Added
+	GRAPHICS_COLOREDLIGHTING,    // Added
+	GRAPHICS_ALIASSHADOW,
+	GRAPHICS_BRUSHSHADOW,
+	GRAPHICS_COUNT
+} graphics_cursor;
+
+#define GRAPHICS_ITEMS (GRAPHICS_COUNT)
+int numberOfGraphicsItems = GRAPHICS_ITEMS;
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} graphicsmenu;
+
+static const char* M_Graphics_GetItemText(int index)
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case GRAPHICS_BRIGHTNESS:
+		return "Brightness";
+	case GRAPHICS_CONTRAST:
+		return "Contrast";
+	case GRAPHICS_FILTERING:
+		return "Texture Filtering";
+	case GRAPHICS_ANTIALIASING:
+		return "Screen Anti-Aliasing";
+	case GRAPHICS_EXTERNALTEX:
+		return "External Textures";
+	case GRAPHICS_REPLACEMENTMODELS:
+		return "Custom Models";
+	case GRAPHICS_ROCKETLIGHT:
+		return "Rocket Light";
+	case GRAPHICS_EXPLOSIONLIGHT:
+		return "Explosion Light";
+	case GRAPHICS_MODELLERP:
+		return "Smooth Model Anims";
+	case GRAPHICS_RENDERSCALE:
+		return "Render Scale";
+	case GRAPHICS_CLASSICPARTICLES:
+		return "Classic Particles";
+	case GRAPHICS_ALIASSHADOW:
+		return "Shadows";
+	case GRAPHICS_BRUSHSHADOW:
+		return "Brush Shadows";
+	case GRAPHICS_CUSTOMPARTICLES:
+		return "Custom Particles";
+	case GRAPHICS_COLOREDLIGHTING:
+		return "Colored Lighting";
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_Graphics_f(void)
+{
+	key_dest = key_menu;
+	m_state = m_graphics;
+	m_entersound = true;
+	graphics_cursor = 0;
+	graphicsmenu.cursor = 0;
+	graphicsmenu.search.len = 0;
+	graphicsmenu.search.text[0] = 0;
+	numberOfGraphicsItems = GRAPHICS_ITEMS;
+
+	IN_UpdateGrabs();
+}
+
+static void M_Graphics_AdjustSliders(int dir)
+{
+	int m;
+	float f;
+	S_LocalSound("misc/menu3.wav");
+
+	switch (graphics_cursor)
+	{
+		case GRAPHICS_BRIGHTNESS:
+			f = vid_gamma.value - dir * 0.05f;
+			if (f < 0.5)    f = 0.5;
+			else if (f > 1) f = 1;
+			Cvar_SetValue("gamma", f);
+			break;
+
+		case GRAPHICS_CONTRAST:
+			f = vid_contrast.value + dir * 0.1f;
+			if (f < 1)    f = 1;
+			else if (f > 2) f = 2;
+			Cvar_SetValue("contrast", f);
+			break;
+
+		case GRAPHICS_FILTERING:
+			m = TexMgr_GetTextureMode() + dir;
+			while (m == 3 || (m > 4 && m < 8) || (m > 8 && m < 16))
+				m += dir;
+			if (m < 0)
+				m = 16;
+			else if (m > 16)
+				m = 0;
+			if (m == 0)
+			{
+				Cvar_Set("gl_texturemode", "nll");
+				Cvar_Set("gl_texture_anisotropy", "1");
+			}
+			else
+			{
+				Cvar_Set("gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR");
+				Cvar_SetValue("gl_texture_anisotropy", m);
+			}
+			break;
+
+		case GRAPHICS_ANTIALIASING:
+		{
+			static const int aa_values[] = { 0, 2, 4, 6, 8, 16 };
+			int current = vid_fsaa.value;
+			int current_index = 0;
+
+			// Find current index
+			for (int i = 0; i < 6; i++) {
+				if (aa_values[i] == current) {
+					current_index = i;
+					break;
+				}
+			}
+
+			// Adjust index
+			current_index += dir;
+			if (current_index < 0) current_index = 5;
+			if (current_index > 5) current_index = 0;
+
+			Cvar_SetValue("vid_fsaa", aa_values[current_index]);
+		}
+		break;
+
+		default:
+			break;
+
+	case GRAPHICS_EXTERNALTEX:
+		Cvar_SetValueQuick(&gl_load24bit, !gl_load24bit.value);
+		Cbuf_AddText("flush\n");
+		break;
+
+	case GRAPHICS_REPLACEMENTMODELS:
+		Cvar_SetQuick(&r_replacemodels, *r_replacemodels.string ? "" : "iqm md5mesh md3");
+		Cbuf_AddText("flush\n");
+		break;
+
+	case GRAPHICS_ROCKETLIGHT:
+	{
+		float f = r_rocketlight.value + dir;
+		f = CLAMP(0, f, 100);
+		Cvar_SetValue("r_rocketlight", f);
+	}
+	break;
+
+	case GRAPHICS_EXPLOSIONLIGHT:
+	{
+		float f = r_explosionlight.value + dir;
+		f = CLAMP(0, f, 100);
+		Cvar_SetValue("r_explosionlight", f);
+	}
+	break;
+
+	case GRAPHICS_MODELLERP:
+		if (r_lerpmodels.value || r_lerpmove.value)
+		{
+			Cvar_SetValueQuick(&r_lerpmodels, 0);
+			Cvar_SetValueQuick(&r_lerpmove, 0);
+		}
+		else
+		{
+			Cvar_SetValueQuick(&r_lerpmodels, 1);
+			Cvar_SetValueQuick(&r_lerpmove, 1);
+		}
+		break;
+
+	case GRAPHICS_RENDERSCALE:
+		if (dir > 0) {
+			m = r_scale.value + 1;
+			if (m > 4) m = 1;
+		}
+		else {
+			m = r_scale.value - 1;
+			if (m < 1) m = 4;
+		}
+		Cvar_SetValueQuick(&r_scale, m);
+		break;
+
+	case GRAPHICS_CLASSICPARTICLES:
+		Cvar_SetValueQuick(&r_particles, (r_particles.value == 1) ? 2 : 1);
+		break;
+
+	case GRAPHICS_ALIASSHADOW:
+		f = r_shadows.value + dir * 0.1f;
+		f = CLAMP(0, f, 1);
+		Cvar_SetValue("r_shadows", f);
+		break;
+
+	case GRAPHICS_BRUSHSHADOW:
+		Cvar_SetValue("r_shadows_bmodels", !r_shadows_bmodels.value);
+		break;
+
+	case GRAPHICS_CUSTOMPARTICLES:
+		if (Q_strcmp(r_particledesc.string, "qssm") == 0)
+			Cvar_Set("r_particledesc", "classic");
+		else
+			Cvar_Set("r_particledesc", "qssm");
+		break;
+
+	case GRAPHICS_COLOREDLIGHTING:
+		Cvar_SetValue("gl_loadlitfiles", !gl_loadlitfiles.value);
+		break;
+	}
+}
+
+void M_Graphics_Draw(void)
+{
+	qpic_t* p;
+	enum graphics_e i;
+	float r;
+	int m;
+
+	p = Draw_CachePic("gfx/p_option.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
+
+	const char* title = "Graphics Options";
+	M_PrintWhite((320 - 8 * strlen(title)) / 2, 32, title);
+
+	for (i = 0; i < GRAPHICS_ITEMS; i++)
+	{
+		int y = 48 + 8 * i;
+		const char* text = NULL;
+		const char* value = NULL;
+
+		switch (i)
+		{
+		case GRAPHICS_BRIGHTNESS:
+			text = "        Brightness";
+			r = (1.0 - vid_gamma.value) / 0.5;
+			M_DrawSlider(186, y, r, 10.f * r, "%.0f");
+			break;
+
+		case GRAPHICS_CONTRAST:
+			text = "          Contrast";
+			r = vid_contrast.value - 1.0;
+			M_DrawSlider(186, y, r, 10.f * r, "%.0f");
+			break;
+		
+		case GRAPHICS_FILTERING:
+			text = " Texture Filtering";
+			m = TexMgr_GetTextureMode();
+			switch (m)
+			{
+			case 0: value = "nearest"; break;
+			case 1: value = "linear"; break;
+			default: value = va("aniso %i", m); break;
+			}
+			M_Print(178, y, value);
+			break;
+
+		case GRAPHICS_ANTIALIASING:
+			text = "     Anti-Aliasing";
+			if (vid_fsaa.value == 0)
+				value = "off";
+			else
+				value = va("%ix", (int)vid_fsaa.value);
+			M_Print(178, y, value);
+			break;
+
+		case GRAPHICS_EXTERNALTEX:
+			text = " External Textures";
+			M_DrawCheckbox(178, y, !!gl_load24bit.value);
+			break;
+
+		case GRAPHICS_REPLACEMENTMODELS:
+			text = "     Custom Models";
+			M_DrawCheckbox(178, y, !!*r_replacemodels.string);
+			break;
+
+		case GRAPHICS_ROCKETLIGHT:
+			text = "      Rocket Light";
+			r = r_rocketlight.value / 100.0;
+			M_DrawSlider(186, y, r, r_rocketlight.value, "%.0f%%");
+			break;
+
+		case GRAPHICS_EXPLOSIONLIGHT:
+			text = "   Explosion Light";
+			r = r_explosionlight.value / 100.0;
+			M_DrawSlider(186, y, r, r_explosionlight.value, "%.0f%%");
+			break;
+
+		case GRAPHICS_MODELLERP:
+			text = "Smooth Model Anims";
+			M_DrawCheckbox(178, y, !!r_lerpmodels.value && !!r_lerpmove.value);
+			break;
+
+		case GRAPHICS_RENDERSCALE:
+			text = "      Render Scale";
+			if (r_scale.value == 1)
+				M_Print(178, y, "native (1/1)");
+			else if (r_scale.value == 2)
+				M_Print(178, y, "half (1/2)");
+			else if (r_scale.value == 3)
+				M_Print(178, y, "third (1/3)");
+			else if (r_scale.value == 4)
+				M_Print(178, y, "quarter (1/4)");
+			else
+				M_Print(178, y, "unknown");
+			break;
+
+		case GRAPHICS_CLASSICPARTICLES:
+			text = " Classic Particles";
+			value = r_particles.value == 1 ? "round (winquake)" : "square (glquake)";
+			M_Print(178, y, value);
+			break;
+
+		case GRAPHICS_ALIASSHADOW:
+			text = "           Shadows";
+			r = r_shadows.value;
+			M_DrawSlider(186, y, r, r_shadows.value, "%.1f");
+			break;
+
+		case GRAPHICS_BRUSHSHADOW:
+			text = "     Brush Shadows";
+			M_DrawCheckbox(178, y, r_shadows_bmodels.value != 0);
+			break;
+
+		case GRAPHICS_CUSTOMPARTICLES:
+			text = "  Custom Particles";
+			value = Q_strcmp(r_particledesc.string, "qssm") == 0 ? "qssm" : "off (classic)";
+			M_Print(178, y, value);
+			break;
+
+		case GRAPHICS_COLOREDLIGHTING:
+			text = "  Colored Lighting";
+			M_DrawCheckbox(178, y, gl_loadlitfiles.value != 0);
+			break;
+		default:
+			break;
+		}
+
+		if (text)
+		{
+			if (graphicsmenu.search.len > 0 &&
+				q_strcasestr(text, graphicsmenu.search.text))
+			{
+				M_PrintHighlight(0, y, text,
+					graphicsmenu.search.text,
+					graphicsmenu.search.len);
+			}
+			else
+			{
+				M_Print(0, y, text);
+			}
+
+			if (value)
+				M_Print(178, y, value);
+		}
+	}
+
+	// Draw search box if search is active
+	if (graphicsmenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 170, 32, 1);
+		M_PrintHighlight(24, 178, graphicsmenu.search.text,
+			graphicsmenu.search.text,
+			graphicsmenu.search.len);
+		int cursor_x = 24 + 8 * graphicsmenu.search.len;
+		if (numberOfGraphicsItems == 0)
+			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
+	}
+
+	// cursor
+	M_DrawCharacter(168, 48 + graphics_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+}
+
+static qboolean graphics_slider_grab;
+
+void M_Graphics_Key(int k)
+{
+	// Handle slider grab release
+	if (!keydown[K_MOUSE1])
+		graphics_slider_grab = false;
+
+	if (graphics_slider_grab)
+	{
+		switch (k)
+		{
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			graphics_slider_grab = false;
+			break;
+		}
+		return;
+	}
+
+	// Handle search functionality first
+	if (k == K_ESCAPE)
+	{
+		if (graphicsmenu.search.len > 0)
+		{
+			graphicsmenu.search.len = 0;
+			graphicsmenu.search.text[0] = 0;
+			numberOfGraphicsItems = GRAPHICS_ITEMS;
+			return;
+		}
+		M_Menu_Options_f();
+		return;
+	}
+	else if (k == K_BACKSPACE)
+	{
+		if (graphicsmenu.search.len > 0)
+		{
+			graphicsmenu.search.text[--graphicsmenu.search.len] = 0;
+			if (graphicsmenu.search.len > 0)
+			{
+				numberOfGraphicsItems = 0;
+				for (int i = 0; i < GRAPHICS_ITEMS; i++)
+				{
+					const char* itemtext = M_Graphics_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, graphicsmenu.search.text))
+					{
+						numberOfGraphicsItems++;
+						if (numberOfGraphicsItems == 1)
+							graphics_cursor = i;
+					}
+				}
+			}
+			else
+			{
+				numberOfGraphicsItems = GRAPHICS_ITEMS;
+			}
+			return;
+		}
+	}
+	else if (k >= 32 && k < 127)
+	{
+		if (graphicsmenu.search.len < sizeof(graphicsmenu.search.text) - 1)
+		{
+			graphicsmenu.search.text[graphicsmenu.search.len++] = k;
+			graphicsmenu.search.text[graphicsmenu.search.len] = 0;
+
+			numberOfGraphicsItems = 0;
+			for (int i = 0; i < GRAPHICS_ITEMS; i++)
+			{
+				const char* itemtext = M_Graphics_GetItemText(i);
+				if (itemtext && q_strcasestr(itemtext, graphicsmenu.search.text))
+				{
+					numberOfGraphicsItems++;
+					if (numberOfGraphicsItems == 1)
+						graphics_cursor = i;
+				}
+			}
+			return;
+		}
+	}
+
+	switch (k)
+	{
+	case K_ESCAPE:
+	case K_BBUTTON:
+	case K_MOUSE4:
+	case K_MOUSE2:
+		M_Menu_Options_f();
+		break;
+
+	case K_MOUSE1:
+		m_entersound = true;
+
+		// Check if click is in search box area
+		if (graphicsmenu.search.len > 0 && m_mousey >= 170)
+			break;
+
+		// Check if click is in valid menu area
+		if (m_mousey >= 48 && m_mousey < 48 + (GRAPHICS_ITEMS * 8))
+		{
+			graphics_cursor = (m_mousey - 48) / 8;
+
+			if (graphics_cursor == GRAPHICS_BRIGHTNESS ||
+				graphics_cursor == GRAPHICS_CONTRAST ||
+				graphics_cursor == GRAPHICS_ALIASSHADOW ||
+				graphics_cursor == GRAPHICS_ROCKETLIGHT ||
+				graphics_cursor == GRAPHICS_EXPLOSIONLIGHT)
+			{
+				graphics_slider_grab = true;
+			}
+			else
+			{
+				M_Graphics_AdjustSliders(1);
+			}
+		}
+		break;
+
+	case K_ENTER:
+	case K_KP_ENTER:
+	case K_ABUTTON:
+		m_entersound = true;
+		M_Graphics_AdjustSliders(1);
+		break;
+
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		graphics_cursor--;
+		if (graphics_cursor < 0)
+			graphics_cursor = numberOfGraphicsItems - 1;
+		break;
+
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		graphics_cursor++;
+		if (graphics_cursor >= numberOfGraphicsItems)
+			graphics_cursor = 0;
+		break;
+
+	case K_LEFTARROW:
+	case K_MWHEELDOWN:
+		M_Graphics_AdjustSliders(-1);
+		break;
+
+	case K_RIGHTARROW:
+	case K_MWHEELUP:
+		M_Graphics_AdjustSliders(1);
+		break;
+	}
+}
+
+void M_Graphics_Mousemove(int cx, int cy)
+{
+	if (graphics_slider_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			graphics_slider_grab = false;
+			return;
+		}
+
+		float f;
+		switch (graphics_cursor)
+		{
+		case GRAPHICS_BRIGHTNESS:
+			f = 1.f - M_MouseToSliderFraction(cx - 187) * 0.5f;
+			Cvar_SetValue("gamma", f);
+			break;
+
+		case GRAPHICS_CONTRAST:
+			f = M_MouseToSliderFraction(cx - 187) + 1.f;
+			Cvar_SetValue("contrast", f);
+			break;
+
+		case GRAPHICS_ALIASSHADOW:
+			f = M_MouseToSliderFraction(cx - 187);
+			f = CLAMP(0, f, 1);
+			Cvar_SetValue("r_shadows", f);
+			break;
+
+		case GRAPHICS_ROCKETLIGHT:
+			f = M_MouseToSliderFraction(cx - 187) * 100;
+			Cvar_SetValue("r_rocketlight", CLAMP(0, f, 100));
+			break;
+
+		case GRAPHICS_EXPLOSIONLIGHT:
+			f = M_MouseToSliderFraction(cx - 187) * 100;
+			Cvar_SetValue("r_explosionlight", CLAMP(0, f, 100));
+			break;
+
+			// Add empty cases for all other enum values to suppress warnings
+		case GRAPHICS_FILTERING:
+		case GRAPHICS_ANTIALIASING:
+		case GRAPHICS_EXTERNALTEX:
+		case GRAPHICS_REPLACEMENTMODELS:
+		case GRAPHICS_MODELLERP:
+		case GRAPHICS_RENDERSCALE:
+		case GRAPHICS_CLASSICPARTICLES:
+		case GRAPHICS_CUSTOMPARTICLES:
+		case GRAPHICS_COLOREDLIGHTING:
+		case GRAPHICS_BRUSHSHADOW:
+		case GRAPHICS_COUNT:
+			break;
+
+		default:
+			break;
+		}
+		return;
+	}
+
+	// Don't process mouse movement if it's in the search box area
+	if (graphicsmenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 48) / 8;
+
+	// Make sure the item is within valid range
+	if (item >= 0 && item < GRAPHICS_ITEMS)
+	{
+		// Update the cursor position
+		graphics_cursor = item;
+	}
+}
+
+
+/*
+==================
+Sound Menu
+==================
+*/
+
+extern cvar_t cl_ambient, ambient_level, snd_waterfx;
+extern char mute[2];
+
+static enum sound_e
+{
+	SOUND_VOLUME,
+	SOUND_MUSICVOL,
+	SOUND_MUSICEXT,
+	SOUND_AUDIORATE,
+	SOUND_WATERFX,
+	SOUND_AMBIENTLEVEL,
+	SOUND_STOPSOUND,
+	SOUND_MUTE,
+	SOUND_COUNT
+} sound_cursor;
+
+#define SOUND_ITEMS (SOUND_COUNT)
+int numberOfSoundItems = SOUND_ITEMS;
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} soundmenu;
+
+static const char* M_Sound_GetItemText(int index)
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case SOUND_VOLUME:
+		return "Sound Volume";
+	case SOUND_MUSICVOL:
+		return "Music Volume";
+	case SOUND_MUSICEXT:
+		return "External Music";
+	case SOUND_AUDIORATE:
+		return "Audio Rate";
+	case SOUND_WATERFX:
+		return "Water FX";
+	case SOUND_AMBIENTLEVEL:
+		return "Ambient Level";
+	case SOUND_STOPSOUND:
+		return "Stop Sound";
+	case SOUND_MUTE:
+		return "Mute";
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_Sound_f(void)
+{
+	key_dest = key_menu;
+	m_state = m_sound;
+	m_entersound = true;
+	sound_cursor = 0;
+	soundmenu.cursor = 0;
+	soundmenu.search.len = 0;
+	soundmenu.search.text[0] = 0;
+	numberOfSoundItems = SOUND_ITEMS;
+
+	IN_UpdateGrabs();
+}
+
+static void M_Sound_AdjustSliders(int dir)
+{
+	float f;
+	S_LocalSound("misc/menu3.wav");
+
+	switch (sound_cursor)
+	{
+	case SOUND_VOLUME:
+		f = sfxvolume.value + dir * 0.05f;
+		if (f < 0) f = 0;
+		else if (f > 1) f = 1;
+		Cvar_SetValue("volume", f);
+		break;
+
+	case SOUND_MUSICVOL:
+		f = bgmvolume.value + dir * 0.05f;
+		if (f < 0) f = 0;
+		else if (f > 1) f = 1;
+		Cvar_SetValue("bgmvolume", f);
+		break;
+
+	case SOUND_MUSICEXT:
+		Cvar_Set("bgm_extmusic", bgm_extmusic.value ? "0" : "1");
+		break;
+
+	case SOUND_AUDIORATE:
+		if (dir > 0) {
+			// Going up: 11025->22050->44100->48000->11025
+			if (snd_mixspeed.value == 11025)
+				Cvar_SetValueQuick(&snd_mixspeed, 22050);
+			else if (snd_mixspeed.value == 22050)
+				Cvar_SetValueQuick(&snd_mixspeed, 44100);
+			else if (snd_mixspeed.value == 44100)
+				Cvar_SetValueQuick(&snd_mixspeed, 48000);
+			else
+				Cvar_SetValueQuick(&snd_mixspeed, 11025);
+		}
+		else {
+			// Going down: 11025<-22050<-44100<-48000<-11025
+			if (snd_mixspeed.value == 48000)
+				Cvar_SetValueQuick(&snd_mixspeed, 44100);
+			else if (snd_mixspeed.value == 44100)
+				Cvar_SetValueQuick(&snd_mixspeed, 22050);
+			else if (snd_mixspeed.value == 22050)
+				Cvar_SetValueQuick(&snd_mixspeed, 11025);
+			else
+				Cvar_SetValueQuick(&snd_mixspeed, 48000);
+		}
+		break;
+
+	case SOUND_WATERFX:
+		f = snd_waterfx.value + dir * 0.05f;
+		if (f < 0) f = 0;
+		else if (f > 1) f = 1;
+		Cvar_SetValue("snd_waterfx", f);
+		break;
+
+	case SOUND_AMBIENTLEVEL:
+		f = ambient_level.value + dir * 0.05f;
+		if (f < 0) f = 0;
+		else if (f > 1) f = 1;
+		Cvar_SetValue("ambient_level", f);
+		break;
+
+	case SOUND_STOPSOUND:
+		Cvar_Set("cl_ambient", cl_ambient.value ? "0" : "1");
+		break;
+
+	case SOUND_MUTE:
+		if (mute[0] == 'n')  // If currently not muted (showing "on")
+			q_snprintf(mute, sizeof(mute), "y");  // Set to muted (will show "off")
+		else
+			q_snprintf(mute, sizeof(mute), "n");  // Set to not muted (will show "on")
+		break;
+
+	default:
+		break;
+	}
+}
+
+
+void M_Sound_Draw(void)
+{
+	qpic_t* p;
+	enum sound_e i;
+
+	p = Draw_CachePic("gfx/p_option.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
+
+	const char* title = "Sound Options";
+	M_PrintWhite((320 - 8 * strlen(title)) / 2, 32, title);
+
+	for (i = 0; i < SOUND_ITEMS; i++)
+	{
+		int y = 48 + 8 * i;
+		const char* text = NULL;
+		const char* value = NULL;
+		float r;
+
+		switch (i)
+		{
+		case SOUND_VOLUME:
+			text = "      Sound Volume";
+			r = sfxvolume.value;
+			M_DrawSlider(186, y, r, 100.f * sfxvolume.value, "%.0f%%");
+			break;
+
+		case SOUND_MUSICVOL:
+			text = "      Music Volume";
+			r = bgmvolume.value;
+			M_DrawSlider(186, y, r, 100.f * bgmvolume.value, "%.0f%%");
+			break;
+
+		case SOUND_MUSICEXT:
+			text = "    External Music";
+			M_DrawCheckbox(178, y, bgm_extmusic.value);
+			break;
+
+		case SOUND_AUDIORATE:
+			text = "        Audio Rate";
+			if (snd_mixspeed.value == 48000)
+				value = "48000 hz (DVD)";
+			else if (snd_mixspeed.value == 44100)
+				value = "44100 hz (CD)";
+			else if (snd_mixspeed.value == 22050)
+				value = "22050 hz (Midrange)";
+			else if (snd_mixspeed.value == 11025)
+				value = "11025 hz (WinQuake)";
+			else
+				value = va("%i hz", (int)snd_mixspeed.value);
+			if (value)
+				M_Print(178, y, value);
+			break;
+
+		case SOUND_WATERFX:
+			text = "          Water FX";
+			r = snd_waterfx.value;
+			M_DrawSlider(186, y, r, 100.f * snd_waterfx.value, "%.0f%%");
+			break;
+
+		case SOUND_AMBIENTLEVEL:
+			text = "     Ambient Level";
+			r = ambient_level.value;
+			M_DrawSlider(186, y, r, 100.f * ambient_level.value, "%.0f%%");
+			break;
+
+		case SOUND_STOPSOUND:
+			text = "        Stop Sound";
+			M_DrawCheckbox(178, y, cl_ambient.value);
+			break;
+		case SOUND_MUTE:
+		{
+			text = "              Mute";
+			// If mute is 'y', sound is off. If 'n' or anything else, sound is on
+			if (mute[0] == 'y')
+				M_Print(178, y, "on");
+			else
+				M_Print(178, y, "off");
+		}
+		break;
+
+		default:
+			break;
+		}
+
+		if (text)
+		{
+			if (soundmenu.search.len > 0 &&
+				q_strcasestr(text, soundmenu.search.text))
+			{
+				M_PrintHighlight(0, y, text,
+					soundmenu.search.text,
+					soundmenu.search.len);
+			}
+			else
+			{
+				M_Print(0, y, text);
+			}
+		}
+	}
+
+	// Draw search box if search is active
+	if (soundmenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 170, 32, 1);
+		M_PrintHighlight(24, 178, soundmenu.search.text,
+			soundmenu.search.text,
+			soundmenu.search.len);
+		int cursor_x = 24 + 8 * soundmenu.search.len;
+		if (numberOfSoundItems == 0)
+			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
+	}
+
+	// cursor
+	M_DrawCharacter(168, 48 + sound_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+}
+
+static qboolean sound_slider_grab; // For slider dragging
+
+
+void M_Sound_Key(int k)
+{
+	// Handle slider grab release
+	if (!keydown[K_MOUSE1])
+		sound_slider_grab = false;
+
+	if (sound_slider_grab)
+	{
+		switch (k)
+		{
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			sound_slider_grab = false;
+			break;
+		}
+		return;
+	}
+
+	// Handle search functionality first
+	if (k == K_ESCAPE)
+	{
+		if (soundmenu.search.len > 0)
+		{
+			soundmenu.search.len = 0;
+			soundmenu.search.text[0] = 0;
+			numberOfSoundItems = SOUND_ITEMS;
+			return;
+		}
+		M_Menu_Options_f();
+		return;
+	}
+	else if (k == K_BACKSPACE)
+	{
+		if (soundmenu.search.len > 0)
+		{
+			soundmenu.search.text[--soundmenu.search.len] = 0;
+			if (soundmenu.search.len > 0)
+			{
+				numberOfSoundItems = 0;
+				for (int i = 0; i < SOUND_ITEMS; i++)
+				{
+					const char* itemtext = M_Sound_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, soundmenu.search.text))
+					{
+						numberOfSoundItems++;
+						if (numberOfSoundItems == 1)
+							sound_cursor = i;
+					}
+				}
+			}
+			else
+			{
+				numberOfSoundItems = SOUND_ITEMS;
+			}
+			return;
+		}
+	}
+	else if (k >= 32 && k < 127)
+	{
+		if (soundmenu.search.len < sizeof(soundmenu.search.text) - 1)
+		{
+			soundmenu.search.text[soundmenu.search.len++] = k;
+			soundmenu.search.text[soundmenu.search.len] = 0;
+
+			numberOfSoundItems = 0;
+			for (int i = 0; i < SOUND_ITEMS; i++)
+			{
+				const char* itemtext = M_Sound_GetItemText(i);
+				if (itemtext && q_strcasestr(itemtext, soundmenu.search.text))
+				{
+					numberOfSoundItems++;
+					if (numberOfSoundItems == 1)
+						sound_cursor = i;
+				}
+			}
+			return;
+		}
+	}
+
+	switch (k)
+	{
+	case K_ESCAPE:
+	case K_BBUTTON:
+	case K_MOUSE4:
+	case K_MOUSE2:
+		M_Menu_Options_f();
+		break;
+
+	case K_MOUSE1:
+		m_entersound = true;
+
+		// Check if click is in search box area
+		if (soundmenu.search.len > 0 && m_mousey >= 170)
+			break;
+
+		// Check if click is in valid menu area
+		if (m_mousey >= 48 && m_mousey < 48 + (SOUND_ITEMS * 8))
+		{
+			sound_cursor = (m_mousey - 48) / 8;
+
+			if (sound_cursor == SOUND_VOLUME ||
+				sound_cursor == SOUND_MUSICVOL ||
+				sound_cursor == SOUND_WATERFX ||
+				sound_cursor == SOUND_AMBIENTLEVEL)
+			{
+				sound_slider_grab = true;
+			}
+			else
+			{
+				M_Sound_AdjustSliders(1);
+			}
+		}
+		break;
+
+	case K_ENTER:
+	case K_KP_ENTER:
+	case K_ABUTTON:
+		m_entersound = true;
+		M_Sound_AdjustSliders(1);
+		break;
+
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		sound_cursor--;
+		if (sound_cursor < 0)
+			sound_cursor = numberOfSoundItems - 1;
+		break;
+
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		sound_cursor++;
+		if (sound_cursor >= numberOfSoundItems)
+			sound_cursor = 0;
+		break;
+
+	case K_LEFTARROW:
+	case K_MWHEELDOWN:
+		M_Sound_AdjustSliders(-1);
+		break;
+
+	case K_RIGHTARROW:
+	case K_MWHEELUP:
+		M_Sound_AdjustSliders(1);
+		break;
+	}
+}
+
+void M_Sound_Mousemove(int cx, int cy)
+{
+	if (sound_slider_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			sound_slider_grab = false;
+			return;
+		}
+
+		float f;
+		switch (sound_cursor)
+		{
+		case SOUND_VOLUME:
+			f = M_MouseToSliderFraction(cx - 187);
+			f = CLAMP(0, f, 1);
+			Cvar_SetValue("volume", f);
+			break;
+
+		case SOUND_MUSICVOL:
+			f = M_MouseToSliderFraction(cx - 187);
+			f = CLAMP(0, f, 1);
+			Cvar_SetValue("bgmvolume", f);
+			break;
+
+		case SOUND_WATERFX:
+			f = M_MouseToSliderFraction(cx - 187);
+			f = CLAMP(0, f, 1);
+			Cvar_SetValue("snd_waterfx", f);
+			break;
+
+		case SOUND_AMBIENTLEVEL:
+			f = M_MouseToSliderFraction(cx - 187);
+			f = CLAMP(0, f, 1);
+			Cvar_SetValue("ambient_level", f);
+			break;
+
+			// Add cases for unhandled enumerations to suppress warnings
+		case SOUND_MUSICEXT:
+		case SOUND_AUDIORATE:
+		case SOUND_STOPSOUND:
+		case SOUND_MUTE:
+		case SOUND_COUNT:
+			// No action needed for these cases in mouse movement
+			break;
+
+		default:
+			// Handle unexpected cases gracefully
+			break;
+		}
+		return;
+	}
+
+	// Don't process mouse movement if it's in the search box area
+	if (soundmenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 48) / 8;
+
+	// Make sure the item is within valid range
+	if (item >= 0 && item < SOUND_ITEMS)
+	{
+		// Update the cursor position
+		sound_cursor = item;
+	}
+}
+
+
+/*
+==================
+Game Menu
+==================
+*/
+
+extern cvar_t cl_rollangle, scr_fov, gl_cshiftpercent, cl_bob, v_kicktime, v_kickroll, v_kickpitch, r_drawviewmodel,
+cl_damagehue, w_switch, b_switch, cl_say, cl_r2g, cl_truelightning, cl_deadbodyfilter, con_mm1mute;
+
+enum
+{
+	ALWAYSRUN_OFF = 0,
+	ALWAYSRUN_VANILLA,
+	ALWAYSRUN_QUAKESPASM,
+	ALWAYSRUN_ITEMS
+};
+
+static enum game_e
+{
+	GAME_ALWAYSRUN,
+	GAME_ROLLANGLE,
+	GAME_FOV,
+	GAME_FLASHES,
+	GAME_WEAPONBOB,
+	GAME_DAMAGEKICK,
+	GAME_DAMAGETINT,     // Added
+	GAME_AUTOSWITCH,     // Added
+	GAME_CONSOLECHAT,    // Added
+	GAME_SWAPROCKETS,    // Added
+	GAME_TRUELIGHTNING,  // Added
+	GAME_DEADBODYFILTER, // Added
+	GAME_MM1MUTE,        // Added
+	GAME_VIEWMODEL,      // Added
+	GAME_TEAMCOLOR,  // Added
+	GAME_ENEMYCOLOR, // Added
+	GAME_COUNT
+} game_cursor;
+
+#define GAME_ITEMS (GAME_COUNT)
+int numberOfGameItems = GAME_ITEMS;
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} gamemenu;
+
+static qboolean game_slider_grab;
+static qboolean team_rgb_active;
+static qboolean enemy_rgb_active;
+static char last_team_color[10];
+static char last_enemy_color[10];
+
+static void M_Game_AdjustColor(int dir, qboolean isTeam)
+{
+	const char* current = isTeam ? gl_teamcolor.string : gl_enemycolor.string;
+
+	// If shift is held, handle RGB color mode
+	if (keydown[K_SHIFT])
+	{
+		if (isTeam)
+			team_rgb_active = true;
+		else
+			enemy_rgb_active = true;
+
+		plcolour_t color = CL_PLColours_Parse(current);
+		vec3_t hsv;
+		rgbtohsv(color.rgb, hsv);
+
+		hsv[0] += dir / 128.0;
+		hsv[1] = 1;
+		hsv[2] = 1;
+		color.type = 2;
+		color.basic = 0;
+		hsvtorgb(hsv[0], hsv[1], hsv[2], color.rgb);
+
+		const char* colorStr = CL_PLColours_ToString(color);
+		if (isTeam)
+		{
+			Cvar_Set("gl_teamcolor", colorStr);
+			snprintf(last_team_color, sizeof(last_team_color), "%s", colorStr);
+		}
+		else
+		{
+			Cvar_Set("gl_enemycolor", colorStr);
+			snprintf(last_enemy_color, sizeof(last_enemy_color), "%s", colorStr);
+		}
+		return;
+	}
+
+	// Not in RGB mode
+	if (isTeam)
+		team_rgb_active = false;
+	else
+		enemy_rgb_active = false;
+
+	// Handle empty string ("off") case
+	if (strcmp(current, "") == 0)
+	{
+		if (dir > 0)  // Going right from "off" -> 0
+		{
+			plcolour_t color;
+			color.type = 1;
+			color.basic = 0;
+			const char* colorStr = CL_PLColours_ToString(color);
+			if (isTeam)
+			{
+				Cvar_Set("gl_teamcolor", colorStr);
+				snprintf(last_team_color, sizeof(last_team_color), "%s", colorStr);
+			}
+			else
+			{
+				Cvar_Set("gl_enemycolor", colorStr);
+				snprintf(last_enemy_color, sizeof(last_enemy_color), "%s", colorStr);
+			}
+		}
+		return;
+	}
+
+	// Handle numeric colors
+	plcolour_t color = CL_PLColours_Parse(current);
+	color.type = 1;
+
+	// Calculate new basic color value
+	int newBasic = color.basic + dir;
+
+	// Handle cycling
+	if (newBasic < 0)  // Going left from 0 -> "off"
+	{
+		if (isTeam)
+			Cvar_Set("gl_teamcolor", "");
+		else
+			Cvar_Set("gl_enemycolor", "");
+		return;
+	}
+	else if (newBasic > 13)  // Going right from 13 -> 0
+	{
+		color.basic = 0;
+	}
+	else  // Normal case
+	{
+		color.basic = newBasic;
+	}
+
+	const char* colorStr = CL_PLColours_ToString(color);
+	if (isTeam)
+	{
+		Cvar_Set("gl_teamcolor", colorStr);
+		snprintf(last_team_color, sizeof(last_team_color), "%s", colorStr);
+	}
+	else
+	{
+		Cvar_Set("gl_enemycolor", colorStr);
+		snprintf(last_enemy_color, sizeof(last_enemy_color), "%s", colorStr);
+	}
+}
+
+static const char* M_Game_GetItemText(int index)
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case GAME_ALWAYSRUN:
+		return "Always Run";
+	case GAME_ROLLANGLE:
+		return "Strafe Angle Tilt";
+	case GAME_FOV:
+		return "Field of View";
+	case GAME_FLASHES:
+		return "Screen Flashes";
+	case GAME_WEAPONBOB:
+		return "Weapon Bob";
+	case GAME_DAMAGEKICK:
+		return "Damage Kick";
+	case GAME_DAMAGETINT:
+		return "Gun Damage Tint";
+	case GAME_AUTOSWITCH:
+		return "Gun Auto Switch";
+	case GAME_CONSOLECHAT:
+		return "Console Chat";
+	case GAME_SWAPROCKETS:
+		return "R2G Swap Rockets";
+	case GAME_TRUELIGHTNING:
+		return "True Lightning";
+	case GAME_DEADBODYFILTER:
+		return "Deadbody Filter";
+	case GAME_MM1MUTE:
+		return "Mute MM1 Chat";
+	case GAME_VIEWMODEL:
+		return "View Model";
+	case GAME_TEAMCOLOR:
+		return "Force Team Color";
+	case GAME_ENEMYCOLOR:
+		return "Force Enemy Color";
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_Game_f(void)
+{
+	key_dest = key_menu;
+	m_state = m_game;
+	m_entersound = true;
+	game_cursor = 0;
+	gamemenu.cursor = 0;
+	gamemenu.search.len = 0;
+	gamemenu.search.text[0] = 0;
+	numberOfGameItems = GAME_ITEMS;
+
+	IN_UpdateGrabs();
+}
+
+static void M_Game_AdjustSliders(int dir)
+{
+	int curr_alwaysrun, target_alwaysrun;
+	float f;
+	S_LocalSound("misc/menu3.wav");
+
+	switch (game_cursor)
+	{
+
+	case GAME_ALWAYSRUN:
+		if (cl_alwaysrun.value)
+			curr_alwaysrun = ALWAYSRUN_QUAKESPASM;
+		else if (cl_forwardspeed.value > 200)
+			curr_alwaysrun = ALWAYSRUN_VANILLA;
+		else
+			curr_alwaysrun = ALWAYSRUN_OFF;
+
+		target_alwaysrun = (ALWAYSRUN_ITEMS + curr_alwaysrun + dir) % ALWAYSRUN_ITEMS;
+
+		if (target_alwaysrun == ALWAYSRUN_VANILLA)
+		{
+			Cvar_SetValue("cl_alwaysrun", 0);
+			Cvar_SetValue("cl_forwardspeed", 400);
+			Cvar_SetValue("cl_backspeed", 400);
+		}
+		else if (target_alwaysrun == ALWAYSRUN_QUAKESPASM)
+		{
+			Cvar_SetValue("cl_alwaysrun", 1);
+			Cvar_SetValue("cl_forwardspeed", 200);
+			Cvar_SetValue("cl_backspeed", 200);
+		}
+		else // ALWAYSRUN_OFF
+		{
+			Cvar_SetValue("cl_alwaysrun", 0);
+			Cvar_SetValue("cl_forwardspeed", 200);
+			Cvar_SetValue("cl_backspeed", 200);
+		}
+		break;
+
+	case GAME_ROLLANGLE:
+		Cvar_SetValue("cl_rollangle", !cl_rollangle.value);
+		break;
+
+	case GAME_FOV:
+		f = scr_fov.value + dir;  // Changed from dir * 5 to just dir
+		f = CLAMP(60, f, 130);
+		Cvar_SetValue("fov", f);
+		break;
+
+	case GAME_FLASHES:
+		f = gl_cshiftpercent.value + dir;  // Changed from dir * 10 to just dir
+		f = CLAMP(0, f, 100);
+		Cvar_SetValue("gl_cshiftpercent", f);
+		break;
+
+	case GAME_WEAPONBOB:
+		Cvar_SetValue("cl_bob", !cl_bob.value);
+		break;
+
+	case GAME_DAMAGEKICK:
+		if (v_kickroll.value == 0 || v_kickpitch.value == 0) // If off, turn on with defaults
+		{
+			Cvar_SetValue("v_kicktime", 0.5);
+			Cvar_SetValue("v_kickroll", 0.6);
+			Cvar_SetValue("v_kickpitch", 0.6);
+		}
+		else // Turn off
+		{
+			Cvar_SetValue("v_kicktime", 0);
+			Cvar_SetValue("v_kickroll", 0);
+			Cvar_SetValue("v_kickpitch", 0);
+		}
+		break;
+
+	case GAME_DAMAGETINT:
+	{
+		int current = cl_damagehue.value;
+		current = (current + 3 + dir) % 3;  // Cycle through 0,1,2
+		Cvar_SetValue("cl_damagehue", current);
+	}
+	break;
+
+	case GAME_AUTOSWITCH:
+	{
+		int newval = (w_switch.value == 0) ? 2 : 0;
+		Cvar_SetValue("w_switch", newval);
+		Cvar_SetValue("b_switch", newval);
+	}
+	break;
+
+	case GAME_CONSOLECHAT:
+	{
+		int current = cl_say.value;
+		current = (current + 3 + dir) % 3;  // Cycle through 0,1,2
+		Cvar_SetValue("cl_say", current);
+	}
+	break;
+
+	case GAME_SWAPROCKETS:
+		Cvar_SetValue("cl_r2g", !cl_r2g.value);
+		break;
+
+	case GAME_TRUELIGHTNING:
+		f = cl_truelightning.value + dir;
+		f = CLAMP(0, f, 100);
+		Cvar_SetValue("cl_truelightning", f);
+		break;
+
+	case GAME_DEADBODYFILTER:
+		Cvar_SetValue("cl_deadbodyfilter", !cl_deadbodyfilter.value);
+		break;
+
+	case GAME_MM1MUTE:
+		Cvar_SetValue("con_mm1mute", !con_mm1mute.value);
+		break;
+
+	case GAME_VIEWMODEL:
+		f = r_drawviewmodel.value + dir * 0.1f;  // Change to 0.1 increments
+		f = CLAMP(0, f, 1);  // Clamp between 0 and 1
+		Cvar_SetValue("r_drawviewmodel", f);
+		break;
+
+	case GAME_TEAMCOLOR:
+		M_Game_AdjustColor(dir, true);
+		break;
+	case GAME_ENEMYCOLOR:
+		M_Game_AdjustColor(dir, false);
+		break;
+
+	case GAME_COUNT:
+		break;
+
+	default:
+		break;
+	}
+}
+
+void M_Game_Draw(void)
+{
+	//qpic_t* p;
+	float r;
+	enum game_e i;
+
+	//p = Draw_CachePic("gfx/p_option.lmp");
+	//M_DrawPic((320 - p->width) / 2, 4, p);
+
+	const char* title = "Game Options";
+	M_PrintWhite((320 - 8 * strlen(title)) / 2, 4, title);
+
+	for (i = 0; i < GAME_ITEMS; i++)
+	{
+		int y = 20 + 8 * i;
+		const char* text = NULL;
+		const char* value = NULL;
+
+		switch (i)
+		{
+
+		case GAME_ALWAYSRUN:
+			text = "        Always Run";
+			if (cl_alwaysrun.value)
+				value = "qs/power bunnyhop";
+			else if (cl_forwardspeed.value > 200.0)
+				value = "traditional";
+			else
+				value = "off (slow)";
+			M_Print(178, y, value);
+			break;
+
+		case GAME_ROLLANGLE:
+			text = " Strafe Angle Tilt";
+			M_DrawCheckbox(178, y, cl_rollangle.value != 0);
+			break;
+
+		case GAME_FOV:
+			text = "     Field of View";
+			r = (scr_fov.value - 60) / 70.0;  // 70 is range (130-60)
+			M_DrawSlider(186, y, r, scr_fov.value, "%.0f");
+			break;
+
+		case GAME_FLASHES:
+			text = "    Screen Flashes";
+			r = gl_cshiftpercent.value / 100.0;
+			M_DrawSlider(186, y, r, gl_cshiftpercent.value, "%.0f%%");
+			break;
+
+		case GAME_WEAPONBOB:
+			text = "        Weapon Bob";
+			M_DrawCheckbox(178, y, cl_bob.value != 0);
+			break;
+
+		case GAME_DAMAGEKICK:
+			text = "       Damage Kick";
+			M_DrawCheckbox(178, y, (v_kickroll.value != 0 || v_kickpitch.value != 0));
+			break;
+
+		case GAME_DAMAGETINT:
+			text = "   Damage Gun Tint";
+			if (cl_damagehue.value == 0)
+				value = "off";
+			else if (cl_damagehue.value == 1)
+				value = "weapon";
+			else
+				value = "weapon+crosshair";
+			M_Print(178, y, value);
+			break;
+
+		case GAME_AUTOSWITCH:
+			text = "   Gun Auto Switch";
+			M_DrawCheckbox(178, y, w_switch.value != 0);
+			break;
+
+		case GAME_CONSOLECHAT:
+			text = "      Console Chat";
+			if (cl_say.value == 0)
+				value = "off";
+			else if (cl_say.value == 1)
+				value = "console";
+			else
+				value = "console+space";
+			M_Print(178, y, value);
+			break;
+
+		case GAME_SWAPROCKETS:
+			text = "  R2G Swap Rockets";
+			M_DrawCheckbox(178, y, cl_r2g.value != 0);
+			break;
+
+		case GAME_TRUELIGHTNING:
+			text = "    True Lightning";
+			r = cl_truelightning.value / 100.0;
+			M_DrawSlider(186, y, r, cl_truelightning.value, "%.0f%%");
+			break;
+
+		case GAME_DEADBODYFILTER:
+			text = "   Deadbody Filter";
+			M_DrawCheckbox(178, y, cl_deadbodyfilter.value != 0);
+			break;
+		case GAME_MM1MUTE:
+			text = "     Mute MM1 Chat";
+			M_DrawCheckbox(178, y, con_mm1mute.value != 0);
+			break;
+
+		case GAME_VIEWMODEL:
+			text = " Visible Gun Model";
+			r = r_drawviewmodel.value;  // Already 0-1, no need to divide
+			M_DrawSlider(186, y, r, r_drawviewmodel.value * 100, "%.0f%%");  // Multiply by 100 just for display
+			break;
+
+		case GAME_TEAMCOLOR:
+			text = "  Force Team Color";
+			if (strcmp(gl_teamcolor.string, "") == 0)
+				value = "off";
+			else if (team_rgb_active)
+				value = va("%s", gl_teamcolor.string);
+			else
+			{
+				plcolour_t color = CL_PLColours_Parse(gl_teamcolor.string);
+				value = (color.type == 2) ? va("%s", gl_teamcolor.string) : va("%d", color.basic);
+			}
+			M_Print(178, y, value);
+			if (strcmp(gl_teamcolor.string, "") != 0)
+				Draw_FillPlayer(178 + (strlen(value) * 8) + 4, y + 2, 6, 6, CL_PLColours_Parse(gl_teamcolor.string), 1.0);
+			break;
+
+		case GAME_ENEMYCOLOR:
+			text = " Force Enemy Color";
+			if (strcmp(gl_enemycolor.string, "") == 0)
+				value = "off";
+			else if (enemy_rgb_active)
+				value = va("%s", gl_enemycolor.string);
+			else
+			{
+				plcolour_t color = CL_PLColours_Parse(gl_enemycolor.string);
+				value = (color.type == 2) ? va("%s", gl_enemycolor.string) : va("%d", color.basic);
+			}
+			M_Print(178, y, value);
+			if (strcmp(gl_enemycolor.string, "") != 0)
+				Draw_FillPlayer(178 + (strlen(value) * 8) + 4, y + 2, 6, 6, CL_PLColours_Parse(gl_enemycolor.string), 1.0);
+			break;
+
+		default:
+			break;
+		}
+
+		if (text)
+		{
+			if (gamemenu.search.len > 0 &&
+				q_strcasestr(text, gamemenu.search.text))
+			{
+				M_PrintHighlight(0, y, text,
+					gamemenu.search.text,
+					gamemenu.search.len);
+			}
+			else
+			{
+				M_Print(0, y, text);
+			}
+		}
+	}
+
+	// Draw cursor
+	M_DrawCharacter(168, 20 + game_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+
+	if (game_cursor == GAME_TEAMCOLOR || game_cursor == GAME_ENEMYCOLOR)
+		M_PrintRGBA(74, 160, "+shift for RGB colors", CL_PLColours_Parse("0xffffff"), 0.6f, false);
+
+	// Draw search box if search is active
+	if (gamemenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 170, 32, 1);
+		M_PrintHighlight(24, 178, gamemenu.search.text,
+			gamemenu.search.text,
+			gamemenu.search.len);
+		int cursor_x = 24 + 8 * gamemenu.search.len;
+		if (numberOfGameItems == 0)
+			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
+	}
+}
+
+void M_Game_Key(int k)
+{
+	// Handle slider grab release
+	if (!keydown[K_MOUSE1])
+		game_slider_grab = false;
+
+	if (game_slider_grab)
+	{
+		switch (k)
+		{
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			game_slider_grab = false;
+			break;
+		}
+		return;
+	}
+
+	// Handle search functionality first
+	if (k == K_ESCAPE)
+	{
+		if (gamemenu.search.len > 0)
+		{
+			gamemenu.search.len = 0;
+			gamemenu.search.text[0] = 0;
+			numberOfGameItems = GAME_ITEMS;
+			return;
+		}
+		M_Menu_Options_f();
+		return;
+	}
+	else if (k == K_BACKSPACE)
+	{
+		if (gamemenu.search.len > 0)
+		{
+			gamemenu.search.text[--gamemenu.search.len] = 0;
+			if (gamemenu.search.len > 0)
+			{
+				numberOfGameItems = 0;
+				for (int i = 0; i < GAME_ITEMS; i++)
+				{
+					const char* itemtext = M_Game_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, gamemenu.search.text))
+					{
+						numberOfGameItems++;
+						if (numberOfGameItems == 1)
+							game_cursor = i;
+					}
+				}
+			}
+			else
+			{
+				numberOfGameItems = GAME_ITEMS;
+			}
+			return;
+		}
+	}
+	else if (k >= 32 && k < 127)
+	{
+		if (gamemenu.search.len < sizeof(gamemenu.search.text) - 1)
+		{
+			gamemenu.search.text[gamemenu.search.len++] = k;
+			gamemenu.search.text[gamemenu.search.len] = 0;
+
+			numberOfGameItems = 0;
+			for (int i = 0; i < GAME_ITEMS; i++)
+			{
+				const char* itemtext = M_Game_GetItemText(i);
+				if (itemtext && q_strcasestr(itemtext, gamemenu.search.text))
+				{
+					numberOfGameItems++;
+					if (numberOfGameItems == 1)
+						game_cursor = i;
+				}
+			}
+			return;
+		}
+	}
+
+	switch (k)
+	{
+	case K_ESCAPE:
+	case K_BBUTTON:
+	case K_MOUSE4:
+	case K_MOUSE2:
+		M_Menu_Options_f();
+		break;
+
+	case K_MOUSE1:
+		m_entersound = true;
+
+		// Check if click is in search box area
+		if (gamemenu.search.len > 0 && m_mousey >= 170)
+			break;
+
+		// Check if click is in valid menu area
+		if (m_mousey >= 20 && m_mousey < 20 + (GAME_ITEMS * 8))  // Changed from 48 to 20
+		{
+			game_cursor = (m_mousey - 20) / 8;  // Changed from 48 to 20
+
+			if (game_cursor == GAME_FOV ||
+				game_cursor == GAME_FLASHES ||
+				game_cursor == GAME_TRUELIGHTNING ||
+				game_cursor == GAME_VIEWMODEL)
+			{
+				game_slider_grab = true;
+			}
+			else
+			{
+				M_Game_AdjustSliders(1);
+			}
+		}
+		break;
+
+	case K_ENTER:
+	case K_KP_ENTER:
+	case K_ABUTTON:
+		m_entersound = true;
+		M_Game_AdjustSliders(1);
+		break;
+
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		game_cursor--;
+		if (game_cursor < 0)
+			game_cursor = numberOfGameItems - 1;
+		break;
+
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		game_cursor++;
+		if (game_cursor >= numberOfGameItems)
+			game_cursor = 0;
+		break;
+
+	case K_LEFTARROW:
+	case K_MWHEELDOWN:
+		M_Game_AdjustSliders(-1);
+		break;
+
+	case K_RIGHTARROW:
+	case K_MWHEELUP:
+		M_Game_AdjustSliders(1);
+		break;
+	}
+}
+
+void M_Game_Mousemove(int cx, int cy)
+{
+	if (game_slider_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			game_slider_grab = false;
+			return;
+		}
+
+		float f;
+		switch (game_cursor)
+		{
+		case GAME_FOV:
+			f = 60 + M_MouseToSliderFraction(cx - 187) * 70;  // 70 is range (130-60)
+			Cvar_SetValue("fov", CLAMP(60, (int)f, 130));
+			break;
+
+		case GAME_FLASHES:
+			f = M_MouseToSliderFraction(cx - 187) * 100;
+			Cvar_SetValue("gl_cshiftpercent", CLAMP(0, (int)f, 100));
+			break;
+
+		case GAME_TRUELIGHTNING:
+			f = M_MouseToSliderFraction(cx - 187) * 100;
+			Cvar_SetValue("cl_truelightning", CLAMP(0, (int)f, 100));
+			break;
+
+		case GAME_VIEWMODEL:
+			f = M_MouseToSliderFraction(cx - 187);  // Already 0-1
+			Cvar_SetValue("r_drawviewmodel", CLAMP(0, f, 1));
+			break;
+
+			// Add cases for unhandled enumerations
+		case GAME_ALWAYSRUN:
+		case GAME_ROLLANGLE:
+		case GAME_WEAPONBOB:
+		case GAME_DAMAGEKICK:
+		case GAME_DAMAGETINT:
+		case GAME_AUTOSWITCH:
+		case GAME_CONSOLECHAT:
+		case GAME_SWAPROCKETS:
+		case GAME_DEADBODYFILTER:
+		case GAME_MM1MUTE:
+		case GAME_COUNT:
+			// No action needed for these cases in mouse movement
+			break;
+
+		default:
+			// Handle unexpected cases gracefully
+			break;
+		}
+		return;
+	}
+
+	// Don't process mouse movement if it's in the search box area
+	if (gamemenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 20) / 8;
+
+	// Make sure the item is within valid range
+	if (item >= 0 && item < GAME_ITEMS)
+	{
+		// Update the cursor position
+		game_cursor = item;
+	}
+}
+
+
+/*
+==================
+HUD Menu
+==================
+*/
+
+extern cvar_t scr_sbar, scr_showfps, scr_match_hud, scr_matchclock, scr_ping, scr_clock, 
+scr_showspeed, scr_sbarfacecolor, scr_showscores, scr_autoid, scr_movekeys, scr_conscale, scr_sbaralphaqwammo;
+
+static enum hud_e
+{
+	HUD_CROSSHAIR,
+	HUD_SCALE,
+	HUD_SCRSIZE,
+	HUD_SBALPHA,
+	HUD_SBARSTYLE,
+	HUD_SHOWFPS,
+	HUD_MATCHSCORES,
+	HUD_MATCHCLOCK,
+	HUD_SHOWPING,
+	HUD_SHOWCLOCK,
+	HUD_SHOWSPEED,
+	HUD_SHOWSCORES,
+	HUD_AUTOID,
+	HUD_MOVEKEYS,
+	HUD_CONSOLEFONT,
+	HUD_COUNT
+} hud_cursor;
+
+#define HUD_ITEMS (HUD_COUNT)
+int numberOfHUDItems = HUD_ITEMS;
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} hudmenu;
+
+static qboolean hud_slider_grab;
+float target_hud_scale_frac;
+
+static const char* M_HUD_GetItemText(int index)
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case HUD_CROSSHAIR:
+		return "Crosshair";
+	case HUD_SCALE:
+		return "HUD Scale";
+	case HUD_SCRSIZE:
+		return "Screen Size";
+	case HUD_SBALPHA:
+		return "Statusbar Alpha";
+	case HUD_SBARSTYLE:
+		return "Status Bar Style";
+	case HUD_SHOWFPS:
+		return "Show FPS";
+	case HUD_MATCHSCORES:
+		return "Show Match Scores";
+	case HUD_MATCHCLOCK:
+		return "Match Clock";
+	case HUD_SHOWPING:
+		return "Show Ping";
+	case HUD_SHOWCLOCK:
+		return "Show Clock";
+	case HUD_SHOWSPEED:
+		return "Show Speed";
+	case HUD_SHOWSCORES:
+		return "Show Scores";
+	case HUD_AUTOID:
+		return "Player Auto ID";
+	case HUD_MOVEKEYS:
+		return "Movement Keys";
+	case HUD_CONSOLEFONT:
+		return "Console Font Size";
+
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_HUD_f(void)
+{
+	key_dest = key_menu;
+	m_state = m_hud;
+	m_entersound = true;
+	hud_cursor = 0;
+	hudmenu.cursor = 0;
+	hudmenu.search.len = 0;
+	hudmenu.search.text[0] = 0;
+	numberOfHUDItems = HUD_ITEMS;
+	hud_slider_grab = false;
+
+	IN_UpdateGrabs();
+}
+
+static void M_HUD_AdjustSliders(int dir)
+{
+	float f, l;
+	int value;
+	S_LocalSound("misc/menu3.wav");
+
+	switch (hud_cursor)
+	{
+	case HUD_SCALE:
+		l = ((vid.width + 31) / 32) / 10.0;
+		f = scr_sbarscale.value + dir * .1;
+		if (f < 1) f = 1;
+		else if (f > l) f = l;
+		Cvar_SetValue("scr_sbarscale", f);  // Only adjust sbar scale
+		break;
+
+	case HUD_SCRSIZE:
+		f = scr_viewsize.value + dir * 10;
+		if (f > 130) f = 130;
+		else if (f < 30) f = 30;
+		Cvar_SetValue("viewsize", f);
+		break;
+
+	case HUD_SBALPHA:
+		f = scr_sbaralpha.value - dir * 0.05;
+		if (f < 0) f = 0;
+		else if (f > 1) f = 1;
+		Cvar_SetValue("scr_sbaralpha", f);
+		break;
+	case HUD_SBARSTYLE:
+		value = scr_sbar.value + dir;
+		if (value > 3) value = 1;
+		if (value < 1) value = 3;
+		Cvar_SetValue("scr_sbar", value);
+		break;
+
+	case HUD_SHOWFPS:
+		Cvar_SetValue("scr_showfps", !scr_showfps.value);
+		break;
+
+	case HUD_MATCHSCORES:
+		Cvar_SetValue("scr_match_hud", !scr_match_hud.value);
+		break;
+
+	case HUD_MATCHCLOCK:
+		Cvar_SetValue("scr_matchclock", !scr_matchclock.value);
+		break;
+
+	case HUD_SHOWPING:
+		Cvar_SetValue("scr_ping", !scr_ping.value);
+		break;
+
+	case HUD_SHOWCLOCK:
+		value = scr_clock.value + dir;
+		if (value > 8) value = 0;  // Changed from 4 to 8
+		if (value < 0) value = 8;  // Changed from 4 to 8
+		Cvar_SetValue("scr_clock", value);
+		break;
+
+	case HUD_SHOWSPEED:
+		value = scr_showspeed.value + dir;
+		if (value > 2) value = 0;
+		if (value < 0) value = 2;
+		Cvar_SetValue("scr_showspeed", value);
+		break;
+
+	case HUD_SHOWSCORES:
+		Cvar_SetValue("scr_showscores", !scr_showscores.value);
+		break;
+
+	case HUD_AUTOID:
+		value = scr_autoid.value + dir;
+		if (value > 2) value = 0;
+		if (value < 0) value = 2;
+		Cvar_SetValue("scr_autoid", value);
+		break;
+
+	case HUD_MOVEKEYS:
+		Cvar_SetValue("scr_movekeys", !scr_movekeys.value);
+		break;
+
+	case HUD_CONSOLEFONT:
+		f = scr_conscale.value + dir * 0.5;
+		if (f < 1) f = 1;
+		else if (f > 6) f = 6;
+		Cvar_SetValue("scr_conscale", f);
+		break;
+
+	default:
+		break;
+	}
+}
+
+void M_HUD_Draw(void)
+{
+	qpic_t* p;
+	float r, l;
+	const char* value;
+
+	p = Draw_CachePic("gfx/p_option.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
+
+	const char* title = "HUD Options";
+	M_PrintWhite((320 - 8 * strlen(title)) / 2, 32, title);
+
+	for (int i = 0; i < HUD_ITEMS; i++)
+	{
+		int y = 48 + 8 * i;
+		const char* text = NULL;
+
+		switch (i)
+		{
+		case HUD_CROSSHAIR:
+			text = "         Crosshair";
+			M_Print(178, y-2, "...");
+			break;
+		case HUD_SCALE:
+			text = "         HUD Scale";
+			l = (vid.width / 320.0) - 1;
+			r = l > 0 ? (scr_sbarscale.value - 1) / l : 0;  // Changed from conscale to sbarscale
+			if (hud_slider_grab && hud_cursor == HUD_SCALE)
+				r = target_hud_scale_frac;
+			M_DrawSlider(186, y, r, scr_sbarscale.value, "%.1f");  // Changed from conscale to sbarscale
+			break;
+
+		case HUD_SCRSIZE:
+			text = "       Screen Size";
+			r = (scr_viewsize.value - 30) / (130 - 30);
+			M_DrawSlider(186, y, r, scr_viewsize.value, "%.0f");
+			break;
+
+		case HUD_SBALPHA:
+			text = "   Statusbar Alpha";
+			r = (1.0 - scr_sbaralpha.value);
+			M_DrawSlider(186, y, r, 100.0f * r, "%.0f%%");
+			break;
+
+		case HUD_SBARSTYLE:
+			text = "  Status Bar Style";
+			switch ((int)scr_sbar.value)
+			{
+			case 1: value = "Classic"; break;
+			case 2: value = "Quakeworld"; break;
+			case 3: value = "Modern/Remaster"; break;
+			default: value = "Unknown"; break;
+			}
+			M_Print(178, y, value);
+			break;
+
+		case HUD_SHOWFPS:
+			text = "          Show FPS";
+			M_DrawCheckbox(178, y, scr_showfps.value);
+			break;
+
+		case HUD_MATCHSCORES:
+			text = " Show Match Scores";
+			M_DrawCheckbox(178, y, scr_match_hud.value);
+			break;
+
+		case HUD_MATCHCLOCK:
+			text = "       Match Clock";
+			M_DrawCheckbox(178, y, scr_matchclock.value);
+			break;
+
+		case HUD_SHOWPING:
+			text = "         Show Ping";
+			M_DrawCheckbox(178, y, scr_ping.value);
+			break;
+
+		case HUD_SHOWCLOCK:
+			text = "        Show Clock";
+			switch ((int)scr_clock.value)
+			{
+			case 0: value = "Off"; break;
+			case 1: value = "Level Time"; break;
+			case 2: value = "12hr Clock"; break;
+			case 3: value = "24hr Clock"; break;
+			case 4: value = "Date Only"; break;
+			case 5: value = "Date + 12hr"; break;
+			case 6: value = "Date + 24hr"; break;
+			case 7: value = "Score/12hr"; break;
+			case 8: value = "Score/24hr"; break;
+			default: value = "Unknown"; break;
+			}
+			M_Print(178, y, value);
+			break;
+
+		case HUD_SHOWSPEED:
+			text = "        Show Speed";
+			switch ((int)scr_showspeed.value)
+			{
+			case 0: value = "Off"; break;
+			case 1: value = "Numbers"; break;
+			case 2: value = "Visual Meter"; break;
+			default: value = "Unknown"; break;
+			}
+			M_Print(178, y, value);
+			break;
+
+		case HUD_SHOWSCORES:
+			text = "       Show Scores";
+			M_DrawCheckbox(178, y, scr_showscores.value);
+			break;
+
+		case HUD_AUTOID:
+			text = "    Player Auto ID";
+			switch ((int)scr_autoid.value)
+			{
+			case 0: value = "off"; break;
+			case 1: value = "on"; break;
+			case 2: value = "on+prewar+pmode"; break;
+			default: value = "Unknown"; break;
+			}
+			M_Print(178, y, value);
+			break;
+
+		case HUD_MOVEKEYS:
+			text = "     Movement Keys";
+			M_DrawCheckbox(178, y, scr_movekeys.value);
+			break;
+
+		case HUD_CONSOLEFONT:
+			text = " Console Font Size";
+			r = (scr_conscale.value - 1) / 5.0; // Scale to 1-6 range
+			M_DrawSlider(186, y, r, scr_conscale.value, "%.1f");
+			break;
+
+		}
+
+		if (text)
+		{
+			if (hudmenu.search.len > 0 &&
+				q_strcasestr(text, hudmenu.search.text))
+			{
+				M_PrintHighlight(0, y, text,
+					hudmenu.search.text,
+					hudmenu.search.len);
+			}
+			else
+			{
+				M_Print(0, y, text);
+			}
+		}
+	}
+
+	// Draw search box if active
+	if (hudmenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 174, 32, 1);
+		M_PrintHighlight(24, 182, hudmenu.search.text,
+			hudmenu.search.text,
+			hudmenu.search.len);
+		int cursor_x = 24 + 8 * hudmenu.search.len;
+		if (numberOfHUDItems == 0)
+			M_DrawCharacter(cursor_x, 182, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 182, 10 + ((int)(realtime * 4) & 1));
+	}
+
+	// Draw cursor
+	M_DrawCharacter(168, 48 + hud_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+}
+
+void M_HUD_Key(int k)
+{
+	// Handle slider grab release
+	if (!keydown[K_MOUSE1])
+		hud_slider_grab = false;
+
+	if (hud_slider_grab)
+	{
+		switch (k)
+		{
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			hud_slider_grab = false;
+			break;
+		}
+		return;
+	}
+
+	// Handle search functionality first
+	if (k == K_ESCAPE)
+	{
+		if (hudmenu.search.len > 0)
+		{
+			hudmenu.search.len = 0;
+			hudmenu.search.text[0] = 0;
+			numberOfHUDItems = HUD_ITEMS;
+			return;
+		}
+		M_Menu_Options_f();
+		return;
+	}
+	else if (k == K_BACKSPACE)
+	{
+		if (hudmenu.search.len > 0)
+		{
+			hudmenu.search.text[--hudmenu.search.len] = 0;
+			if (hudmenu.search.len > 0)
+			{
+				numberOfHUDItems = 0;
+				for (int i = 0; i < HUD_ITEMS; i++)
+				{
+					const char* itemtext = M_HUD_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, hudmenu.search.text))
+					{
+						numberOfHUDItems++;
+						if (numberOfHUDItems == 1)
+							hud_cursor = i;
+					}
+				}
+			}
+			else
+			{
+				numberOfHUDItems = HUD_ITEMS;
+			}
+			return;
+		}
+	}
+	else if (k >= 32 && k < 127)
+	{
+		if (hudmenu.search.len < sizeof(hudmenu.search.text) - 1)
+		{
+			hudmenu.search.text[hudmenu.search.len++] = k;
+			hudmenu.search.text[hudmenu.search.len] = 0;
+
+			numberOfHUDItems = 0;
+			for (int i = 0; i < HUD_ITEMS; i++)
+			{
+				const char* itemtext = M_HUD_GetItemText(i);
+				if (itemtext && q_strcasestr(itemtext, hudmenu.search.text))
+				{
+					numberOfHUDItems++;
+					if (numberOfHUDItems == 1)
+						hud_cursor = i;
+				}
+			}
+			return;
+		}
+	}
+
+	switch (k)
+	{
+	case K_ESCAPE:
+	case K_BBUTTON:
+	case K_MOUSE4:
+	case K_MOUSE2:
+		M_Menu_Options_f();
+		break;
+
+	case K_ENTER:
+	case K_KP_ENTER:
+	case K_ABUTTON:
+		m_entersound = true;
+		switch (hud_cursor)
+		{
+		case HUD_CROSSHAIR:
+			M_Menu_Crosshair_f();
+			break;
+		case HUD_SBARSTYLE:
+		{
+			int value = scr_sbar.value + 1;
+			if (value > 3) value = 1;
+			Cvar_SetValue("scr_sbar", value);
+			break;
+		}
+		case HUD_SHOWFPS:
+			Cvar_SetValue("scr_showfps", !scr_showfps.value);
+			break;
+		case HUD_MATCHSCORES:
+			Cvar_SetValue("scr_match_hud", !scr_match_hud.value);
+			break;
+		case HUD_MATCHCLOCK:
+			Cvar_SetValue("scr_matchclock", !scr_matchclock.value);
+			break;
+		case HUD_SHOWPING:
+			Cvar_SetValue("scr_ping", !scr_ping.value);
+			break;
+		case HUD_SHOWCLOCK:
+		{
+			int value = scr_clock.value + 1;
+			if (value > 8) value = 0;
+			Cvar_SetValue("scr_clock", value);
+			break;
+		}
+		default:
+			M_HUD_AdjustSliders(1);
+			break;
+		}
+		break;
+
+	case K_MOUSE1:
+		m_entersound = true;
+
+		// Check if click is in search box area
+		if (hudmenu.search.len > 0 && m_mousey >= 170)
+			break;
+
+		// Check if click is in valid menu area
+		if (m_mousey >= 48 && m_mousey < 48 + (HUD_ITEMS * 8))
+		{
+			hud_cursor = (m_mousey - 48) / 8;
+
+			if (hud_cursor == HUD_CROSSHAIR)
+			{
+				M_Menu_Crosshair_f();
+				break;
+			}
+
+			if (hud_cursor == HUD_SCALE ||
+				hud_cursor == HUD_SCRSIZE ||
+				hud_cursor == HUD_SBALPHA ||
+				hud_cursor == HUD_CONSOLEFONT)
+			{
+				hud_slider_grab = true;
+			}
+			else if (hud_cursor == HUD_SBARSTYLE)
+			{
+				int value = scr_sbar.value + 1;
+				if (value > 3) value = 1;
+				Cvar_SetValue("scr_sbar", value);
+			}
+			else if (hud_cursor == HUD_SHOWFPS)
+			{
+				Cvar_SetValue("scr_showfps", !scr_showfps.value);
+			}
+			else if (hud_cursor == HUD_MATCHSCORES)
+			{
+				Cvar_SetValue("scr_match_hud", !scr_match_hud.value);
+			}
+			else if (hud_cursor == HUD_MATCHCLOCK)
+			{
+				Cvar_SetValue("scr_matchclock", !scr_matchclock.value);
+			}
+			else if (hud_cursor == HUD_SHOWPING)
+			{
+				Cvar_SetValue("scr_ping", !scr_ping.value);
+			}
+			else if (hud_cursor == HUD_SHOWCLOCK)
+			{
+				int value = scr_clock.value + 1;
+				if (value > 8) value = 0;
+				Cvar_SetValue("scr_clock", value);
+			}
+			else if (hud_cursor == HUD_SHOWSPEED)
+			{
+				int value = scr_showspeed.value + 1;
+				if (value > 2) value = 0;
+				Cvar_SetValue("scr_showspeed", value);
+			}
+			else if (hud_cursor == HUD_SHOWSCORES)
+			{
+				Cvar_SetValue("scr_showscores", !scr_showscores.value);
+			}
+			else if (hud_cursor == HUD_AUTOID)
+			{
+				int value = scr_autoid.value + 1;
+				if (value > 2) value = 0;
+				Cvar_SetValue("scr_autoid", value);
+			}
+			else if (hud_cursor == HUD_MOVEKEYS)
+			{
+				Cvar_SetValue("scr_movekeys", !scr_movekeys.value);
+			}
+			else
+			{
+				M_HUD_AdjustSliders(1);
+			}
+		}
+		break;
+
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		if (hud_cursor <= 0)
+			hud_cursor = numberOfHUDItems - 1;
+		else
+			hud_cursor--;
+		break;
+
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		hud_cursor++;
+		if (hud_cursor >= numberOfHUDItems)
+			hud_cursor = 0;
+		break;
+
+	case K_LEFTARROW:
+	case K_MWHEELDOWN:
+		M_HUD_AdjustSliders(-1);
+		break;
+
+	case K_RIGHTARROW:
+	case K_MWHEELUP:
+		M_HUD_AdjustSliders(1);
+		break;
+	}
+}
+
+void M_HUD_Mousemove(int cx, int cy)
+{
+	if (hud_slider_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			hud_slider_grab = false;
+			return;
+		}
+
+		float f, l;
+		switch (hud_cursor)
+		{
+		case HUD_SCALE:
+			target_hud_scale_frac = M_MouseToSliderFraction(cx - 187);
+			l = (vid.width / 320.0) - 1;
+			f = l > 0 ? target_hud_scale_frac * l + 1 : 1;
+			Cvar_SetValue("scr_sbarscale", f);
+			break;
+
+		case HUD_SCRSIZE:
+			f = M_MouseToSliderFraction(cx - 187);
+			f = f * (130 - 30) + 30;
+			if (f >= 100)
+				f = floor(f / 10 + 0.5) * 10;
+			Cvar_SetValue("viewsize", f);
+			break;
+
+		case HUD_SBALPHA:
+			f = 1.0 - M_MouseToSliderFraction(cx - 187);
+			Cvar_SetValue("scr_sbaralpha", f);
+			break;
+
+		case HUD_CONSOLEFONT:
+			f = M_MouseToSliderFraction(cx - 187);
+			f = f * 5.0 + 1.0;
+			f = CLAMP(1.0, f, 6.0);
+			Cvar_SetValue("scr_conscale", f);
+			break;
+
+			// Add cases for unhandled enumerations
+		case HUD_SBARSTYLE:
+		case HUD_SHOWFPS:
+		case HUD_MATCHSCORES:
+		case HUD_MATCHCLOCK:
+		case HUD_SHOWPING:
+		case HUD_SHOWCLOCK:
+		case HUD_SHOWSPEED:
+		case HUD_SHOWSCORES:
+		case HUD_AUTOID:
+		case HUD_MOVEKEYS:
+		case HUD_COUNT:
+			// No action needed for these cases in mouse movement
+			break;
+
+		default:
+			// Handle unexpected cases gracefully
+			break;
+		}
+		return;
+	}
+
+	// Don't process mouse movement if it's in the search box area
+	if (hudmenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 48) / 8;
+
+	// Make sure the item is within valid range
+	if (item >= 0 && item < HUD_ITEMS)
+	{
+		// Update the cursor position
+		hud_cursor = item;
+	}
+}
+
+/*
+==================
+Crosshair Menu
+==================
+*/
+
+qboolean crosshair_menu;
+
+extern cvar_t scr_crosshairalpha, scr_crosshaircolor, scr_crosshairoutline, scr_crosshairscale, crosshair;
+
+static enum crosshair_e
+{
+	CROSSHAIR_TOGGLE,
+	CROSSHAIR_ALPHA,
+	CROSSHAIR_COLOR,
+	CROSSHAIR_OUTLINE,
+	CROSSHAIR_SCALE,
+	CROSSHAIR_COUNT
+} crosshair_cursor;
+
+#define CROSSHAIR_ITEMS (CROSSHAIR_COUNT)
+int numberOfCrosshairItems = CROSSHAIR_ITEMS;
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} crosshairmenu;
+
+
+void renderCircle(float cx, float cy, float r, int num_segments, float line_width);
+void renderSmoothDot(float cx, float cy, float size);
+
+void M_DrawMenuCrosshair(int x, int y)
+{
+	float base_scale = CLAMP(1.0f, scr_crosshairscale.value, 10.0f);
+	float menu_scale = q_min((float)glwidth / 320.0f, (float)glheight / 200.0f);
+	menu_scale = CLAMP(1.0f, scr_menuscale.value, menu_scale);
+
+	// Adjust scale to match viewport
+	float s = (base_scale / menu_scale) / 1.0f;
+
+	plcolour_t color;
+	if (strcmp(scr_crosshaircolor.string, "") == 0)
+		color = CL_PLColours_Parse("0xffffff");
+	else
+		color = CL_PLColours_Parse(scr_crosshaircolor.string);
+
+	plcolour_t outline = CL_PLColours_Parse("0x000000");
+	float alpha = scr_crosshairalpha.value;
+
+	// Save current GL state
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+	// Set up scaling matrix for all crosshairs
+	glPushMatrix();
+	glTranslatef(x, y, 0);
+	glScalef(s, s, 1.0);
+
+	// Regular crosshairs 1-5
+
+	if (crosshair.value == 1)
+		Draw_CharacterRGBA(-4, -4, '+', color, alpha);
+
+	if (crosshair.value == 2)
+	{
+		if (scr_crosshairoutline.value)
+			Draw_FillPlayer(-2, -2, 4, 4, outline, alpha);
+		Draw_FillPlayer(-1, -1, 2, 2, color, alpha);
+	}
+
+	if (crosshair.value == 3)
+	{
+		if (scr_crosshairoutline.value)
+		{
+			Draw_FillPlayer(-2, 5, 4, 12, outline, alpha);
+			Draw_FillPlayer(-17, -2, 12, 4, outline, alpha);
+			Draw_FillPlayer(5, -2, 12, 4, outline, alpha);
+			Draw_FillPlayer(-2, -17, 4, 12, outline, alpha);
+		}
+		Draw_FillPlayer(-1, 6, 2, 10, color, alpha);
+		Draw_FillPlayer(-16, -1, 10, 2, color, alpha);
+		Draw_FillPlayer(6, -1, 10, 2, color, alpha);
+		Draw_FillPlayer(-1, -16, 2, 10, color, alpha);
+	}
+
+	if (crosshair.value == 4)
+	{
+		if (scr_crosshairoutline.value)
+		{
+			Draw_FillPlayer(-2, -10, 4, 20, outline, alpha);
+			Draw_FillPlayer(-10, -2, 20, 4, outline, alpha);
+		}
+		Draw_FillPlayer(-1, -9, 2, 18, color, alpha);
+		Draw_FillPlayer(-9, -1, 18, 2, color, alpha);
+	}
+
+	if (crosshair.value == 5)
+	{
+		if (scr_crosshairoutline.value)
+		{
+			Draw_FillPlayer(-3, -10, 6, 20, outline, alpha);
+			Draw_FillPlayer(-10, -3, 20, 6, outline, alpha);
+		}
+		Draw_FillPlayer(-2, -9, 4, 18, color, alpha);
+		Draw_FillPlayer(-9, -2, 18, 4, color, alpha);
+	}
+
+	if (crosshair.value >= 6)
+	{
+		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);        // for alpha
+		glDisable(GL_ALPHA_TEST);  // for alpha
+
+		float r, g, b;
+		float ro, go, bo;
+
+		// --- Handle 'color' (main crosshair color), respecting type like in Draw_FillPlayer() ---
+		if (color.type == 2)
+		{
+			// Already an RGB color
+			r = color.rgb[0] / 255.0f;
+			g = color.rgb[1] / 255.0f;
+			b = color.rgb[2] / 255.0f;
+		}
+		else
+		{
+			// Basic color index
+			byte* pal = (byte*)&d_8to24table[(color.basic << 4) + 8];
+			r = pal[0] / 255.0f;
+			g = pal[1] / 255.0f;
+			b = pal[2] / 255.0f;
+		}
+
+		// --- Handle 'outline' color, same approach ---
+		if (outline.type == 2)
+		{
+			ro = outline.rgb[0] / 255.0f;
+			go = outline.rgb[1] / 255.0f;
+			bo = outline.rgb[2] / 255.0f;
+		}
+		else
+		{
+			byte* pal = (byte*)&d_8to24table[(outline.basic << 4) + 8];
+			ro = pal[0] / 255.0f;
+			go = pal[1] / 255.0f;
+			bo = pal[2] / 255.0f;
+		}
+
+		float dotSize = 3.0f * (s * 4);
+		float outlineWidth = 4.0f;
+		float outlineSize = dotSize + outlineWidth;
+		float scaledLineWidth = s * 4 * 1.9f;
+
+		// Crosshair #6: a smooth circle "dot"
+		if (crosshair.value == 6)
+		{
+			if (scr_crosshairoutline.value)
+			{
+				// Outline first
+				glColor4f(ro, go, bo, alpha);
+				renderSmoothDot(0.0f, 0.0f, outlineSize);
+			}
+			// Main fill
+			glColor4f(r, g, b, alpha);
+			renderSmoothDot(0.0f, 0.0f, dotSize);
+		}
+		// Crosshair #7: a circle ring plus center dot
+		else if (crosshair.value == 7)
+		{
+			// The circle ring is translucent
+			glColor4f(r, g, b, alpha / 12);
+			renderCircle(0.0f, 0.0f, 10.0f, 200, scaledLineWidth);
+
+			if (scr_crosshairoutline.value)
+			{
+				// Outline first
+				glColor4f(ro, go, bo, 1.0f);
+				renderSmoothDot(0.0f, 0.0f, outlineSize);
+			}
+			// Main fill
+			glColor4f(r, g, b, 1.0f);
+			renderSmoothDot(0.0f, 0.0f, dotSize);
+		}
+
+		glDisable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);
+		glEnable(GL_TEXTURE_2D);
+	}
+
+	// Restore matrix and GL state
+	glPopMatrix();
+	glPopAttrib();
+}
+
+static qboolean crosshair_rgb_active;
+static char last_crosshair_color[10];
+
+static void M_Crosshair_AdjustColor(int dir)
+{
+	if (keydown[K_SHIFT])
+	{
+		crosshair_rgb_active = true;
+		plcolour_t color = CL_PLColours_Parse(scr_crosshaircolor.string);
+		vec3_t hsv;
+		rgbtohsv(color.rgb, hsv);  // Remove ToRGB call, use rgb directly
+
+		hsv[0] += dir / 128.0;
+		hsv[1] = 1;
+		hsv[2] = 1;
+		color.type = 2;
+		color.basic = 0;
+		hsvtorgb(hsv[0], hsv[1], hsv[2], color.rgb);
+
+		const char* colorStr = CL_PLColours_ToString(color);  // Pass color directly, not pointer
+		Cvar_Set("scr_crosshaircolor", colorStr);
+		snprintf(last_crosshair_color, sizeof(last_crosshair_color), "%s", colorStr); // Safely copy
+	}
+	else
+	{
+		crosshair_rgb_active = false;
+		plcolour_t color = CL_PLColours_Parse(scr_crosshaircolor.string);
+		color.type = 1;
+
+		if (color.basic + dir < 0)
+			color.basic = 13;
+		else if (color.basic + dir > 13)
+			color.basic = 0;
+		else
+			color.basic += dir;
+
+		const char* colorStr = CL_PLColours_ToString(color);  // Pass color directly, not pointer
+		Cvar_Set("scr_crosshaircolor", colorStr);
+		snprintf(last_crosshair_color, sizeof(last_crosshair_color), "%s", colorStr); // Safely copy
+	}
+}
+
+static qboolean crosshair_slider_grab;
+
+static const char* M_Crosshair_GetItemText(int index)
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case CROSSHAIR_TOGGLE:
+		return "Use Crosshair";
+	case CROSSHAIR_ALPHA:
+		return "Crosshair Alpha";
+	case CROSSHAIR_COLOR:
+		return "Crosshair Color";
+	case CROSSHAIR_OUTLINE:
+		return "Crosshair Outline";
+	case CROSSHAIR_SCALE:
+		return "Crosshair Scale";
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_Crosshair_f(void)
+{
+	key_dest = key_menu;
+	m_state = m_crosshair;
+	m_entersound = true;
+	crosshair_cursor = 0;
+	crosshairmenu.cursor = 0;
+	crosshairmenu.search.len = 0;
+	crosshairmenu.search.text[0] = 0;
+	numberOfCrosshairItems = CROSSHAIR_ITEMS;
+	crosshair_menu = true;
+
+	IN_UpdateGrabs();
+}
+
+static void M_Crosshair_AdjustSliders(int dir)
+{
+	float f;
+	S_LocalSound("misc/menu3.wav");
+
+	switch (crosshair_cursor)
+	{
+	case CROSSHAIR_TOGGLE:
+		if (dir > 0)
+		{
+			// Cycle through crosshair styles 0-7
+			f = crosshair.value + 1;
+			if (f > 7) f = 0;
+		}
+		else
+		{
+			f = crosshair.value - 1;
+			if (f < 0) f = 7;
+		}
+		Cvar_SetValue("crosshair", f);
+		break;
+	case CROSSHAIR_ALPHA:
+		f = scr_crosshairalpha.value + dir * 0.1;
+		if (f > 1) f = 1;
+		else if (f < 0) f = 0;
+		Cvar_SetValue("scr_crosshairalpha", f);
+		break;
+
+	case CROSSHAIR_COLOR:
+		M_Crosshair_AdjustColor(dir);
+		break;
+
+	case CROSSHAIR_OUTLINE:
+		Cvar_SetValue("scr_crosshairoutline", !scr_crosshairoutline.value);
+		break;
+
+	case CROSSHAIR_SCALE:
+		f = scr_crosshairscale.value + dir * 0.1;
+		if (f > 10) f = 10;
+		else if (f < 1) f = 1;
+		Cvar_SetValue("scr_crosshairscale", f);
+		break;
+
+	default:
+		break;
+	}
+}
+
+void M_Crosshair_Draw(void)
+{
+	qpic_t* p;
+	float r;
+	enum crosshair_e i;
+
+	p = Draw_CachePic("gfx/p_option.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
+
+	const char* title = "Crosshair Options";
+	M_PrintWhite((320 - 8 * strlen(title)) / 2, 32, title);
+
+	for (i = 0; i < CROSSHAIR_ITEMS; i++)
+	{
+		int y = 48 + 8 * i;
+		const char* text = NULL;
+		const char* value = NULL;
+
+		switch (i)
+		{
+		case CROSSHAIR_TOGGLE:
+			text = "       Crosshair";
+			if (crosshair.value == 0)
+				value = "Off";
+			else
+				value = va("Style %d", (int)crosshair.value);
+			M_Print(178, y, value);
+			break;
+		case CROSSHAIR_ALPHA:
+			text = "           Alpha";
+			r = scr_crosshairalpha.value;
+			M_DrawSlider(186, y, r, scr_crosshairalpha.value, "%.1f");
+			break;
+
+		case CROSSHAIR_COLOR:
+			text = "           Color";
+			if (crosshair_rgb_active)
+			{
+				value = va("%s", scr_crosshaircolor.string);
+			}
+			else
+			{
+				plcolour_t color = CL_PLColours_Parse(scr_crosshaircolor.string);
+				if (color.type == 2)  // RGB color
+					value = va("%s", scr_crosshaircolor.string);
+				else  // Basic color
+					value = va("%d", color.basic);
+			}
+			M_Print(178, y, value);
+			break;
+
+		case CROSSHAIR_OUTLINE:
+			text = "         Outline";
+			M_DrawCheckbox(178, y, scr_crosshairoutline.value);
+			break;
+
+		case CROSSHAIR_SCALE:
+			text = "           Scale";
+			r = (scr_crosshairscale.value - 1.0f) / 9.0f;  // Map 1-10 to 0-1 for slider
+			M_DrawSlider(186, y, r, scr_crosshairscale.value, "%.1f");
+			break;
+
+		default:
+			break;
+		}
+
+		if (text)
+		{
+			if (crosshairmenu.search.len > 0 &&
+				q_strcasestr(text, crosshairmenu.search.text))
+			{
+				M_PrintHighlight(16, y, text,
+					crosshairmenu.search.text,
+					crosshairmenu.search.len);
+			}
+			else
+			{
+				M_Print(16, y, text);
+			}
+		}
+
+	}
+
+	if (crosshair.value > 0)
+		M_DrawMenuCrosshair(160, 100);
+
+	// Draw cursor
+	M_DrawCharacter(168, 48 + crosshair_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+
+	if (crosshair_cursor == CROSSHAIR_COLOR)
+		M_PrintRGBA(74, 120, "+shift for RGB colors", CL_PLColours_Parse("0xffffff"), 0.6f, false);
+
+	// Draw search box if search is active
+	if (crosshairmenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 170, 32, 1);
+		M_PrintHighlight(24, 178, crosshairmenu.search.text,
+			crosshairmenu.search.text,
+			crosshairmenu.search.len);
+		int cursor_x = 24 + 8 * crosshairmenu.search.len;
+		if (numberOfCrosshairItems == 0)
+			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
+	}
+}
+
+void M_Crosshair_Key(int k)
+{
+	// Handle slider grab release
+	if (!keydown[K_MOUSE1])
+		crosshair_slider_grab = false;
+
+	if (crosshair_slider_grab)
+	{
+		switch (k)
+		{
+		case 'c':
+		case 'C':
+			if (keydown[K_CTRL])
+			{
+				if (last_crosshair_color[0] != '\0')
+					SDL_SetClipboardText(last_crosshair_color);
+				const char* soundFile = COM_FileExists("sound/qssm/copy.wav", NULL) ? "qssm/copy.wav" : "player/tornoff2.wav";
+				S_LocalSound(soundFile);
+			}
+			break;
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			crosshair_slider_grab = false;
+			break;
+		}
+		return;
+	}
+
+	// Handle search functionality first
+	if (k == K_ESCAPE)
+	{
+		if (crosshairmenu.search.len > 0)
+		{
+			crosshairmenu.search.len = 0;
+			crosshairmenu.search.text[0] = 0;
+			numberOfCrosshairItems = CROSSHAIR_ITEMS;
+			return;
+		}
+		crosshair_menu = false;
+		M_Menu_Options_f();
+		return;
+	}
+	else if (k == K_BACKSPACE)
+	{
+		if (crosshairmenu.search.len > 0)
+		{
+			crosshairmenu.search.text[--crosshairmenu.search.len] = 0;
+			if (crosshairmenu.search.len > 0)
+			{
+				numberOfCrosshairItems = 0;
+				for (int i = 0; i < CROSSHAIR_ITEMS; i++)
+				{
+					const char* itemtext = M_Crosshair_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, crosshairmenu.search.text))
+					{
+						numberOfCrosshairItems++;
+						if (numberOfCrosshairItems == 1)
+							crosshair_cursor = i;
+					}
+				}
+			}
+			else
+			{
+				numberOfCrosshairItems = CROSSHAIR_ITEMS;
+			}
+			return;
+		}
+	}
+
+	switch (k)
+	{
+	case K_ESCAPE:
+	case K_BBUTTON:
+	case K_MOUSE4:
+	case K_MOUSE2:
+		M_Menu_Options_f();
+		break;
+
+	case K_MOUSE1:
+		m_entersound = true;
+
+		// Check if click is in search box area
+		if (crosshairmenu.search.len > 0 && m_mousey >= 170)
+			break;
+
+		// Check if click is in valid menu area
+		if (m_mousey >= 48 && m_mousey < 48 + (CROSSHAIR_ITEMS * 8))
+		{
+			crosshair_cursor = (m_mousey - 48) / 8;
+
+			if (crosshair_cursor == CROSSHAIR_ALPHA || crosshair_cursor == CROSSHAIR_SCALE)
+			{
+				crosshair_slider_grab = true;
+			}
+			else
+			{
+				M_Crosshair_AdjustSliders(1);
+			}
+		}
+		break;
+
+	case K_ENTER:
+	case K_KP_ENTER:
+	case K_ABUTTON:
+		m_entersound = true;
+		M_Crosshair_AdjustSliders(1);
+		break;
+
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		crosshair_cursor--;
+		if (crosshair_cursor < 0)
+			crosshair_cursor = numberOfCrosshairItems - 1;
+		break;
+
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		crosshair_cursor++;
+		if (crosshair_cursor >= numberOfCrosshairItems)
+			crosshair_cursor = 0;
+		break;
+
+	case K_LEFTARROW:
+	case K_MWHEELDOWN:
+		M_Crosshair_AdjustSliders(-1);
+		break;
+
+	case K_RIGHTARROW:
+	case K_MWHEELUP:
+		M_Crosshair_AdjustSliders(1);
+		break;
+	}
+}
+
+void M_Crosshair_Mousemove(int cx, int cy)
+{
+	if (crosshair_slider_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			crosshair_slider_grab = false;
+			return;
+		}
+
+		float f;
+		switch (crosshair_cursor)
+		{
+		case CROSSHAIR_ALPHA:
+			f = M_MouseToSliderFraction(cx - 187);
+			Cvar_SetValue("scr_crosshairalpha", f);
+			break;
+		case CROSSHAIR_SCALE:
+			f = 1.0f + M_MouseToSliderFraction(cx - 187) * 9.0f;
+			Cvar_SetValue("scr_crosshairscale", f);
+			break;
+		default:
+			break;
+		}
+		return;
+	}
+
+	// Don't process mouse movement if it's in the search box area
+	if (crosshairmenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 48) / 8;
+
+	// Make sure the item is within valid range
+	if (item >= 0 && item < CROSSHAIR_ITEMS)
+	{
+		// Update the cursor position
+		crosshair_cursor = item;
+	}
+}
+
+/*
+==================
+Console Menu
+==================
+*/
+
+extern cvar_t scr_conscale, scr_consize, scr_conspeed, scr_conalpha;
+
+static enum console_e
+{
+	CONSOLE_FONTSIZE,
+	CONSOLE_HEIGHT,
+	CONSOLE_SPEED,
+	CONSOLE_TRANSPARENCY,
+	CONSOLE_COUNT
+} console_cursor;
+
+#define CONSOLE_ITEMS (CONSOLE_COUNT)
+int numberOfConsoleItems = CONSOLE_ITEMS;
+
+static struct
+{
+	int cursor;
+	struct {
+		char text[32];
+		int len;
+	} search;
+} consolemenu;
+
+static qboolean console_slider_grab;
+
+static const char* M_Console_GetItemText(int index)
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case CONSOLE_FONTSIZE:
+		return "Font Size";
+	case CONSOLE_HEIGHT:
+		return "Console Height";
+	case CONSOLE_SPEED:
+		return "Down/Up Speed";
+	case CONSOLE_TRANSPARENCY:
+		return "Transparency";
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_Console_f(void)
+{
+	key_dest = key_menu;
+	m_state = m_console;
+	m_entersound = true;
+	console_cursor = 0;
+	consolemenu.cursor = 0;
+	consolemenu.search.len = 0;
+	consolemenu.search.text[0] = 0;
+	numberOfConsoleItems = CONSOLE_ITEMS;
+
+	IN_UpdateGrabs();
+}
+
+static void M_Console_AdjustSliders(int dir)
+{
+	float f;
+	S_LocalSound("misc/menu3.wav");
+
+	switch (console_cursor)
+	{
+	case CONSOLE_FONTSIZE:
+		f = scr_conscale.value + dir;
+		if (f > 6) f = 6;
+		else if (f < 1) f = 1;
+		Cvar_SetValue("scr_conscale", f);
+		break;
+
+	case CONSOLE_HEIGHT:
+		f = scr_consize.value + dir * 0.1;
+		if (f > 1) f = 1;
+		else if (f < 0) f = 0;
+		Cvar_SetValue("scr_consize", f);
+		break;
+
+	case CONSOLE_SPEED:
+		f = scr_conspeed.value + dir * 100;
+		if (f > 10000) f = 10000;
+		else if (f < 100) f = 100;
+		Cvar_SetValue("scr_conspeed", f);
+		break;
+
+	case CONSOLE_TRANSPARENCY:
+		f = scr_conalpha.value + dir * 0.1;
+		if (f > 1) f = 1;
+		else if (f < 0) f = 0;
+		Cvar_SetValue("scr_conalpha", f);
+		break;
+	default:
+		break;
+	}
+}
+
+void M_Console_Draw(void)
+{
+	qpic_t* p;
+	float r;
+	enum console_e i;
+
+	p = Draw_CachePic("gfx/p_option.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
+
+	const char* title = "Console Options";
+	M_PrintWhite((320 - 8 * strlen(title)) / 2, 32, title);
+
+	for (i = 0; i < CONSOLE_ITEMS; i++)
+	{
+		int y = 48 + 8 * i;
+		const char* text = NULL;
+
+		switch (i)
+		{
+		case CONSOLE_FONTSIZE:
+			text = "       Font Size";
+			r = (scr_conscale.value - 1) / 5;
+			M_DrawSlider(186, y, r, scr_conscale.value, "%.0f");
+			break;
+
+		case CONSOLE_HEIGHT:
+			text = "          Height";
+			r = scr_consize.value;
+			M_DrawSlider(186, y, r, scr_consize.value * 100, "%.0f%%");
+			break;
+
+		case CONSOLE_SPEED:
+			text = "           Speed";
+			r = (scr_conspeed.value - 100) / 9900;  // Simplified calculation
+			M_DrawSlider(186, y, r, scr_conspeed.value, "%.0f");
+			break;
+
+		case CONSOLE_TRANSPARENCY:
+			text = "    Transparency";
+			r = scr_conalpha.value;
+			M_DrawSlider(186, y, r, scr_conalpha.value * 100, "%.0f%%");
+			break;
+
+		default:
+			break;
+		}
+
+		if (text)
+		{
+			if (consolemenu.search.len > 0 &&
+				q_strcasestr(text, consolemenu.search.text))
+			{
+				M_PrintHighlight(16, y, text,
+					consolemenu.search.text,
+					consolemenu.search.len);
+			}
+			else
+			{
+				M_Print(16, y, text);
+			}
+		}
+	}
+
+	// Draw cursor
+	M_DrawCharacter(168, 48 + console_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+
+	// Draw search box if search is active
+	if (consolemenu.search.len > 0)
+	{
+		M_DrawTextBox(16, 170, 32, 1);
+		M_PrintHighlight(24, 178, consolemenu.search.text,
+			consolemenu.search.text,
+			consolemenu.search.len);
+		int cursor_x = 24 + 8 * consolemenu.search.len;
+		if (numberOfConsoleItems == 0)
+			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
+		else
+			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
+	}
+}
+
+void M_Console_Key(int k)
+{
+	// Handle slider grab release
+	if (!keydown[K_MOUSE1])
+		console_slider_grab = false;
+
+	if (console_slider_grab)
+	{
+		switch (k)
+		{
+		case K_ESCAPE:
+		case K_BBUTTON:
+		case K_MOUSE4:
+		case K_MOUSE2:
+			console_slider_grab = false;
+			break;
+		}
+		return;
+	}
+
+	// Handle search functionality first
+	if (k == K_ESCAPE)
+	{
+		if (consolemenu.search.len > 0)
+		{
+			consolemenu.search.len = 0;
+			consolemenu.search.text[0] = 0;
+			numberOfConsoleItems = CONSOLE_ITEMS;
+			return;
+		}
+		M_Menu_Options_f();
+		return;
+	}
+	else if (k == K_BACKSPACE)
+	{
+		if (consolemenu.search.len > 0)
+		{
+			consolemenu.search.text[--consolemenu.search.len] = 0;
+			if (consolemenu.search.len > 0)
+			{
+				numberOfConsoleItems = 0;
+				for (int i = 0; i < CONSOLE_ITEMS; i++)
+				{
+					const char* itemtext = M_Console_GetItemText(i);
+					if (itemtext && q_strcasestr(itemtext, consolemenu.search.text))
+					{
+						numberOfConsoleItems++;
+						if (numberOfConsoleItems == 1)
+							console_cursor = i;
+					}
+				}
+			}
+			else
+			{
+				numberOfConsoleItems = CONSOLE_ITEMS;
+			}
+			return;
+		}
+	}
+	else if (k >= 32 && k < 127)
+	{
+		if (consolemenu.search.len < sizeof(consolemenu.search.text) - 1)
+		{
+			consolemenu.search.text[consolemenu.search.len++] = k;
+			consolemenu.search.text[consolemenu.search.len] = 0;
+
+			numberOfConsoleItems = 0;
+			for (int i = 0; i < CONSOLE_ITEMS; i++)
+			{
+				const char* itemtext = M_Console_GetItemText(i);
+				if (itemtext && q_strcasestr(itemtext, consolemenu.search.text))
+				{
+					numberOfConsoleItems++;
+					if (numberOfConsoleItems == 1)
+						console_cursor = i;
+				}
+			}
+			return;
+		}
+	}
+
+	switch (k)
+	{
+	case K_ESCAPE:
+	case K_BBUTTON:
+	case K_MOUSE4:
+	case K_MOUSE2:
+		M_Menu_Options_f();
+		break;
+
+	case K_ENTER:
+	case K_KP_ENTER:
+	case K_ABUTTON:
+	case K_MOUSE1:
+		m_entersound = true;
+		if (console_cursor == CONSOLE_FONTSIZE ||
+			console_cursor == CONSOLE_HEIGHT ||
+			console_cursor == CONSOLE_SPEED ||
+			console_cursor == CONSOLE_TRANSPARENCY)
+		{
+			console_slider_grab = true;
+		}
+		else
+		{
+			M_Console_AdjustSliders(1);
+		}
+		break;
+
+	case K_UPARROW:
+		S_LocalSound("misc/menu1.wav");
+		console_cursor--;
+		if (console_cursor < 0)
+			console_cursor = numberOfConsoleItems - 1;
+		break;
+
+	case K_DOWNARROW:
+		S_LocalSound("misc/menu1.wav");
+		console_cursor++;
+		if (console_cursor >= numberOfConsoleItems)
+			console_cursor = 0;
+		break;
+
+	case K_LEFTARROW:
+	case K_MWHEELDOWN:
+		M_Console_AdjustSliders(-1);
+		break;
+
+	case K_RIGHTARROW:
+	case K_MWHEELUP:
+		M_Console_AdjustSliders(1);
+		break;
+	}
+}
+
+void M_Console_Mousemove(int cx, int cy)
+{
+	if (console_slider_grab)
+	{
+		if (!keydown[K_MOUSE1])
+		{
+			console_slider_grab = false;
+			return;
+		}
+
+		float f;
+		switch (console_cursor)
+		{
+		case CONSOLE_FONTSIZE:
+			f = 1.f + M_MouseToSliderFraction(cx - 187) * 5.f;
+			f = (int)f;  // Round to nearest integer
+			Cvar_SetValue("scr_conscale", CLAMP(1, f, 6));
+			break;
+
+		case CONSOLE_HEIGHT:
+			f = M_MouseToSliderFraction(cx - 187);
+			Cvar_SetValue("scr_consize", CLAMP(0, f, 1));
+			break;
+
+		case CONSOLE_SPEED:
+			f = 100.f + M_MouseToSliderFraction(cx - 187) * 9900.f;
+			f = floor(f / 100) * 100;  // Round down to nearest 100
+			Cvar_SetValue("scr_conspeed", CLAMP(100, f, 10000));
+			break;
+
+		case CONSOLE_TRANSPARENCY:
+			f = M_MouseToSliderFraction(cx - 187);
+			Cvar_SetValue("scr_conalpha", CLAMP(0, f, 1));
+			break;
+
+		default:
+			break;
+		}
+		return;
+	}
+
+	// Don't process mouse movement if it's in the search box area
+	if (consolemenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 48) / 8;
+
+	// Make sure the item is within valid range
+	if (item >= 0 && item < CONSOLE_ITEMS)
+	{
+		// Update the cursor position
+		console_cursor = item;
+	}
+}
+
+/*
+==================
+Misc Menu
+==================
+*/
+
+extern cvar_t pr_checkextension, r_replacemodels, gl_load24bit, cl_nopext, r_lerpmodels, r_lerpmove, 
+sys_throttle, r_particles, sv_nqplayerphysics, cl_nopred, cl_autodemo, cl_smartspawn, cl_bobbing;
 
 static enum extras_e
 {
-	EXTRAS_FILTERING,
-	EXTRAS_EXTERNALTEX,
-	EXTRAS_REPLACEMENTMODELS,
-	EXTRAS_MODELLERP,
-	EXTRAS_FPSCAP,
 	EXTRAS_YIELD,
 	EXTRAS_DEMOREEL,
-	EXTRAS_RENDERSCALE,
 	EXTRAS_NETEXTENSIONS,
 	EXTRAS_QCEXTENSIONS,
-	EXTRAS_CLASSICPARTICLES,
-	EXTRAS_AUDIORATE,
 	EXTRAS_PREDICTION,
-	EXTRAS_ITEMS
+	EXTRAS_AUTODEMO,
+	EXTRAS_SPAWNTRAINER,
+	EXTRAS_ITEMBOB,
+	EXTRAS_RESETCONFIG,
+	EXTRAS_COUNT
 } extras_cursor;
+
+#define EXTRAS_ITEMS (EXTRAS_COUNT)
 
 int numberOfExtrasItems = EXTRAS_ITEMS; // woods #mousemenu
 
@@ -4210,85 +8309,64 @@ static struct
 	} search;
 } extrasmenu;
 
-void M_Menu_Extras_f (void)
+static const char* M_Extras_GetItemText(int index) // Add this helper function
+{
+	static char buffer[64];
+
+	switch (index)
+	{
+	case EXTRAS_YIELD:
+		return "System Throttle";
+	case EXTRAS_DEMOREEL:
+		return "Start Demo Attract";
+	case EXTRAS_NETEXTENSIONS:
+		return "Protocol Exts";
+	case EXTRAS_QCEXTENSIONS:
+		return "QC Extensions";
+	case EXTRAS_PREDICTION:
+		return "Prediction";
+	case EXTRAS_AUTODEMO:
+		return "Auto Demo";
+	case EXTRAS_SPAWNTRAINER:
+		return "Spawn Trainer";
+	case EXTRAS_ITEMBOB:
+		return "Q3 Item Bobbing";
+	case EXTRAS_RESETCONFIG:
+		return "Reset Config";
+	default:
+		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
+		return buffer;
+	}
+}
+
+void M_Menu_Extras_f(void)
 {
 	key_dest = key_menu;
 	m_state = m_extras;
 	m_entersound = true;
+	extras_cursor = 0;
+	extrasmenu.cursor = 0;
 	extrasmenu.search.len = 0;
 	extrasmenu.search.text[0] = 0;
+	numberOfExtrasItems = EXTRAS_ITEMS;
 
 	IN_UpdateGrabs();
 }
 
-
 static void M_Extras_AdjustSliders (int dir)
 {
-	extern cvar_t pr_checkextension, r_replacemodels, gl_load24bit, cl_nopext, r_lerpmodels, r_lerpmove, host_maxfps, sys_throttle, r_particles, sv_nqplayerphysics, cl_nopred;
 	int m;
 	S_LocalSound ("misc/menu3.wav");
 
 	switch (extras_cursor)
 	{
-	case EXTRAS_FILTERING:
-		m = TexMgr_GetTextureMode() + dir;
-		while (m == 3 || (m>4&&m<8) || (m>8&&m<16))
-			m += dir;
-		if (m < 0)
-			m = 16;
-		else if (m > 16)
-			m = 0;
-		if (m == 0)
-		{
-			Cvar_Set ("gl_texturemode", "nll");	//use linear minification filter to reduce distant noise without uglifying the visuals.
-			Cvar_Set ("gl_texture_anisotropy", "1");
-		}
-		else
-		{
-			Cvar_Set ("gl_texturemode", "GL_LINEAR_MIPMAP_LINEAR");
-			Cvar_SetValue ("gl_texture_anisotropy", m);
-		}
-		break;
-	case EXTRAS_EXTERNALTEX:
-		Cvar_SetValueQuick (&gl_load24bit, !gl_load24bit.value);
-		Cbuf_AddText("flush\n");	//needs to be a vid_reload, but qs doesn't exactly do that nicely...
-		break;
-	case EXTRAS_REPLACEMENTMODELS:
-		Cvar_SetQuick (&r_replacemodels, *r_replacemodels.string?"":"iqm md5mesh md3");
-		Cbuf_AddText("flush\n");
-		break;
-	case EXTRAS_MODELLERP:
-		if (r_lerpmodels.value || r_lerpmove.value)
-		{
-			Cvar_SetValueQuick(&r_lerpmodels, 0);
-			Cvar_SetValueQuick(&r_lerpmove, 0);
-		}
-		else
-		{
-			Cvar_SetValueQuick(&r_lerpmodels, 1);
-			Cvar_SetValueQuick(&r_lerpmove,  1);
-		}
-		break;
-	case EXTRAS_FPSCAP:
-		{
-			static int caps[] = {30, 60, 72, 120, 144, 500, 0};
-			int best = 0, bestdiff = INT_MAX, diff, i;
-			for (i = 0; i < countof(caps); i++)
-			{
-				diff = abs((int)host_maxfps.value - caps[i]);
-				if (diff < bestdiff)
-				{
-					bestdiff = diff;
-					best = i;
-				}
-			}
-			best += dir;
-			best = CLAMP(0, best, countof(caps)-1);
-			Cvar_SetValueQuick (&host_maxfps, caps[best]);
-		}
-		break;
 	case EXTRAS_YIELD:
-		Cvar_SetQuick (&sys_throttle, sys_throttle.value?"0":sys_throttle.default_string);
+		if (fabs(sys_throttle.value - 0.02) < 0.001)      // Check if close to 0.02
+			Cvar_SetValue("sys_throttle", -1);
+		else if (sys_throttle.value < -0.9)               // Check if it's -1
+			Cvar_SetValue("sys_throttle", 0);
+		else
+			Cvar_SetValue("sys_throttle", 0.02);
 		break;
 	case EXTRAS_DEMOREEL:
 		m = cl_demoreel.value+dir;
@@ -4298,23 +8376,11 @@ static void M_Extras_AdjustSliders (int dir)
 			m = 0;
 		Cvar_SetValueQuick (&cl_demoreel, m);
 		break;
-	case EXTRAS_RENDERSCALE:
-		m = r_scale.value-dir;
-		m = CLAMP(1, m, 4);
-		Cvar_SetValueQuick(&r_scale, m);
-		break;
 	case EXTRAS_NETEXTENSIONS:
 		Cvar_SetValueQuick (&cl_nopext, !cl_nopext.value);
 		break;
 	case EXTRAS_QCEXTENSIONS:
 		Cvar_SetValueQuick (&pr_checkextension, !pr_checkextension.value);
-		break;
-	case EXTRAS_CLASSICPARTICLES:
-		Cvar_SetValueQuick (&r_particles, (r_particles.value==1)?2:1);
-		break;
-	case EXTRAS_AUDIORATE:
-		Cvar_SetValueQuick (&snd_mixspeed, (snd_mixspeed.value==48000)?44100:48000);
-	//	Cbuf_AddText("\nsnd_restart\n");
 		break;
 	case EXTRAS_PREDICTION:
 		m = ((!!cl_nopred.value)<<1)|(!!sv_nqplayerphysics.value);
@@ -4325,77 +8391,70 @@ static void M_Extras_AdjustSliders (int dir)
 		Cvar_SetValueQuick (&cl_nopred, (m>>1)&1);
 		Cvar_SetValueQuick (&sv_nqplayerphysics, (m>>0)&1);
 		break;
+	case EXTRAS_AUTODEMO:
+		m = cl_autodemo.value + dir;
+		if (m < 0) m = 4;
+		if (m > 4) m = 0;
+		Cvar_SetValue("cl_autodemo", m);
+		break;
+	case EXTRAS_SPAWNTRAINER:
+		Cvar_SetValue("cl_smartspawn", !cl_smartspawn.value);
+		break;
+	case EXTRAS_ITEMBOB:
+		Cvar_SetValue("cl_bobbing", !cl_bobbing.value);
+		break;
+	case EXTRAS_RESETCONFIG:
+		if (!SCR_ModalMessage("Are you sure you want to\nreset your configuration?\n (^mn^m/^my^m)\n", 0.0f))
+			break;
+		// Execute config reset commands
+		Cbuf_AddText("cfg_reset\n");  // Reset to default config
+		Cbuf_AddText("cfg_save\n");   // Save the reset config
+		M_Menu_Options_f();           // Return to Options menu
+		break;
 	case EXTRAS_ITEMS:	//not a real option
 		break;
 	}
 }
 
-void M_Extras_Draw (void) // woods 
+void M_Extras_Draw(void)
 {
-	extern cvar_t pr_checkextension, r_replacemodels, gl_load24bit, cl_nopext, r_lerpmodels, r_lerpmove, host_maxfps, sys_throttle, r_particles, sv_nqplayerphysics, cl_nopred;
-	int m;
 	qpic_t* p;
 	enum extras_e i;
 
-	p = Draw_CachePic ("gfx/p_option.lmp");
-	M_DrawPic ( (320-p->width)/2, 4, p);
+	p = Draw_CachePic("gfx/p_option.lmp");
+	M_DrawPic((320 - p->width) / 2, 4, p);
 
-	const char* title = "Extra Options";
+	const char* title = "Miscellaneous Options";
 	M_PrintWhite((320 - 8 * strlen(title)) / 2, 32, title);
 
 	for (i = 0; i < EXTRAS_ITEMS; i++)
 	{
-		int y = 48 + 8*i;
+		int y = 48 + 8 * i;
 		const char* text = NULL;
 		const char* value = NULL;
 
 		switch (i)
 		{
-		case EXTRAS_FILTERING:
-			text = " Texture Filtering";
-			m = TexMgr_GetTextureMode();
-			switch(m)
-			{
-			case 0: value = "nearest"; break;
-			case 1: value = "linear"; break;
-			default: value = va("anisotropic %i", m); break;
-			}
-			break;
-
-		case EXTRAS_EXTERNALTEX:
-			text = "   Custom Textures";
-			break;
-
-		case EXTRAS_REPLACEMENTMODELS:
-			text = "     Custom Models";
-			break;
-
-		case EXTRAS_MODELLERP:
-			text = "        Model Lerp";
-			break;
-
-		case EXTRAS_FPSCAP:
-			text = host_maxfps.value < 0 ? "       Maximum PPS" : "       Maximum FPS";
-			value = host_maxfps.value ? va("%g", fabs(host_maxfps.value)) : "uncapped";
-			break;
 		case EXTRAS_YIELD:
-			text = "       Frame Delay";
-			value = sys_throttle.value ? "on" : "off";
+			text = "   System Throttle";
+			if (fabs(sys_throttle.value - 0.02) < 0.001)
+				value = "on";
+			else if (sys_throttle.value == 0)
+				value = "off";
+			else if (sys_throttle.value < -0.9)
+				value = "off+when minimized";
+			else
+				value = "unknown";
 			break;
 
 		case EXTRAS_DEMOREEL:
-			text = "      Attract Mode";
+			text = "Start Demo Attract";
 			if (cl_demoreel.value > 1)
 				value = "on";
 			else if (cl_demoreel.value)
 				value = "startup only";
 			else
 				value = "off";
-			break;
-
-		case EXTRAS_RENDERSCALE:
-			text = "      Render Scale";
-			value = r_scale.value == 1 ? "native" : va("1/%g", r_scale.value);
 			break;
 
 		case EXTRAS_NETEXTENSIONS:
@@ -4408,141 +8467,95 @@ void M_Extras_Draw (void) // woods
 			value = pr_checkextension.value ? "enabled" : "blocked";
 			break;
 
-		case EXTRAS_CLASSICPARTICLES:
-			text = " Classic Particles";
-			if (r_particles.value == 1)
-				value = "disabled";
-			else if (r_particles.value == 1)
-				value = "round";
-			else if (r_particles.value == 2)
-				value = "square";
-			else
-				value = "?!?";
-			break;
-
-		case EXTRAS_AUDIORATE:
-			text = "        Audio Rate";
-			if (snd_mixspeed.value == 48000)
-				value = "48000 hz (DVD)";
-			else if (r_particles.value == 1)
-				value = "44100 hz (CD)";
-			else
-				value = va("%i hz", (int)snd_mixspeed.value);
-			break;
-
 		case EXTRAS_PREDICTION:
 			text = "        Prediction";
 			if (!cl_nopred.value && !sv_nqplayerphysics.value)
-				value = "on (override ssqc)"; //deathmatch! will break quirky mods like quakerally.
+				value = "on (override ssqc)";
 			else if (!cl_nopred.value && sv_nqplayerphysics.value)
-				value = "on (compat phys)"; //conservative / default setting.
+				value = "on (compat phys)";
 			else if (cl_nopred.value && !sv_nqplayerphysics.value)
-				value = "off (override ssqc)"; //silly setting (skipped when changing in menu)
+				value = "off (override ssqc)";
 			else
-				value = "off"; //honest/oldskool setting.
+				value = "off";
 			break;
 
-		case EXTRAS_ITEMS:
+		case EXTRAS_AUTODEMO:
+			text = "         Auto Demo";
+			switch ((int)cl_autodemo.value)
+			{
+			case 0: value = "off"; break;
+			case 1: value = "all maps"; break;
+			case 2: value = "crx matches only"; break;
+			case 3: value = "all maps (online)"; break;
+			case 4: value = "all maps (split)"; break;
+			default: value = "unknown"; break;
+			}
+			break;
+
+		case EXTRAS_SPAWNTRAINER:
+			text = "     Spawn Trainer";
+			value = cl_smartspawn.value ? "on (jump only)" : "off (jump or fire)";
+			break;
+
+		case EXTRAS_ITEMBOB:
+			text = "   Q3 Item Bobbing";
+			value = cl_bobbing.value ? "on" : "off";
+			break;
+
+		case EXTRAS_RESETCONFIG:
+			text = "      Reset Config";
+			value = "confirm";
+			break;
+
+		default:
 			break;
 		}
 
-		if (text) // If search is active and text matches search term
-
+		if (text)
 		{
 			if (extrasmenu.search.len > 0 &&
 				q_strcasestr(text, extrasmenu.search.text))
 			{
-				M_PrintHighlight(0, y, text,
+				M_PrintHighlight(8, y, text,
 					extrasmenu.search.text,
 					extrasmenu.search.len);
 			}
 			else
 			{
-				M_Print(0, y, text);
+				M_Print(8, y, text);
 			}
 
-			// Draw the value or checkbox
-			if (i == EXTRAS_EXTERNALTEX)
-				M_DrawCheckbox(176, y, !!gl_load24bit.value);
-			else if (i == EXTRAS_REPLACEMENTMODELS)
-				M_DrawCheckbox(176, y, !!*r_replacemodels.string);
-			else if (i == EXTRAS_MODELLERP)
-				M_DrawCheckbox(176, y, !!r_lerpmodels.value && !!r_lerpmove.value);
-			else if (value)
-				M_Print(176, y, value);
+			M_Print(168, y, value);
 		}
 	}
 
-	if (extrasmenu.search.len > 0) // Draw search box if search is active
+	// Draw cursor
+	M_DrawCharacter(160, 48 + extras_cursor * 8, 12 + ((int)(realtime * 4) & 1));
+
+	// Draw search box if search is active
+	if (extrasmenu.search.len > 0)
 	{
 		M_DrawTextBox(16, 170, 32, 1);
 		M_PrintHighlight(24, 178, extrasmenu.search.text,
 			extrasmenu.search.text,
 			extrasmenu.search.len);
-		int cursor_x = 24 + 8 * extrasmenu.search.len; // Start position + character width * text length
+		int cursor_x = 24 + 8 * extrasmenu.search.len;
 		if (numberOfExtrasItems == 0)
 			M_DrawCharacter(cursor_x, 178, 11 ^ 128);
 		else
 			M_DrawCharacter(cursor_x, 178, 10 + ((int)(realtime * 4) & 1));
 	}
-
-	// cursor
-	M_DrawCharacter (168, 48 + extras_cursor*8, 12+((int)(realtime*4)&1));
 }
 
-static const char* M_Extras_GetItemText(int index)
+void M_Extras_Key(int k)
 {
-	static char buffer[64];
-	extern cvar_t pr_checkextension, r_replacemodels, gl_load24bit, cl_nopext, r_lerpmodels, r_lerpmove, host_maxfps, sys_throttle, r_particles, sv_nqplayerphysics, cl_nopred;
-
-
-	switch (index)
-	{
-	case EXTRAS_FILTERING:
-		return "Texture Filtering";
-	case EXTRAS_EXTERNALTEX:
-		return "Custom Textures";
-	case EXTRAS_REPLACEMENTMODELS:
-		return "Custom Models";
-	case EXTRAS_MODELLERP:
-		return "Model Lerp";
-	case EXTRAS_FPSCAP:
-		if (host_maxfps.value < 0)
-			return "Maximum PPS";
-		else
-			return "Maximum FPS";
-	case EXTRAS_YIELD:
-		return "Frame Delay";
-	case EXTRAS_DEMOREEL:
-		return "Attract Mode";
-	case EXTRAS_RENDERSCALE:
-		return "Render Scale";
-	case EXTRAS_NETEXTENSIONS:
-		return "Protocol Exts";
-	case EXTRAS_QCEXTENSIONS:
-		return "QC Extensions";
-	case EXTRAS_CLASSICPARTICLES:
-		return "Classic Particles";
-	case EXTRAS_AUDIORATE:
-		return "Audio Rate";
-	case EXTRAS_PREDICTION:
-		return "Prediction";
-	default:
-		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
-		return buffer;
-	}
-}
-
-void M_Extras_Key (int k)
-{
-	// Handle search functionality first
 	if (k == K_ESCAPE)
 	{
 		if (extrasmenu.search.len > 0)
 		{
-			// Clear search but stay in menu
 			extrasmenu.search.len = 0;
 			extrasmenu.search.text[0] = 0;
+			numberOfExtrasItems = EXTRAS_ITEMS;
 			return;
 		}
 		M_Menu_Options_f();
@@ -4553,41 +8566,41 @@ void M_Extras_Key (int k)
 		if (extrasmenu.search.len > 0)
 		{
 			extrasmenu.search.text[--extrasmenu.search.len] = 0;
-			// After deleting, search with remaining text
 			if (extrasmenu.search.len > 0)
 			{
-				// Search for first matching item
+				numberOfExtrasItems = 0;
 				for (int i = 0; i < EXTRAS_ITEMS; i++)
 				{
 					const char* itemtext = M_Extras_GetItemText(i);
 					if (itemtext && q_strcasestr(itemtext, extrasmenu.search.text))
 					{
-						extras_cursor = i;
-						break;
+						numberOfExtrasItems++;
+						if (numberOfExtrasItems == 1)
+							extras_cursor = i;
 					}
 				}
+			}
+			else
+			{
+				numberOfExtrasItems = EXTRAS_ITEMS;
 			}
 			return;
 		}
 	}
-	else if (k >= 32 && k < 127) // Printable characters
+	else if (k >= 32 && k < 127)
 	{
 		if (extrasmenu.search.len < sizeof(extrasmenu.search.text) - 1)
 		{
 			extrasmenu.search.text[extrasmenu.search.len++] = k;
 			extrasmenu.search.text[extrasmenu.search.len] = 0;
 
-			// Reset item count
 			numberOfExtrasItems = 0;
-
-			// Search for matching items and count them
 			for (int i = 0; i < EXTRAS_ITEMS; i++)
 			{
 				const char* itemtext = M_Extras_GetItemText(i);
-				if (q_strcasestr(itemtext, extrasmenu.search.text))
+				if (itemtext && q_strcasestr(itemtext, extrasmenu.search.text))
 				{
 					numberOfExtrasItems++;
-					// Move cursor to the first matching item
 					if (numberOfExtrasItems == 1)
 						extras_cursor = i;
 				}
@@ -4600,60 +8613,67 @@ void M_Extras_Key (int k)
 	{
 	case K_ESCAPE:
 	case K_BBUTTON:
-	case K_MOUSE4: // woods #mousemenu
+	case K_MOUSE4:
 	case K_MOUSE2:
-		M_Menu_Options_f ();
+		M_Menu_Options_f();
 		break;
 
 	case K_ENTER:
 	case K_KP_ENTER:
 	case K_ABUTTON:
-	case K_MOUSE1: // woods #mousemenu
+	case K_MOUSE1:
 		m_entersound = true;
-		switch (extras_cursor)
-		{
-		default:
-			M_Extras_AdjustSliders (1);
-			break;
-		}
-		return;
+		M_Extras_AdjustSliders(1);
+		break;
 
 	case K_UPARROW:
-		S_LocalSound ("misc/menu1.wav");
-		if (extras_cursor <= 0)
-			extras_cursor = EXTRAS_ITEMS-1;
-		else
-			extras_cursor--;
+		S_LocalSound("misc/menu1.wav");
+		extras_cursor--;
+		if (extras_cursor < 0)
+			extras_cursor = EXTRAS_ITEMS - 1;
 		break;
 
 	case K_DOWNARROW:
-		S_LocalSound ("misc/menu1.wav");
+		S_LocalSound("misc/menu1.wav");
 		extras_cursor++;
 		if (extras_cursor >= EXTRAS_ITEMS)
 			extras_cursor = 0;
 		break;
 
 	case K_LEFTARROW:
-	case K_MWHEELDOWN: // woods #mousemenu
-		M_Extras_AdjustSliders (-1);
+	case K_MWHEELDOWN:
+		M_Extras_AdjustSliders(-1);
 		break;
 
 	case K_RIGHTARROW:
-	case K_MWHEELUP: // woods #mousemenu
-		M_Extras_AdjustSliders (1);
+	case K_MWHEELUP:
+		M_Extras_AdjustSliders(1);
 		break;
 	}
 }
 
-void M_Extras_Mousemove(int cx, int cy) // woods #mousemenu
+void M_Extras_Mousemove(int cx, int cy)
 {
-	int tempCursor = extras_cursor; // Store enum value in an int variable
-	M_UpdateCursor(cy, 48, 8, numberOfExtrasItems, &tempCursor);
-	extras_cursor = tempCursor; // Cast back to enum type if necessary
+	// Don't process mouse movement if it's in the search box area
+	if (extrasmenu.search.len > 0 && cy >= 170)
+		return;
+
+	// Calculate which menu item the mouse is over
+	int item = (cy - 48) / 8;
+
+	// Make sure the item is within valid range and mouse is in the menu area
+	if (item >= 0 && item < EXTRAS_ITEMS && cy >= 48 && cy < 48 + (EXTRAS_ITEMS * 8))
+	{
+		// Update cursor position regardless of search state
+		extras_cursor = item;
+	}
 }
 
-//=============================================================================
-/* VIDEO MENU */
+/*
+==================
+Video Menu
+==================
+*/
 
 void M_Menu_Video_f (void)
 {
@@ -4677,8 +8697,11 @@ void M_Video_Mousemove(int cx, int cy) // woods #mousemenu
 	(*vid_menumousefn) (cx, cy);
 }
 
-//=============================================================================
-/* HELP MENU */
+/*
+==================
+Help Menu
+==================
+*/
 
 int		help_page;
 #define	NUM_HELP_PAGES	6
@@ -4735,8 +8758,11 @@ void M_Help_Key (int key)
 
 }
 
-//=============================================================================
-/* QUIT MENU */
+/*
+==================
+Quit Menu
+==================
+*/
 
 int		msgNumber;
 enum m_state_e	m_quit_prevstate;
@@ -4842,8 +8868,11 @@ void M_Quit_Draw (void) //johnfitz -- modified for new quit message -- woods mod
 	M_PrintWhite		(160-4*(sizeof(msg3)-1), 104, msg3);
 }
 
-//=============================================================================
-/* LAN CONFIG MENU */
+/*
+==================
+LAN Config Menu
+==================
+*/
 
 int		lanConfig_cursor = -1;
 int     lanConfig_cursor_table_newgame[] = { 76, 86, 104 }; // Updated cursor positions for "New Game"
@@ -4861,6 +8890,19 @@ int     lanConfig_protocol_cursor = 0; // Track selected protocol
 
 extern int sv_protocol;
 extern unsigned int	sv_protocol_pext2;
+
+typedef struct {
+	int x;
+	int y;
+	int width;
+	char text[128];
+	int label_x;
+	int label_width;
+} clickable_text_t;
+
+static clickable_text_t ip_clickables[2];  // For local and external IPs
+static float copy_message_time = 0;
+static char last_copied_ip[128] = "";
 
 void SetProtocol(int protocol_cursor)
 {
@@ -4992,55 +9034,41 @@ void M_LanConfig_Draw (void)
 		startJoin = "New Game";
 	else
 		startJoin = "Join Game";
-	/*if (IPXConfig) // woods #skipipx
-		protocol = "IPX";
-	else*/
-	//protocol = "TCP/IP";
+
 	M_PrintWhite (basex, 32, va ("%s", startJoin));
 	basex += 8;
 
 	y = 52;
-	M_Print (basex, y, "Address:");
-#if 1
-	numaddresses = NET_ListAddresses(addresses, sizeof(addresses)/sizeof(addresses[0]));
+	M_Print(basex, y, "Address:");
+	numaddresses = NET_ListAddresses(addresses, sizeof(addresses) / sizeof(addresses[0]));
 	if (!numaddresses)
 	{
-		M_Print (basex+(9*8)+10, y, "NONE KNOWN");
+		M_Print(basex + (9 * 8) + 10, y, "NONE KNOWN");
 		y += 8;
 	}
 	else
 	{
+		// Store clickable areas for IPs and their labels
+		// Local IP
+		ip_clickables[0].label_x = basex + (9 * 8) + 10;
+		ip_clickables[0].label_width = 7 * 8;
+		ip_clickables[0].x = basex + (9 * 8) + 10 + 7 * 8;
+		ip_clickables[0].y = y;
+		ip_clickables[0].width = strlen(addresses[0]) * 8;
+		strncpy(ip_clickables[0].text, addresses[0], sizeof(ip_clickables[0].text));
 		M_Print(basex + (9 * 8) + 10, y, va("local: %s", addresses[0]));
 		y += 8;
 
+		// External IP
+		ip_clickables[1].label_x = basex + (9 * 8) + 10;
+		ip_clickables[1].label_width = 7 * 8;
+		ip_clickables[1].x = basex + (9 * 8) + 10 + 7 * 8;
+		ip_clickables[1].y = y;
+		ip_clickables[1].width = strlen(my_public_ip) * 8;
+		strncpy(ip_clickables[1].text, my_public_ip, sizeof(ip_clickables[1].text));
 		M_Print(basex + (9 * 8) + 10, y, va("ext:   %s", my_public_ip));
 		y += 8;
 	}
-#else
-	if (IPXConfig)
-	{
-		M_Print (basex+9*8, y, my_ipx_address);
-		y+=8;
-	}
-	else
-	{
-		if (ipv4Available && ipv6Available)
-		{
-			M_Print (basex+9*8, y, my_ipv4_address);
-			y+=8;
-			M_Print (basex+9*8, y, my_ipv6_address);
-			y+=8;
-		}
-		else
-		{
-			if (ipv4Available)
-				M_Print (basex+9*8, y, my_ipv4_address);
-			if (ipv6Available)
-				M_Print (basex+9*8, y, my_ipv6_address);
-			y+=8;
-		}
-	}
-#endif
 
 	y+=8;	//for the port's box
 	M_Print (basex, y, "Port:");
@@ -5117,13 +9145,44 @@ void M_LanConfig_Draw (void)
 		y += 16;
 	}
 
+	if (realtime < copy_message_time)
+	{
+		char copy_message[256];
+		snprintf(copy_message, sizeof(copy_message), "copied %s", last_copied_ip);
+		M_PrintRGBA(basex, y + 8, copy_message, CL_PLColours_Parse("0xffffff"), 0.5f, false);
+	}
+
 	if (*m_return_reason)
-		M_PrintWhite (basex, 148, m_return_reason);
+		M_PrintWhite(basex, 148, m_return_reason);
 }
 
 void M_LanConfig_Key (int key)
 {
 	int		l;
+
+	if (key == K_MOUSE1)
+	{
+		// Check if click was on either IP address or their labels
+		for (int i = 0; i < 2; i++)
+		{
+			if ((m_mousex >= ip_clickables[i].x &&
+				m_mousex <= ip_clickables[i].x + ip_clickables[i].width &&
+				m_mousey >= ip_clickables[i].y &&
+				m_mousey <= ip_clickables[i].y + 8) ||
+				(m_mousex >= ip_clickables[i].label_x &&
+					m_mousex <= ip_clickables[i].label_x + ip_clickables[i].label_width &&
+					m_mousey >= ip_clickables[i].y &&
+					m_mousey <= ip_clickables[i].y + 8))
+			{
+				SDL_SetClipboardText(ip_clickables[i].text);
+				strcpy(last_copied_ip, ip_clickables[i].text);
+				copy_message_time = realtime + 1.0;
+				const char* soundFile = COM_FileExists("sound/qssm/copy.wav", NULL) ? "qssm/copy.wav" : "player/tornoff2.wav";
+				S_LocalSound(soundFile);
+				return;
+			}
+		}
+	}
 
 	switch (key)
 	{
@@ -5300,11 +9359,11 @@ void M_LanConfig_Char (int key)
 	}
 }
 
-//=============================================================================
-
-// woods #historymenu
-
-/* Connection History menu */
+/*
+==================
+History Menu
+==================
+*/
 
 #define MAX_VIS_HISTORY	17
 
@@ -5564,11 +9623,11 @@ void M_History_Mousemove(int cx, int cy) // woods #mousemenu
 	M_List_Mousemove(&historymenu.list, cy);
 }
 
-//=============================================================================
-
-// woods #bookmarksmenu
-
-/* Bookmarks menu */
+/*
+==================
+Bookmarks Menu
+==================
+*/
 
 #define MAX_VIS_BOOKMARKS	16
 
@@ -6083,14 +10142,31 @@ qboolean M_LanConfig_TextEntry (void)
 	return (lanConfig_cursor == 0 || lanConfig_cursor == 5); // woods #historymenu #bookmarksmenu
 }
 
-void M_LanConfig_Mousemove(int cx, int cy) // woods #mousemenu
+void M_LanConfig_Mousemove(int cx, int cy)
 {
+	// First check if mouse is over IP addresses
+	for (int i = 0; i < 2; i++)
+	{
+		if (cx >= ip_clickables[i].x &&
+			cx <= ip_clickables[i].x + ip_clickables[i].width &&
+			cy >= ip_clickables[i].y &&
+			cy <= ip_clickables[i].y + 8)
+		{
+			// Mouse is over an IP address - could add visual feedback here
+			return; // Don't update menu cursor when over IPs
+		}
+	}
+
+	// If not over IPs, handle regular menu cursor movement
 	int numCommands = StartingGame ? NUM_LANCONFIG_CMDS_NEWGAME : NUM_LANCONFIG_CMDS_JOINGAME;
 	M_UpdateCursorWithTable(cy, lanConfig_cursor_ptr, numCommands, &lanConfig_cursor);
 }
 
-//=============================================================================
-/* GAME OPTIONS MENU */
+/*
+==================
+New Game Options Menu
+==================
+*/
 
 typedef struct
 {
@@ -6390,14 +10466,7 @@ void M_GameOptions_Draw (void)
 	M_Print (0, y, "            Skill");
 	if (!coop.value && !HasBots()) // woods #botdetect
 	{ 
-		char dimmed_text[128];
-		const char* text = "Normal difficulty";
-		int i;
-		for (i = 0; text[i]; i++)
-			dimmed_text[i] = text[i] + 128;
-		dimmed_text[i] = 0;
-
-		M_PrintRGBA(160, y, dimmed_text, CL_PLColours_Parse("0xffffff"), 0.5f);
+		M_PrintRGBA(160, y, "Normal difficulty", CL_PLColours_Parse("0xffffff"), 0.5f, true);
 	}
 	else if (skill.value == 0)
 		M_Print (160, y, "Easy difficulty");
@@ -6443,7 +10512,7 @@ void M_GameOptions_Draw (void)
 		M_Print (160, y, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].description);
 		if (m_skill_mapname[0])  // Custom map selected - show faded level name
 			M_PrintRGBA(160, y + 8, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name,
-				CL_PLColours_Parse("0xffffff"), 0.5);
+				CL_PLColours_Parse("0xffffff"), 0.5, false);
 		else  // No custom map - show normal level name
 			M_PrintWhite (160, y+8, hipnoticlevels[hipnoticepisodes[startepisode].firstLevel + startlevel].name);
 	}
@@ -6453,7 +10522,7 @@ void M_GameOptions_Draw (void)
 		M_Print (160, y, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].description);
 		if (m_skill_mapname[0])  // Custom map selected - show faded level name
 			M_PrintRGBA(160, y+8, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name,
-				CL_PLColours_Parse("0xffffff"), 0.5);
+				CL_PLColours_Parse("0xffffff"), 0.5, false);
 		else  // No custom map - show normal level name
 			M_PrintWhite(160, y+8, roguelevels[rogueepisodes[startepisode].firstLevel + startlevel].name);
 	}
@@ -6462,7 +10531,7 @@ void M_GameOptions_Draw (void)
 		M_Print (160, y, levels[episodes[startepisode].firstLevel + startlevel].description);
 		if (m_skill_mapname[0])  // Custom map selected - show faded level name
 			M_PrintRGBA(160, y+8, levels[episodes[startepisode].firstLevel + startlevel].name,
-				CL_PLColours_Parse("0xffffff"), 0.5);
+				CL_PLColours_Parse("0xffffff"), 0.5, false);
 		else  // No custom map - show normal level name
 			M_PrintWhite(160, y+8, levels[episodes[startepisode].firstLevel + startlevel].name);
 	}
@@ -6672,8 +10741,11 @@ void M_GameOptions_Mousemove(int cx, int cy) // woods #mousemenu
 	M_UpdateCursorWithTable(cy, gameoptions_cursor_table, NUM_GAMEOPTIONS, &gameoptions_cursor);
 }
 
-//=============================================================================
-/* SEARCH MENU */
+/*
+==================
+Server Search Menu
+==================
+*/
 
 qboolean	searchComplete = false;
 double		searchCompleteTime;
@@ -6737,9 +10809,11 @@ void M_Search_Key (int key)
 {
 }
 
-//=============================================================================
-/* SLIST MENU */
-// woods #serversmenu #icmp
+/*
+==================
+Server List Menu
+==================
+*/
 
 #define MAX_VIS_SERVERS 18
 #define PING_COOLDOWN 2.0
@@ -7458,11 +11532,11 @@ void M_ServerList_Mousemove(int cx, int cy) // woods
 		TriggerServerPing(serversmenu.list.cursor);
 }
 
-//=============================================================================
-
-// woods #modsmenu (iw)
-
-/* Mods menu */
+/*
+==================
+Mods Menu (iw)
+==================
+*/
 
 #define MAX_VIS_MODS	19
 
@@ -7699,11 +11773,11 @@ void M_Mods_Mousemove(int cx, int cy) // woods #mousemenu
 	M_List_Mousemove(&modsmenu.list, cy);
 }
 
-//=============================================================================
-
-// woods #demosmenu
-
-/* Demos menu */
+/*
+==================
+Demos Menu
+==================
+*/
 
 #define MAX_VIS_DEMOS	17
 
@@ -8053,8 +12127,11 @@ void M_Demos_Mousemove(int cx, int cy) // woods #mousemenu
 	M_List_Mousemove(&demosmenu.list, cy);
 }
 
-//=============================================================================
-/* Credits menu -- used by the 2021 re-release */
+/*
+=========================================
+Credit Menu - used by the 2021 re-release
+========================================+
+*/
 
 void M_Menu_Credits_f (void)
 {
@@ -8071,12 +12148,20 @@ static struct
 	{"menu_singleplayer", M_Menu_SinglePlayer_f},
 	{"menu_load", M_Menu_Load_f},
 	{"menu_save", M_Menu_Save_f},
+	{"menu_skill", M_Menu_Skill_f},
 	{"menu_multiplayer", M_Menu_MultiPlayer_f},
 	{"menu_setup", M_Menu_Setup_f},
 	{"menu_options", M_Menu_Options_f},
 	{"menu_keys", M_Menu_Keys_f},
-	{"menu_extras", M_Menu_Extras_f},
+	{"menu_mouse", M_Menu_Mouse_f},
+	{"menu_sound", M_Menu_Sound_f},
+	{"menu_game", M_Menu_Game_f},
+	{"menu_hud", M_Menu_HUD_f},
+	{"menu_crosshair", M_Menu_Crosshair_f},
+	{"menu_console", M_Menu_HUD_f},
+	{"menu_misc", M_Menu_Extras_f},
 	{"menu_video", M_Menu_Video_f},
+	{"menu_graphics", M_Menu_Graphics_f},
 	{"help", M_Menu_Help_f},
 	{"menu_quit", M_Menu_Quit_f},
 	{"menu_credits", M_Menu_Credits_f}, // needed by the 2021 re-release
@@ -8279,7 +12364,8 @@ void M_Draw (void)
 			S_ExtraUpdate ();
 		}
 
-		Draw_FadeScreen (); //johnfitz -- fade even if console fills screen
+		if (m_state != m_crosshair && !scr_con_current)
+			Draw_FadeScreen (); //johnfitz -- fade even if console fills screen
 	}
 	else
 	{
@@ -8353,12 +12439,40 @@ void M_Draw (void)
 		M_Keys_Draw ();
 		break;
 
+	case m_mouse:
+		M_Mouse_Draw();
+		break;
+
 	case m_extras:
 		M_Extras_Draw ();
 		break;
 
 	case m_video:
 		M_Video_Draw ();
+		break;
+
+	case m_graphics:
+		M_Graphics_Draw();
+		break;
+
+	case m_sound:
+		M_Sound_Draw ();
+		break;
+
+	case m_game:
+		M_Game_Draw();
+		break;
+
+	case m_hud:
+		M_HUD_Draw();
+		break;
+
+	case m_crosshair:
+		M_Crosshair_Draw();
+		break;
+
+	case m_console:
+		M_Console_Draw();
 		break;
 
 	case m_mods: // woods #modsmenu (iw)
@@ -8480,6 +12594,10 @@ void M_Keydown (int key)
 		M_Keys_Key (key);
 		return;
 
+	case m_mouse:
+		M_Mouse_Key(key);
+		return;
+
 	case m_extras:
 		M_Extras_Key (key);
 		return;
@@ -8487,6 +12605,30 @@ void M_Keydown (int key)
 	case m_video:
 		M_Video_Key (key);
 		return;
+
+	case m_graphics:
+		M_Graphics_Key(key);
+		return;
+
+	case m_sound:
+		M_Sound_Key (key);
+		break;
+
+	case m_game:
+		M_Game_Key(key);
+		break;
+
+	case m_hud:
+		M_HUD_Key(key);
+		break;
+
+	case m_crosshair:
+		M_Crosshair_Key(key);
+		break;
+
+	case m_console:
+		M_Console_Key(key);
+		break;
 
 	case m_mods: // woods #modsmenu (iw)
 		M_Mods_Key(key);
@@ -8602,8 +12744,36 @@ void M_Mousemove(int x, int y) // woods #mousemenu
 		M_Keys_Mousemove(x, y);
 		return;
 
+	case m_mouse:
+		M_Mouse_Mousemove(x, y);
+		return;
+
 	case m_video:
 		M_Video_Mousemove(x, y);
+		return;
+
+	case m_graphics:
+		M_Graphics_Mousemove(x, y);
+		return;
+
+	case m_sound:
+		M_Sound_Mousemove(x, y);
+		return;
+
+	case m_game:
+		M_Game_Mousemove(x, y);
+		return;
+
+	case m_hud:
+		M_HUD_Mousemove(x, y);
+		return;
+
+	case m_crosshair:
+		M_Crosshair_Mousemove(x, y);
+		return;
+
+	case m_console:
+		M_Console_Mousemove(x, y);
 		return;
 
 	case m_extras:

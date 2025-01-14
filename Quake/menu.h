@@ -35,9 +35,16 @@ enum m_state_e {
 	m_setup,
 	m_net,
 	m_options,
-	m_video,
-	m_extras,
 	m_keys,
+	m_mouse,
+	m_video,
+	m_graphics,
+	m_sound,
+	m_game,
+	m_hud,
+	m_crosshair,
+	m_console,
+	m_extras,
 	m_mods, // woods #modsmenu (iw)
 	m_demos, // woods #demosmenu
 	m_help,
@@ -56,6 +63,7 @@ extern enum m_state_e m_state;
 extern enum m_state_e m_return_state;
 
 extern qboolean m_entersound;
+extern qboolean crosshair_menu;
 
 //
 // menus
@@ -78,7 +86,7 @@ void M_Menu_Quit_f (void);
 void M_Print (int cx, int cy, const char *str);
 void M_Print2 (int cx, int cy, const char* str); // woods #speed yellow numbers
 void M_DrawCharacterRGBA (int cx, int line, int num, plcolour_t c, float alpha); // woods
-void M_PrintRGBA (int cx, int cy, const char* str, plcolour_t c, float alpha); // woods
+void M_PrintRGBA (int cx, int cy, const char* str, plcolour_t c, float alpha, qboolean mask); // woods
 void M_PrintWhite (int cx, int cy, const char *str);
 
 void M_Draw (void);
@@ -90,6 +98,7 @@ void M_DrawTransPic (int x, int y, qpic_t *pic);
 void M_DrawCheckbox (int x, int y, int on);
 void M_DrawTextBox(int x, int y, int width, int lines); // woods (iw) #democontrols
 void M_DrawTextBox_WithAlpha (int x, int y, int width, int lines, float alpha); // woods #centerprintbg (iw)
+void M_PrintHighlight(int x, int y, const char* str, const char* search, int searchlen); // woods #centerprintbg (iw)
 
 #endif	/* _QUAKE_MENU_H */
 
