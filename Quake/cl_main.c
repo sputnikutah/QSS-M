@@ -337,10 +337,8 @@ void CL_EstablishConnection (const char *host)
 
 void CL_SendInitialUserinfo(void *ctx, const char *key, const char *val)
 {
-	//if (*key == '*')
-	//	return;	//servers don't like that sort of userinfo key
-
-	Info_SetKey(cls.userinfo, sizeof(cls.userinfo), "*ver", ENGINE_NAME_AND_VER); // woods, allow initial only #*ver
+	if (*key == '*' && cls.signon == SIGNONS)
+		return;	//servers don't like that sort of userinfo key
 
 	if (!strcmp(key, "name"))
 		return;	//already unconditionally sent earlier.
@@ -384,6 +382,8 @@ void CL_SignonReply (void)
 	case 1:
 		MSG_WriteByte (&cls.message, clc_stringcmd);
 		MSG_WriteString (&cls.message, va("name \"%s\"\n", cl_name.string));
+
+		Info_SetKey(cls.userinfo, sizeof(cls.userinfo), "*ver", ENGINE_NAME_AND_VER); // woods, allow initial only #*ver
 
 		cl.sendprespawn = true;
 		break;

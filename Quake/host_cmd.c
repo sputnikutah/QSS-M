@@ -4905,6 +4905,8 @@ void Host_Setinfo_f(void)
 		}
 		else
 		{
+			if (*key == '*' && cls.signon == SIGNONS)
+				return;	//users may not change * keys (beyond initial connection anyway).
 			SV_UpdateInfo((host_client - svs.clients)+1, key, val);
 		}
 	}
@@ -4922,8 +4924,6 @@ void Host_Setinfo_f(void)
 				Cvar_Set(key, val);
 			else
 			{
-				if (*key == '*') // woods #*ver
-					return;	//users may not change * keys (beyond initial connection anyway).
 				Info_SetKey(cls.userinfo, sizeof(cls.userinfo), key, val);
 				if (cls.state == ca_connected)
 					Cmd_ForwardToServer();
