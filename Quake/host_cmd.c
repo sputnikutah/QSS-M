@@ -4905,8 +4905,17 @@ void Host_Setinfo_f(void)
 		}
 		else
 		{
-			if (*key == '*' && cls.signon == SIGNONS)
-				return;	//users may not change * keys (beyond initial connection anyway).
+			if (*key == '*') // woods
+			{
+				// Allow *ver only during initial connection and only once
+				if (!strcmp(key, "*ver") && !cl.ver_sent)
+				{
+					cl.ver_sent = true;  // Mark as sent
+				}
+				else
+					return;  // Reject all other * keys
+			}
+
 			SV_UpdateInfo((host_client - svs.clients)+1, key, val);
 		}
 	}

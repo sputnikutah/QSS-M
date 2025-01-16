@@ -251,6 +251,7 @@ void CL_Disconnect (void)
 	if (cl.modtype == 1 || cl.modtype == 4)
 		Cbuf_AddText("setinfo observing off\n"); // woods
 	pausedprint = false;  // woods
+	cl.ver_sent = false; // woods
 }
 
 void CL_Disconnect_f (void)
@@ -337,7 +338,7 @@ void CL_EstablishConnection (const char *host)
 
 void CL_SendInitialUserinfo(void *ctx, const char *key, const char *val)
 {
-	if (*key == '*' && cls.signon == SIGNONS)
+	if (*key == '*' && strcmp(key, "*ver"))
 		return;	//servers don't like that sort of userinfo key
 
 	if (!strcmp(key, "name"))

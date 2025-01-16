@@ -399,6 +399,7 @@ typedef struct
 	int			notobserver;		// woods tool for detecting match participation
 	char		lastchat[256];		// woods #like
 	vec3_t		lerpangles;			// JPG - angles now used by view.c so that smooth chasecam doesn't fuck up demos // woods #smoothcam
+	qboolean	ver_sent;			// woods - flag to send *ver intially
 
 } client_state_t;
 
