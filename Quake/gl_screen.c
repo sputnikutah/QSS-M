@@ -279,8 +279,6 @@ void SCR_CenterPrint (const char *str) //update centerprint data
 	if ((strstr(str, qfrunequake)))
 	{
 		cl.modtype = 6;
-		strncpy(cl.observer, "y", sizeof(cl.observer));
-		return;
 	}
 
 // ===============================
