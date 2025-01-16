@@ -382,18 +382,6 @@ static qmodel_t *Mod_LoadModel (qmodel_t *mod, qboolean crash)
 	byte	stackbuf[1024];		// avoid dirtying the cache heap
 	int	mod_type;
 
-	extern cvar_t r_particledesc; // woods use fte particles for bubbles
-
-	if (!strcmp(mod->name, "progs/s_bubble.spr") && !strcmp(r_particledesc.string, "qssm") && COM_FileExists("particles/qssm.cfg", NULL))
-
-	{
-		mod->type = mod_ext_invalid;
-		mod->flags = 0;
-		mod->needload = false;
-		Mod_SetExtraFlags(mod);
-		return mod;
-	}
-
 	if (!mod->needload)
 	{
 		if (mod->type == mod_alias)
