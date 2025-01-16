@@ -539,10 +539,16 @@ void SCR_DrawCenterString (void) //actually do the drawing
 	float	alpha; // woods #confade
 
 	char buf[15];
+	char buf2[15];
 	const char* realobs;
+	const char* star_realobs;
 	realobs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf));
+	star_realobs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf2, sizeof(buf2));
 
-	if (!scr_obscenterprint.value && !cameras && !countdown && !qeintermission && ((cl.modtype == 1 || cl.modtype == 4) && (!strcmp(realobs, "eyecam") || (!strcmp(realobs, "chase")))))
+	if (!scr_obscenterprint.value && !cameras && !countdown && !qeintermission &&
+		((cl.modtype == 1 || cl.modtype == 4) &&
+			((!strcmp(realobs, "eyecam") || !strcmp(realobs, "chase")) ||
+				(!strcmp(star_realobs, "eyecam") || !strcmp(star_realobs, "chase")))))
 		return;
 
 	if (!strcmp(cl.observer, "y") && (cl.modtype >= 2)) // woods #observer
@@ -1839,7 +1845,9 @@ void SCR_ShowObsFrags(void)
 	scoreboard_t* s;
 	char	shortname[16]; // woods for dynamic scoreboard during match, don't show ready
 	char buf[15];
+	char buf2[15];
 	const char* obs;
+	const char* star_obs;
 	int clampedSbar = CLAMP(1, (int)scr_sbar.value, 3);
 
 	if (cl.intermission)
@@ -1854,8 +1862,12 @@ void SCR_ShowObsFrags(void)
 	if ((cl.gametype == GAME_DEATHMATCH) && (cls.state == ca_connected))
 	{
 		obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf));
+		star_obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf2, sizeof(buf2));
 
-		if ((!strcmp(cl.observer, "y") && (cl.modtype >= 2)) || scr_showscores.value || !strcmp(obs, "eyecam") || !strcmp(obs, "chase") || !strcmp(obs, "fly") || !strcmp(obs, "walk"))
+		if ((!strcmp(cl.observer, "y") && (cl.modtype >= 2)) ||
+			scr_showscores.value ||
+			!strcmp(obs, "eyecam") || !strcmp(obs, "chase") || !strcmp(obs, "fly") || !strcmp(obs, "walk") ||
+			!strcmp(star_obs, "eyecam") || !strcmp(star_obs, "chase") || !strcmp(star_obs, "fly") || !strcmp(star_obs, "walk"))
 		{
 			Sbar_SortFrags_Obs ();
 
@@ -2328,10 +2340,13 @@ void SCR_Observing(void)
 		char printtxt[25];
 		char buf2[25];
 		char buf3[25];
+		char buf4[25];
 		const char* obs;
+		const char* star_obs;
 		const char* observing;
 		int color, y;
 		obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf2, sizeof(buf2));
+		star_obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf4, sizeof(buf4));
 		observing = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observing", buf3, sizeof(buf3));
 		color = cl.scores[cl.viewentity - 1].pants.basic; // get color 0-13
 		color = Sbar_ColorForMap((color & 15) << 4); // translate to proper drawfill color
@@ -2361,12 +2376,12 @@ void SCR_Observing(void)
 
 		if (cl.modtype == 1 || cl.modtype == 4) // crx case
 		{
-			if (!strcmp(obs, "chase")) // chase
+			if (!strcmp(obs, "chase") || !strcmp(star_obs, "chase")) // chase
 			{
 				sprintf(printtxt, "%s", observing); // print who you are observering
 				M_PrintWhite(166 - (strlen(observing)*4), y, printtxt);
 			}
-			else if (!strcmp(obs, "eyecam"))// eyecam
+			else if (!strcmp(obs, "eyecam") || !strcmp(star_obs, "eyecam")) // eyecam
 			{
 				if (r_drawviewmodel.value)
 					Draw_Fill(152 - strlen(observing)*4, y, (strlen(observing)*8) + 15, 9, 0, .8); // show their color
@@ -3141,6 +3156,9 @@ void SCR_SetupAutoID(void)
 	char buf3[15];
 	const char* mode;
 
+	char buf4[15];
+	const char* star_obs;
+
 	//if (r_refdef.viewangles[ROLL] == 80) // dead, could rotate text?
 
 	if (!scr_autoid.value || cls.state != ca_connected || cl.intermission || qeintermission || crxintermission)
@@ -3149,16 +3167,17 @@ void SCR_SetupAutoID(void)
 	if ((cl.gametype == GAME_DEATHMATCH) && (cls.state == ca_connected) && !cls.demoplayback)
 	{
 		obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf));
+		star_obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf4, sizeof(buf4));
 		playmode = Info_GetKey(cl.serverinfo, "playmode", buf2, sizeof(buf2));
 		mode = Info_GetKey(cl.serverinfo, "mode", buf3, sizeof(buf3));
 
 		if (cl.modtype == 1 || cl.modtype == 4) // mods with observer keys
 		{
 			if (
-				(strcmp(obs, "eyecam") != 0) && // allow in mp if an observer
-				(strcmp(obs, "chase") != 0) &&
-				(strcmp(obs, "fly") != 0) &&
-				(strcmp(obs, "walk") != 0) &&
+				(strcmp(obs, "eyecam") != 0 && strcmp(star_obs, "eyecam") != 0) && // allow in mp if an observer
+				(strcmp(obs, "chase") != 0 && strcmp(star_obs, "chase") != 0) &&
+				(strcmp(obs, "fly") != 0 && strcmp(star_obs, "fly") != 0) &&
+				(strcmp(obs, "walk") != 0 && strcmp(star_obs, "walk") != 0) &&
 				(
 					(strcmp(playmode, "practice") != 0) || // allow in practice mode if value 2
 					((int)scr_autoid.value != 2)

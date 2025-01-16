@@ -2409,6 +2409,7 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 	const char* observing = "null";
 	const char* mode = "null";
 	const char* spectator = "null"; // woods #autovote
+	const char* star_observer = "null"; // woods #autovote
 
 	if ((cl.gametype == GAME_DEATHMATCH) && (cls.state == ca_connected))
 	{// am I colored up?
@@ -2417,13 +2418,15 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 		char buf2[10];
 		char buf3[10];
 		char buf4[10];
+		char buf5[10];
 		observer = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf)); // userinfo
+		star_observer = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf5, sizeof(buf5));  // userinfo
 		observing = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observing", buf2, sizeof(buf2)); // userinfo
 		mode = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "mode", buf3, sizeof(buf3)); // userinfo
 		spectator = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*spectator", buf4, sizeof(buf4)); // woods #autovote
 	}
 
-	if (!q_strcasecmp(observer, "off") && !q_strcasecmp(observing, "off")) // use info keys to detect
+	if ((!q_strcasecmp(observer, "off") || !q_strcasecmp(star_observer, "off")) && !q_strcasecmp(observing, "off")) // use info keys to detect
 		cl.notobserver = 1;
 	else
 		cl.notobserver = 0;

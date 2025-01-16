@@ -1693,25 +1693,30 @@ void Sbar_Draw (void)
 	qboolean mpdemo = false; // woods #obspent
 	qboolean observer = false; // woods #obspent
 	char buf[15]; // woods #obspent
+	char buf2[15];
 	const char* obs = NULL; // woods #obspent
+	const char* star_obs = NULL;
 
 	if (cls.demoplayback && cl.maxclients > 1) // woods #obspent
 		mpdemo = true;
 
 	if ((cl.gametype == GAME_DEATHMATCH) && (cls.state == ca_connected)) // woods #obspent
+	{
 		obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf));
+		star_obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf2, sizeof(buf2));
+	}
 
-	if (obs) // woods #obspent
+	if (obs || star_obs) // woods #obspent
 	{
 		if (cl.modtype == 1 || cl.modtype == 4) 
 		{
-			if (strcmp(obs, "") == 0) 
+			if (strcmp(obs, "") == 0 && strcmp(star_obs, "") == 0)
 				observer = false;
 			else 
-				observer = (strcmp(obs, "off") != 0);
+				observer = (strcmp(obs, "off") != 0) || (strcmp(star_obs, "off") != 0);
 		}
 		else 
-			observer = (strcmp(obs, "n") == 0);
+			observer = (strcmp(obs, "n") == 0) || (strcmp(star_obs, "n") == 0);
 	}
 
 	int clampedSbar = CLAMP(1, (int)scr_sbar.value, 3); // woods

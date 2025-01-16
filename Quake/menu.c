@@ -2647,10 +2647,13 @@ void M_Setup_Draw (void)
 	if (cls.state == ca_connected)
 	{
 		char buf[15];
+		char buf2[15];
 		const char* obs;
+		const char* star_obs;
 		obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf));
+		star_obs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf2, sizeof(buf2));
 
-		if (!strcmp(obs, "fly")) // woods #3rdperson
+		if (!strcmp(obs, "fly") || !strcmp(star_obs, "fly")) // woods #3rdperson
 			flyme = true;
 		else
 			flyme = false;
