@@ -497,6 +497,19 @@ void CL_SignonReply (void)
 		if (!q_strcasecmp(val2, "practice"))
 			cl.playmode = 3;
 
+		const char* val3;
+		char buf8[4];
+		val3 = Info_GetKey(cl.serverinfo, "sv_fullpitch", buf8, sizeof(buf8)); // woods #pqfullpitch
+		if (val3 && val3[0] != '\0')
+		{
+			if (strcmp(val3, "0") == 0)
+				cl.fullpitch = 0;
+			else
+				cl.fullpitch = 1;
+		}
+		else
+			cl.fullpitch = 1;
+
 		retry_counter = 0; // woods #ms
 
 		break;

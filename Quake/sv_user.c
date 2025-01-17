@@ -47,6 +47,7 @@ cvar_t	sv_idealpitchscale = {"sv_idealpitchscale","0.8",CVAR_NONE};
 cvar_t	sv_altnoclip = {"sv_altnoclip","1",CVAR_ARCHIVE}; //johnfitz
 cvar_t	sv_nqplayerphysics = {"sv_nqplayerphysics", "1", CVAR_ARCHIVE}; //spike. set to 0 for prediction to work. name comes from fte.
 cvar_t	sv_bunnyhopqw = {"sv_bunnyhopqw","0",CVAR_ARCHIVE}; // woods #qwbunnyhop quakespasm-shalrathy 76a1f96
+cvar_t	sv_fullpitch = {"sv_fullpitch","1",CVAR_ARCHIVE| CVAR_SERVERINFO}; // woods -- 1 is qs default, 0 limits server to og nq default #pqfullpitch
 
 qboolean SV_RunThink (edict_t *ent);
 
@@ -518,6 +519,22 @@ void SV_ReadClientMove (usercmd_t *move)
 		else
 			angle[i] = MSG_ReadAngle16 (sv.protocolflags);	//johnfitz -- 16-bit angles for PROTOCOL_FITZQUAKE
 	}
+
+	if (sv_fullpitch.value == 0) // woods -- force server #pqfullpitch
+	{
+		if (angle[PITCH] > 80.01 || angle[PITCH] < -70.01)
+		{
+			if (angle[PITCH] > 80.01)
+				angle[PITCH] = 80.01;
+			if (angle[PITCH] < -70.01)
+				angle[PITCH] = -70.01;
+
+			MSG_WriteByte(&host_client->message, svc_setangle);
+			for (i = 0; i < 3; i++)
+				MSG_WriteAngle(&host_client->message, angle[i], sv.protocolflags);
+		}
+	}
+
 	movevalues[0] = MSG_ReadShort ();
 	movevalues[1] = MSG_ReadShort ();
 	movevalues[2] = MSG_ReadShort ();

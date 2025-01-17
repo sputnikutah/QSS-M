@@ -870,11 +870,21 @@ void IN_JoyMove (usercmd_t *cmd)
 	if (lookEased.x != 0 || lookEased.y != 0)
 		V_StopPitchDrift();
 
-	/* johnfitz -- variable pitch clamping */
-	if (cl.viewangles[PITCH] > cl_maxpitch.value)
-		cl.viewangles[PITCH] = cl_maxpitch.value;
-	if (cl.viewangles[PITCH] < cl_minpitch.value)
-		cl.viewangles[PITCH] = cl_minpitch.value;
+	if (cl.fullpitch == 0) // woods #pqfullpitch -- force client to adapt when not allowed
+	{
+		if (cl.viewangles[PITCH] > 80)
+			cl.viewangles[PITCH] = 80;
+		if (cl.viewangles[PITCH] < -70)
+			cl.viewangles[PITCH] = -70;
+	}
+	else
+	{
+		/* johnfitz -- variable pitch clamping */
+		if (cl.viewangles[PITCH] > cl_maxpitch.value)
+			cl.viewangles[PITCH] = cl_maxpitch.value;
+		if (cl.viewangles[PITCH] < cl_minpitch.value)
+			cl.viewangles[PITCH] = cl_minpitch.value;
+	}
 #endif
 }
 
@@ -916,11 +926,21 @@ void IN_MouseMove(usercmd_t *cmd)
 	if ( (in_mlook.state & 1) && !(in_strafe.state & 1))
 	{
 		cl.viewangles[PITCH] += m_pitch.value * dmy * cl.csqc_sensitivity;
-		/* johnfitz -- variable pitch clamping */
-		if (cl.viewangles[PITCH] > cl_maxpitch.value)
-			cl.viewangles[PITCH] = cl_maxpitch.value;
-		if (cl.viewangles[PITCH] < cl_minpitch.value)
-			cl.viewangles[PITCH] = cl_minpitch.value;
+		if (cl.fullpitch == 0) // woods #pqfullpitch -- force client to adapt when not allowed
+		{
+			if (cl.viewangles[PITCH] > 80)
+				cl.viewangles[PITCH] = 80;
+			if (cl.viewangles[PITCH] < -70)
+				cl.viewangles[PITCH] = -70;
+		}
+		else
+		{
+			/* johnfitz -- variable pitch clamping */
+			if (cl.viewangles[PITCH] > cl_maxpitch.value)
+				cl.viewangles[PITCH] = cl_maxpitch.value;
+			if (cl.viewangles[PITCH] < cl_minpitch.value)
+				cl.viewangles[PITCH] = cl_minpitch.value;
+		}
 	}
 	else
 	{

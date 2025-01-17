@@ -1576,6 +1576,7 @@ void SV_Init (void)
 	extern	cvar_t	sv_map_rotation;		// woods #maprotation
 	extern	cvar_t	sv_defaultmap;		// woods #mapchangeprotect
 	extern	cvar_t	sv_bunnyhopqw; // woods #qwbunnyhop
+	extern	cvar_t	sv_fullpitch; // woods #pqfullpitch
 
 	PM_Register();
 	Cvar_RegisterVariable (&sv_maxvelocity);
@@ -1600,6 +1601,8 @@ void SV_Init (void)
 	Cvar_RegisterVariable (&sv_autoload); // woods #autoload (iw)
 	Cvar_RegisterVariable (&sv_nqplayerphysics);	//spike
 	Cvar_RegisterVariable (&sv_bunnyhopqw); // woods #qwbunnyhop
+	Cvar_RegisterVariable (&sv_fullpitch); // woods
+
 
 	Cvar_RegisterVariable (&sv_sound_watersplash); //spike
 	Cvar_RegisterVariable (&sv_sound_land); //spike
