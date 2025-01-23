@@ -2156,7 +2156,7 @@ void SCR_DrawSpeed (void)
 	if (clampedSbar == 3)
 	{
 		GL_SetCanvas(CANVAS_BOTTOMLEFTQE);
-		y = 175;
+		y = 177;
 		x = 134;
 	}
 	else
