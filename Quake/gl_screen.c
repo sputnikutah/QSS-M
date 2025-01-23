@@ -1407,6 +1407,9 @@ void SCR_ShowPL(void)
 	if (scr_viewsize.value >= 130)
 		return;
 
+	if (!scr_ping.value)
+		return;
+
 	ct = (SDL_GetTicks() - maptime) / 1000; // woods connected map time #maptime
 
 	if (cl.gametype == GAME_DEATHMATCH && cls.state == ca_connected)
