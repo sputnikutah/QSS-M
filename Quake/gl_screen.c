@@ -1931,6 +1931,9 @@ void SCR_ShowFlagStatus(void)
 	float z;
 	int x, y, xx, yy;
 
+	if (scr_viewsize.value >= 130)
+		return;
+
 	// woods lets get some info from server infokeys
 
 	const char* redflag;
