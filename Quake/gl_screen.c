@@ -543,7 +543,7 @@ void SCR_DrawCenterString (void) //actually do the drawing
 	realobs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "observer", buf, sizeof(buf));
 	star_realobs = Info_GetKey(cl.scores[cl.realviewentity - 1].userinfo, "*observer", buf2, sizeof(buf2));
 
-	if (!scr_obscenterprint.value && !cameras && !countdown && !qeintermission &&
+	if (!scr_obscenterprint.value && !cameras && !countdown && !qeintermission && !crxintermission &&
 		((cl.modtype == 1 || cl.modtype == 4) &&
 			((!strcmp(realobs, "eyecam") || !strcmp(realobs, "chase")) ||
 				(!strcmp(star_realobs, "eyecam") || !strcmp(star_realobs, "chase")))))
@@ -1851,10 +1851,7 @@ void SCR_ShowObsFrags(void)
 	const char* star_obs;
 	int clampedSbar = CLAMP(1, (int)scr_sbar.value, 3);
 
-	if (cl.intermission)
-		return;
-
-	if (qeintermission)
+	if (cl.intermission || qeintermission || crxintermission)
 		return;
 
 	if (scr_viewsize.value >= 120)
@@ -2082,7 +2079,7 @@ void SCR_Speedometer(void)
 	float alpha = 0.5;
 	int y = scr_showspeed_y.value;
 
-	if (cl.intermission || qeintermission || scr_viewsize.value >= 120)
+	if (cl.intermission || qeintermission || crxintermission || scr_viewsize.value >= 120)
 		return;
 
 	GL_SetCanvas(CANVAS_SBAR2);
@@ -2367,7 +2364,7 @@ void SCR_Observing(void)
 		if (clampedSbar == 3)
 			y += 34;
 
-		if (cl.intermission)
+		if (cl.intermission || qeintermission || crxintermission)
 			return;
 
 		if (qeintermission)
