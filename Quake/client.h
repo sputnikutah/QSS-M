@@ -401,6 +401,20 @@ typedef struct
 	vec3_t		lerpangles;			// JPG - angles now used by view.c so that smooth chasecam doesn't fuck up demos // woods #smoothcam
 	qboolean	ver_sent;			// woods - flag to send *ver intially
 	int			fullpitch;			// woods #pqfullpitch
+
+	struct itemtimer_s // woods #obstimers (FTE)
+	{
+		float end;
+		int entnum;
+		char *timername;
+		float start;
+		float duration;
+		vec3_t origin;
+		vec3_t rgb;
+		float radius;
+		struct itemtimer_s* next;
+	} *itemtimers;
+
 } client_state_t;
 
 

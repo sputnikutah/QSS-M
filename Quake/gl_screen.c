@@ -3283,6 +3283,108 @@ void SCR_DrawAutoID(void)
 }
 
 /*
+==============
+SCR_DrawObsTimers -- woods #obstimers
+==============
+*/
+void SCR_DrawObsTimers (void)
+{
+	if (cl.modtype != 1 || !cl.itemtimers || cl.intermission ||
+		qeintermission || crxintermission || scr_viewsize.value >= 130)
+		return;
+
+#define MAX_VISIBLE_TIMERS 32
+#define COUNTDOWN_TIME 5
+#define TIMER_SPACING 10
+
+// Position setup
+	int base_y = 0;
+	int x = 0;
+	int clampedSbar = CLAMP(1, (int)scr_sbar.value, 3);
+
+	// Set canvas and calculate positions based on HUD type
+	if (clampedSbar == 3 && scr_viewsize.value <= 110) 
+	{
+		GL_SetCanvas(CANVAS_BOTTOMLEFTQE);
+		base_y = 177;
+		x = (scr_showspeed.value != 1 && !scr_movekeys.value) ? 134 : 172;
+
+		if ((scr_sbarscale.value > 3 && (scr_showspeed.value == 1 || scr_movekeys.value))
+			|| scr_sbarscale.value >= 4)
+			base_y -= 12;
+	}
+	else 
+	{
+		GL_SetCanvas(CANVAS_BOTTOMLEFT);
+		base_y = 186;
+		x = 6;
+		if (scr_ping.value || key_dest != key_console)
+			base_y -= 23;
+	}
+
+	// Timer collection structure
+	typedef struct {
+		struct itemtimer_s* timer;
+		float time_left;
+	} visible_timer_t;
+	visible_timer_t visible_timers[MAX_VISIBLE_TIMERS];
+	int num_visible = 0;
+
+	// Collect visible timers
+	for (struct itemtimer_s* timer = cl.itemtimers; timer; timer = timer->next)
+	{
+		float time_left = timer->end - cl.time;
+		if (time_left <= COUNTDOWN_TIME && time_left > -1.0 &&
+			num_visible < MAX_VISIBLE_TIMERS) {
+			visible_timers[num_visible].timer = timer;
+			visible_timers[num_visible].time_left = time_left;
+			num_visible++;
+		}
+	}
+
+	// Sort timers (spawn first, then by remaining time)
+	for (int i = 0; i < num_visible - 1; i++) 
+	{
+		for (int j = 0; j < num_visible - i - 1; j++) 
+		{
+			qboolean should_swap = false;
+			float time1 = visible_timers[j].time_left;
+			float time2 = visible_timers[j + 1].time_left;
+
+			if (time1 > 0 && time2 <= 0)
+				should_swap = true;
+			else if (time1 > 0 && time2 > 0 && time1 > time2)
+				should_swap = true;
+
+			if (should_swap) {
+				visible_timer_t temp = visible_timers[j];
+				visible_timers[j] = visible_timers[j + 1];
+				visible_timers[j + 1] = temp;
+			}
+		}
+	}
+
+	// Draw timers
+	char str[32];
+	for (int i = 0; i < num_visible; i++) 
+	{
+		struct itemtimer_s* timer = visible_timers[i].timer;
+		float time_left = visible_timers[i].time_left;
+		int y = base_y - (i * TIMER_SPACING);
+		int name_width = strlen(timer->timername) * 8;
+
+		Draw_String(x, y, timer->timername);
+
+		if (time_left <= 0)
+			M_Print(x + name_width + 8, y, "spawn");
+		else {
+			sprintf(str, "%d", (int)ceil(time_left));
+			M_Print(x + name_width + 8, y, str);
+		}
+	}
+}
+
+/*
 ==============================================================================
 
 SCREEN SHOTS
@@ -3887,6 +3989,7 @@ void SCR_UpdateScreen (void)
 		SCR_DrawSpeed (); // woods #speed
 		SCR_DrawMovementKeys (); // woods #movementkeys
 		TP_DrawClosestLocText (); // woods #locext
+		SCR_DrawObsTimers (); // woods #obstimers
 		SCR_Mute (); // woods #usermute
 		SCR_Observing (); // woods
 		TexturePointer_Draw (); // woods #texturepointer

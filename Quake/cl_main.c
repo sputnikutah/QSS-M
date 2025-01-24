@@ -2562,6 +2562,82 @@ void CL_Entdump_f(void)
 	free(buffer);
 }
 
+static void CL_ServerExtension_ItemTimer_f (void) // woods #obstimers (FTE)
+{
+	// it[cur / ]duration x y z radius 0xRRGGBB "timername" owningent
+
+	if (Cmd_Argc() < 8)
+	{
+		Con_DPrintf2("Ignoring stufftext: %s\n", Cmd_Argv(0));
+		return;
+	}
+
+	float timeout;
+	float start = cl.time;
+	const char* e;
+	timeout = strtod(Cmd_Argv(1), (char**)&e);
+	if (*e == '/') 
+	{
+		start += timeout;
+		timeout = atof(e + 1);
+		start -= timeout;
+	}
+
+	// Parse remaining arguments
+	vec3_t org =
+	{
+		atof(Cmd_Argv(2)),  // x
+		atof(Cmd_Argv(3)),  // y
+		atof(Cmd_Argv(4))   // z
+	};
+	float radius = atof(Cmd_Argv(5));
+	const char* tint = Cmd_Argv(6);
+	unsigned int rgb = strtoul(tint, NULL, 16);  // Convert tint string to RGB
+	const char* timername = (Cmd_Argc() > 7) ? Cmd_Argv(7) : "";
+	unsigned int entnum = (Cmd_Argc() > 8) ? strtoul(Cmd_Argv(8), NULL, 0) : 0;
+
+	// Set defaults if needed
+	if (!timeout)
+		timeout = FLT_MAX;
+	if (!radius)
+		radius = 32;
+
+	// Find existing timer or create new one
+	struct itemtimer_s* timer;
+	for (timer = cl.itemtimers; timer; timer = timer->next)
+	{
+		if (entnum)
+		{
+			if (timer->entnum == entnum)
+				break;
+		}
+		else if (VectorCompare(timer->origin, org))
+			break;
+	}
+	if (!timer)
+	{   //didn't find it.
+		timer = Z_Malloc(sizeof(*timer));
+		timer->next = cl.itemtimers;
+		cl.itemtimers = timer;
+	}
+
+	// Update timer properties
+	VectorCopy(org, timer->origin);
+	timer->start = start;
+	timer->duration = timeout;
+	timer->radius = radius;
+	timer->entnum = entnum;
+	timer->end = start + timer->duration;
+	timer->rgb[0] = ((rgb >> 16) & 0xff) / 255.0;
+	timer->rgb[1] = ((rgb >> 8) & 0xff) / 255.0;
+	timer->rgb[2] = ((rgb) & 0xff) / 255.0;
+
+	// Properly handle the timername string
+	if (timer->timername)
+		Z_Free(timer->timername);
+	timer->timername = Z_Strdup(timername);  // Allocate and copy the string
+}
+
 static void CL_ServerExtension_FullServerinfo_f(void)
 {
 	const char *newserverinfo = Cmd_Argv(1);
@@ -2885,7 +2961,7 @@ void CL_Init (void)
 	//Cmd_AddCommand_ServerCommand ("vwep", CL_ServerExtension_Ignore_f); //invalid for nq, provides an alternative list of model precaches for vweps.
 	//Cmd_AddCommand_ServerCommand ("at", CL_ServerExtension_Ignore_f); //invalid for nq, autotrack info for mvds
 	Cmd_AddCommand_ServerCommand ("wps", CL_ServerExtension_Ignore_f); //ktx/cspree weapon stats
-	Cmd_AddCommand_ServerCommand ("it", CL_ServerExtension_Ignore_f); //cspree item timers
+	Cmd_AddCommand_ServerCommand ("it", CL_ServerExtension_ItemTimer_f); //cspree item timers -- woods #obstimers
 	Cmd_AddCommand_ServerCommand ("tinfo", CL_ServerExtension_Ignore_f); //ktx team info
 	Cmd_AddCommand_ServerCommand ("exectrigger", CL_ServerExtension_Ignore_f); //spike
 	Cmd_AddCommand_ServerCommand ("csqc_progname", CL_ServerExtension_Ignore_f); //spike
