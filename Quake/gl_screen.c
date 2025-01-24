@@ -1371,7 +1371,8 @@ void SCR_ShowPing(void)
 
 				if (fragsort[i] == cl.realviewentity - 1) {
 
-					sprintf (num, "%-4i", s->ping);
+					q_snprintf(num, sizeof(num), "%i%s", s->ping,
+						scr_ping.value >= 2 ? " ms" : "");
 
 					if (ct > 5 && !scr_con_current) // dont update when console down or report ping 0
 						M_PrintWhite (x - 8 * 5, y, num); //johnfitz -- was Draw_String, changed for stretched overlays 
@@ -1451,7 +1452,7 @@ void SCR_ShowPL(void)
 
 			if (key_dest != key_console && ((ct != (int)cl.time) && (ct > 6)))
 			{
-				sprintf(num, "%-4i", lastPL);
+				q_snprintf(num, sizeof(num), "%i%s", lastPL, scr_ping.value == 3 ? " pl" : "");
 				M_Print(x, y, num);
 
 			}
