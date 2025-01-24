@@ -4907,13 +4907,18 @@ void Host_Setinfo_f(void)
 		{
 			if (*key == '*') // woods
 			{
-				// Allow *ver only during initial connection and only once
-				if (!strcmp(key, "*ver") && !cl.ver_sent)
+				if (!strcmp(key, "*ver") && !host_client->spawned) // allow *ver only during initial connection
 				{
-					cl.ver_sent = true;  // Mark as sent
+					Con_DPrintf("allowing *ver set from %s (not yet spawned)\n", host_client->name);
 				}
 				else
-					return;  // Reject all other * keys
+				{
+					if (!strcmp(key, "*ver"))
+						SV_ClientPrintf("\nrejecting *ver set from %s (already spawned)\n\n", host_client->name);
+					else
+						SV_ClientPrintf("\nrejecting *%s set from %s (restricted key)\n\n", key + 1, host_client->name);
+					return;
+				}
 			}
 
 			SV_UpdateInfo((host_client - svs.clients)+1, key, val);

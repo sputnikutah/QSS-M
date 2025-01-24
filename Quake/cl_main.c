@@ -251,7 +251,6 @@ void CL_Disconnect (void)
 	if (cl.modtype == 1 || cl.modtype == 4)
 		Cbuf_AddText("setinfo observing off\n"); // woods
 	pausedprint = false;  // woods
-	cl.ver_sent = false; // woods
 }
 
 void CL_Disconnect_f (void)
