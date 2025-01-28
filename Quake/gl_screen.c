@@ -1020,14 +1020,17 @@ void SCR_DrawFPS (void)
 		oldframecount = host_framecount;
 	}
 
+	cl.fps = (int)lastfps; // woods #f_config
+
 	if (scr_showfps.value)
 	{
-		char	st[16];
-		char	st2[16]; // woods #f_config
+		char	st[12];
 		int	x, y;
-		sprintf (st, "%4.0f fps", lastfps);
-		sprintf (st2, "%4.0f", lastfps); // woods #f_config
-		cl.fps = atoi(st2); // woods #f_config
+		if (scr_showfps.value == 2)
+			q_snprintf(st, sizeof(st), "%4.0f", lastfps);
+		else
+			q_snprintf(st, sizeof(st), "%4.0f fps", lastfps);
+
 		x = 312 - (strlen(st)<<3); // woods added padding
 		if (clampedSbar == 3 && scr_viewsize.value <= 110) // woods #qehud
 		{
@@ -1052,7 +1055,8 @@ void SCR_DrawFPS (void)
 			x = 312;
 			y = 186;
 		}
-		if (scr_clock.value) y -= 12; //make room for clock // woods added padding
+		if (scr_clock.value)
+			y -= 12; //make room for clock // woods added padding
 			Draw_String (x - (strlen(st) << 3), y, st);
 
 		scr_tileclear_updates = 0;
