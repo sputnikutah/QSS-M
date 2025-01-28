@@ -2992,15 +2992,10 @@ if (!strcmp(printtext, "Client ping times:\n") && (cl.expectingpingtimes > realt
 			}
 
 			// for fps
-			if (scr_showfps.value)
-			{ 
 				if (host_maxfps.value == 0)
-					sprintf(lfps, "fps (0) %d", cl.fps);
+				q_snprintf(lfps, sizeof(lfps), "fps (0) %d", cl.fps);
 				else
-					sprintf(lfps, "fps %d/%s", cl.fps, host_maxfps.string);
-			}
-			else
-				sprintf(lfps, "fpsmax %s", host_maxfps.string);
+				q_snprintf(lfps, sizeof(lfps), "fps %d/%s", cl.fps, host_maxfps.string);
 			
 			MSG_WriteByte(&cls.message, clc_stringcmd);
 			MSG_WriteString(&cls.message, va("say fov %s, sens %s, fshaft %s, fbmodels %s, %s", scr_fov.string, sensitivity.string, cl_truelightning.string, gl_overbright_models.string, lfps));
