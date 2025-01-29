@@ -2206,7 +2206,7 @@ SCR_DrawMovementKeys -- woods #movementkeys (soruced from: https://github.com/j0
 */
 void SCR_DrawMovementKeys(void)
 {
-	if (!scr_movekeys.value || cl.intermission || qeintermission || scr_viewsize.value > 110)
+	if (!scr_movekeys.value || cl.intermission || qeintermission || crxintermission || scr_viewsize.value > 110)
 		return;
 
 	extern kbutton_t in_moveleft, in_moveright, in_forward, in_back, in_jump, in_up;
@@ -2370,9 +2370,6 @@ void SCR_Observing(void)
 			y += 34;
 
 		if (cl.intermission || qeintermission || crxintermission)
-			return;
-
-		if (qeintermission)
 			return;
 
 		if (!strcmp(observing, "off"))
