@@ -1557,13 +1557,19 @@ void R_DrawShadows (void)
 		if (!currententity->model) // woods
 			continue;
 
-		if (currententity->model->type != mod_alias)
-			continue;
-
-		if (currententity->model->type == mod_alias) // woods #shadow
+		switch (currententity->model->type) // woods #shadow
+		{
+		case mod_alias:
 			GL_DrawAliasShadow(currententity);
-		else if (currententity->model->type == mod_brush)
+			break;
+
+		case mod_brush:
 			GL_DrawBrushShadow(currententity);
+			break;
+
+		default:
+			continue;
+		}
 	}
 
 	if (gl_stencilbits)
