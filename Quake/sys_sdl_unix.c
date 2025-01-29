@@ -471,6 +471,13 @@ double Sys_DoubleTime (void)
 	return SDL_GetTicks() / 1000.0;
 }
 
+static void safe_write(int fd, const void* buf, size_t count) // woods #arrowkeys
+{
+	ssize_t result = write(fd, buf, count);
+	if (result == -1) {
+	}
+}
+
 const char *Sys_ConsoleInput (void) // woods #arrowkeys
 {
 	static char	con_text[256];
@@ -536,13 +543,13 @@ const char *Sys_ConsoleInput (void) // woods #arrowkeys
                                     if (cursor_pos > 0)
                                     {
                                         cursor_pos--;
-                                        write(1, "\b", 1);
+										safe_write(1, "\b", 1);
                                     }
                                     continue;
                                 case 'C': // Right arrow
                                     if (cursor_pos < textlen)
                                     {
-                                        write(1, &con_text[cursor_pos], 1);
+										safe_write(1, &con_text[cursor_pos], 1);
                                         cursor_pos++;
                                     }
                                     continue;
@@ -559,7 +566,7 @@ const char *Sys_ConsoleInput (void) // woods #arrowkeys
 
         if (c == '\n' || c == '\r')
         {
-            write(1, "\n", 1);
+			safe_write(1, "\n", 1);
             con_text[textlen] = '\0';
             textlen = 0;
             cursor_pos = 0;
@@ -575,18 +582,18 @@ const char *Sys_ConsoleInput (void) // woods #arrowkeys
                 textlen--;
                 
                 // Rewrite the line from cursor position
-                write(1, "\b", 1);
+				safe_write(1, "\b", 1);
                 if (cursor_pos < textlen)
                 {
-                    write(1, &con_text[cursor_pos], textlen - cursor_pos);
-                    write(1, " ", 1);  // Clear last character
+					safe_write(1, &con_text[cursor_pos], textlen - cursor_pos);
+					safe_write(1, " ", 1);  // Clear last character
                     // Move cursor back to position
                     for (int i = 0; i < textlen - cursor_pos + 1; i++)
-                        write(1, "\b", 1);
+						safe_write(1, "\b", 1);
                 }
                 else
                 {
-                    write(1, " \b", 2);  // Clear last character
+					safe_write(1, " \b", 2);  // Clear last character
                 }
             }
             continue;
@@ -603,18 +610,18 @@ const char *Sys_ConsoleInput (void) // woods #arrowkeys
                 textlen++;
                 
                 // Write the new character and the rest of the line
-                write(1, &con_text[cursor_pos], textlen - cursor_pos);
+				safe_write(1, &con_text[cursor_pos], textlen - cursor_pos);
                 
                 // Move cursor back to just after inserted character
                 cursor_pos++;
                 for (int i = 0; i < textlen - cursor_pos; i++)
-                    write(1, "\b", 1);
+					safe_write(1, "\b", 1);
             }
             else
             {
                 // Append character at end of line
                 con_text[textlen] = c;
-                write(1, &c, 1);
+				safe_write(1, &c, 1);
                 textlen++;
                 cursor_pos++;
             }
