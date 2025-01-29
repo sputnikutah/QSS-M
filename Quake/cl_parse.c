@@ -2899,34 +2899,52 @@ if (!strcmp(printtext, "Client ping times:\n") && (cl.expectingpingtimes > realt
 	{
 		if (realtime > cl.printrandom)
 		{
-			char coin[6];
-			char color[5];
-			char rps[10];
+			const char* coin; // heads or tails
+			const char* color; // red or blue
+			const char* rps; // rock, paper, scissors
+			char blackjack[20]; // blackjack hand (with "bust" suffix)
 			int v1 = rand() % 2; // head / tails
 			int v2 = rand() % 100 + 1; // 1-100
 			int v3 = rand() % 3 + 1; // rock, paper, scissors
 			int v4 = rand() % 2; // red or blue
-			int v5 = rand() % 21 + 1; // blackjack
+			int v5; // Generate weighted blackjack hand (15-24)
+			int r = rand() % 100;  // Generate 0-99 for percentage
 
-			if (v1 == 1)
-				sprintf(coin, "heads");
-			else
-				sprintf(coin, "tails");
+			// Weighted blackjack hand generation
+			if (r < 8)  // 8% chance for 21
+			{
+				v5 = 21;
+			}
+			else if (r < 23)  // 15% chance to bust, with weighted bust numbers
+			{
+				int bust_r = rand() % 100;
+				if (bust_r < 60)        // 60% of busts are 22
+					v5 = 22;
+				else if (bust_r < 85)   // 25% of busts are 23
+					v5 = 23;
+				else                    // 15% of busts are 24
+					v5 = 24;
+			}
+			else  // 77% chance for normal hand (15-20)
+			{
+				v5 = 15 + (rand() % 6);  // Random number between 15-20
+			}
 
-			if (v3 == 1)
-				sprintf(rps, "rock");
-			else if (v3 == 2)
-				sprintf(rps, "paper");
+			if (v5 > 21)
+				q_snprintf(blackjack, sizeof(blackjack), "%d (bust)", v5);
 			else
-				sprintf(rps, "scissors");
+				q_snprintf(blackjack, sizeof(blackjack), "%d", v5);
 
-			if (v4 == 1)
-				sprintf(color, "red");
-			else
-				sprintf(color, "blue");
+			coin = v1 == 1 ? "heads" : "tails"; // heads or tails
+			color = v4 == 1 ? "red" : "blue"; // red or blue
+
+			const char* rps_table[] = { "rock", "paper", "scissors" };
+			rps = rps_table[v3 - 1];
 
 			MSG_WriteByte(&cls.message, clc_stringcmd);
-			MSG_WriteString(&cls.message, va("say %s, %s, %s, blackjack: %d, 1-100: %d", coin, rps, color, v5, v2));
+			MSG_WriteString(&cls.message, va("say %s, %s, %s, blackjack: %s, 1-100: %d",
+				coin, rps, color, blackjack, v2));
+
 			cl.printrandom = realtime + 20;
 		}
 	}
@@ -2937,7 +2955,7 @@ if (!strcmp(printtext, "Client ping times:\n") && (cl.expectingpingtimes > realt
 		if (realtime > cl.printconfig)
 		{
 			char key[2];
-			char particles[15];
+			char particles[8];
 			char textures[4];
 			char hud[3];
 			char lfps[20];
@@ -2945,26 +2963,26 @@ if (!strcmp(printtext, "Client ping times:\n") && (cl.expectingpingtimes > realt
 			int clampedSbar = CLAMP(1, (int)scr_sbar.value, 3);
 			
 			if (!strcmp(r_particledesc.string, ""))
-				sprintf(particles, "classic");
+				strcpy(particles, "classic");
 			else
-				sprintf(particles, "%s", r_particledesc.string);
+				strncpy(particles, r_particledesc.string, sizeof(particles) - 1);
 
 			if (r_lightmap.value == 1 || gl_picmip.value >= 2)
-				sprintf(textures, "%s", "OFF");
+				strcpy(textures, "OFF");
 			else
-				sprintf(textures, "%s", "ON");
+				strcpy(textures, "ON");
 
 			if (clampedSbar == 2)
-				sprintf(hud, "%s", "qw");
+				strcpy(hud, "qw");
 			else if (clampedSbar == 3)
-				sprintf(hud, "%s", "qe");
+				strcpy(hud, "qe");
 			else
-				sprintf(hud, "%s", "nq");
+				strcpy(hud, "nq");
 
 			if (!strcmp(gl_enemycolor.string, ""))
-				sprintf(ecolor, "%s", "off");
+				strcpy(ecolor, "off");
 			else
-				sprintf(ecolor, "%.8s", gl_enemycolor.string);
+				strncpy(ecolor, gl_enemycolor.string, sizeof(ecolor) - 1);
 
 			// for movement key
 			int	i, count;
@@ -2979,22 +2997,22 @@ if (!strcmp(printtext, "Client ping times:\n") && (cl.expectingpingtimes > realt
 					{
 							if (strlen(Key_KeynumToString(i)) == 1) // could be UPARROW?
 							{
-								sprintf(key, "%s", Key_KeynumToString(i));
+								strncpy(key, Key_KeynumToString(i), sizeof(key) - 1);
 								break;
 							}
 					}
 					else
 					{ 
-						sprintf(key, "%s", "?");
+						strcpy(key, "?");
 					}
 					count++;
 				}
 			}
 
 			// for fps
-				if (host_maxfps.value == 0)
+			if (host_maxfps.value == 0)
 				q_snprintf(lfps, sizeof(lfps), "fps (0) %d", cl.fps);
-				else
+			else
 				q_snprintf(lfps, sizeof(lfps), "fps %d/%s", cl.fps, host_maxfps.string);
 			
 			MSG_WriteByte(&cls.message, clc_stringcmd);
