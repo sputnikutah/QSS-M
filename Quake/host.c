@@ -277,31 +277,132 @@ void	Host_FindMaxClients (void)
 		Cvar_SetQuick (&deathmatch, "0");
 }
 
-void Host_Version_f (void)
+// 1. System/Standard
+#include <zlib.h>
+#include <curl/curl.h>
+
+// 2. Audio codecs
+#ifdef USE_CODEC_FLAC
+#include <FLAC/format.h>
+#endif
+
+#ifdef USE_CODEC_MIKMOD
+#include <mikmod.h>
+#endif
+
+#ifdef USE_CODEC_OPUS
+#include <opus/opus_defines.h>
+#include <opus/opusfile.h>
+#endif
+
+#ifdef USE_CODEC_VORBIS
+#include <vorbis/codec.h>
+#endif
+
+#ifdef USE_CODEC_XMP
+#include <xmp.h>
+#endif
+
+#ifdef USE_CODEC_MP3
+#include <mad.h>
+#include <mpg123.h>
+#endif
+
+void Host_Version_f(void)
 {
 	SDL_version sdl_linked;
 	SDL_GetVersion(&sdl_linked);
 
-	Con_Printf ("\n");
-	Con_Printf ("Quake                    %1.2f\n", VERSION);
-	Con_Printf ("QuakeSpasm               " QUAKESPASM_VER_STRING "\n");
-	Con_Printf ("QuakeSpasm-Spiked        " QSS_VER "\n"); // woods
-	Con_Printf ("QSS-M                    " QSSM_VER_STRING "\n"); // woods
+	// Application Section
+	Con_Printf("\n^mApplication Information^m\n\n");
+	Con_Printf("%-24s %1.2f\n", "Quake", VERSION);
+	Con_Printf("%-24s %s\n", "QuakeSpasm", QUAKESPASM_VER_STRING);
+	Con_Printf("%-24s %s\n", "QuakeSpasm-Spiked", QSS_VER);
+	Con_Printf("%-24s %s\n", "QSS-M", QSSM_VER_STRING);
+
 #ifdef QSS_VERSION
-	Con_Printf ("QSS Git Description      " QS_STRINGIFY(QSS_VERSION) "\n");
+	Con_Printf("%-24s %s\n", "QSS Git Description", QS_STRINGIFY(QSS_VERSION));
 #endif
 #ifdef QSS_REVISION
-	Con_Printf ("QSS Git Revision         " QS_STRINGIFY(QSS_REVISION) "\n");
+	Con_Printf("%-24s %s\n", "QSS Git Revision", QS_STRINGIFY(QSS_REVISION));
 #endif
+
 #ifdef QSS_DATE
-	Con_Printf ("QuakeSpasm-Spiked Build  " QS_STRINGIFY(QSS_DATE) "\n");
+	Con_Printf("%-24s %s\n", "Build Date", QS_STRINGIFY(QSS_DATE));
 #else
-	Con_Printf ("Exe                      " __TIME__ " " __DATE__ "\n");
+	Con_Printf("%-24s %s %s\n", "Build Date", __TIME__, __DATE__);
 #endif
-	Con_Printf ("SDL                      " Q_SDL_COMPILED_VERSION_STRING " (compiled)\n"); // woods (iw)
-	Con_Printf ("                         %d.%d.%d (linked)\n", sdl_linked.major, sdl_linked.minor, sdl_linked.patch); // woods (iw)
-	Con_Printf ("OS                       %s %d-bit\n", SDL_GetPlatform(), (int)sizeof(void*) * 8); // woods (iw)
-	Con_Printf ("\n");
+
+	Con_Printf("%-24s %s %d-bit\n", "Platform", SDL_GetPlatform(), (int)sizeof(void*) * 8);
+
+	Con_Printf("\n^mLibrary Versions^m\n\n");
+
+	Con_Printf("%-24s %s (compiled)\n", "SDL", Q_SDL_COMPILED_VERSION_STRING);
+	Con_Printf("%-24s %d.%d.%d (linked)\n", "", sdl_linked.major, sdl_linked.minor, sdl_linked.patch);
+
+	// Core libraries
+	Con_Printf("%-24s %s\n", "zlib", zlibVersion());
+#ifdef LIBCURL_VERSION
+	Con_Printf("%-24s %s\n", "libcurl", LIBCURL_VERSION);
+#endif
+
+	// Audio codec libraries
+#ifdef USE_CODEC_FLAC
+	Con_Printf("%-24s %s\n", "libFLAC", FLAC__VERSION_STRING);
+#endif
+
+#ifdef USE_CODEC_OPUS
+	{
+		const char* opus_ver = opus_get_version_string();
+		const char* version = strstr(opus_ver, "libopus ");
+		Con_Printf("%-24s %s\n", "libopus", version ? version + 8 : opus_ver);
+#define LIBOPUSFILE_VERSION "0.10" // hard coded
+		Con_Printf("%-24s %s\n", "libopusfile", LIBOPUSFILE_VERSION);
+	}
+#endif
+
+#if defined(USE_CODEC_OPUS) || defined(USE_CODEC_VORBIS) // these use ogg
+#define LIBOGG_VERSION "1.3.3" // hard coded
+	Con_Printf("%-24s %s\n", "libogg", LIBOGG_VERSION);
+#endif
+
+#ifdef USE_CODEC_VORBIS
+	{
+		const char* vorbis_ver = vorbis_version_string();
+		const char* version = strstr(vorbis_ver, "libVorbis ");
+		if (version) {
+			Con_Printf("%-24s %s\n", "libvorbis", version + 10);
+			Con_Printf("%-24s %s\n", "libvorbisfile", version + 10);
+		}
+	}
+#endif
+
+#ifdef USE_CODEC_MIKMOD
+	Con_Printf("%-24s %d.%d.%d\n", "libmikmod",
+		LIBMIKMOD_VERSION_MAJOR,
+		LIBMIKMOD_VERSION_MINOR,
+		LIBMIKMOD_REVISION);
+#endif
+
+#ifdef USE_CODEC_XMP
+	Con_Printf("%-24s %s\n", "libxmp", XMP_VERSION);
+#endif
+
+	// MP3 libraries
+#ifdef USE_CODEC_MP3
+	if (MAD_VERSION_MINOR) {
+		Con_Printf("%-24s %d.%d.%d%s\n", "libmad",
+			MAD_VERSION_MAJOR,
+			MAD_VERSION_MINOR,
+			MAD_VERSION_PATCH,
+			MAD_VERSION_EXTRA);
+	}
+	else {
+		Con_Printf("%-24s %s\n", "libmpg123", "1.22.4");
+	}
+#endif
+
+	Con_Printf("\n");
 }
 
 /* cvar callback functions : */
