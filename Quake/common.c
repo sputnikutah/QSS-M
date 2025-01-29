@@ -2203,8 +2203,14 @@ static void COM_CheckRegistered (void)
 	if (h == -1)
 	{
 		Cvar_SetROM ("registered", "0");
+
+		if (pak0) // woods #pak0only
+		{
 		Con_Printf ("Playing shareware version.\n");
-		if (com_modified && !pak0) // woods #pak0only
+			return;
+		}
+
+		if (com_modified)
 			Sys_Error ("You must have the registered version to use modified games.\n\n"
 				   "Basedir is: %s\n\n"
 				   "Check that this has an " GAMENAME " subdirectory containing pak0.pak and pak1.pak, "
