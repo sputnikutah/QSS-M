@@ -1561,7 +1561,7 @@ static qboolean CompleteCommandList (const char* partial, void* unused) // woods
 	return true;
 }
 
-static qboolean CompleteIfList (const char* partial, void* unused) // woods #iwtabcomplete
+static qboolean CompleteGeneralList (const char* partial, void* unused) // woods #iwtabcomplete
 {
 	cmdalias_t* alias;
 	cvar_t* cvar;
@@ -1819,7 +1819,7 @@ static const arg_completion_type_t arg_completion_types[] =
 	{ "set",					CompleteCvarArcList,	NULL },
 	{ "seta",					CompleteCvarArcList,	NULL },
 	{ "cmdtoggle",				CompleteCommandList,	NULL },
-	{ "if",						CompleteIfList,			NULL },
+	{ "if",						CompleteGeneralList,	NULL },
 	{ "play",					CompleteSoundList,		NULL },
 	{ "play2",					CompleteSoundList,		NULL },
 	{ "playvol",				CompleteSoundList,		NULL },
@@ -1835,7 +1835,8 @@ static const arg_completion_type_t arg_completion_types[] =
 	{ "which",					CompleteLS,				NULL },
 	{ "flocate",				CompleteLS,				NULL },
 	{ "ip",						CompleteIP,				NULL },
-	{ "unpak",					CompletePAKList,		NULL }
+	{ "unpak",					CompletePAKList,		NULL },
+	{ "cmd",					CompleteGeneralList,	NULL }
 };
 
 static const int num_arg_completion_types =
