@@ -95,6 +95,10 @@ int retry_counter = 0; // woods #ms
 extern SDL_TimerID chatTimerID; // woods #chatinfo
 extern qboolean isChatTimerRunning; // woods #chatinfo
 
+#define BIRTHDAY_DURATION 30000 // 30 seconds in ms -- woods #qbday
+extern qboolean pak0; // pak0 present  -- woods #qbday
+static Uint32 birthday_start_time = 0; // woods #qbday
+
 /*
 ================
 Con_Quakebar -- johnfitz -- returns a bar of the desired length, but never wider than the console
@@ -2321,6 +2325,57 @@ void Con_DrawInput (void)
 
 /*
 ================
+Con_DrawBirthdayMessage -- woods #qbday
+
+Displays a birthday message for Quake on June 22nd
+Only shows for 30 seconds on first launch of the day
+Requires pak0 to be present
+================
+*/
+static void Con_DrawBirthdayMessage (void)
+{
+	if (!pak0) // only proceed if valid pak0 detected
+		return;
+
+	time_t t = time(NULL);
+	struct tm* tm = localtime(&t);
+
+	if (tm->tm_mon != 5 || tm->tm_mday != 22)  // only on June 22
+		return;
+
+	char backup_path[MAX_OSPATH];
+	q_snprintf(backup_path, sizeof(backup_path), "backups/config-%02d-%02d-%d.cfg",
+		tm->tm_mon + 1, tm->tm_mday, tm->tm_year + 1900);
+
+	if (COM_FileExists(backup_path, NULL)) // skip if not first run of the day
+		return;
+
+	Uint32 current_time = SDL_GetTicks();
+
+	if (birthday_start_time == 0) {
+		birthday_start_time = current_time;
+	}
+
+	if (current_time - birthday_start_time < BIRTHDAY_DURATION)
+	{
+		char birthday[32];
+		char yearstr[32];
+		int age = (tm->tm_year + 1900) - 1996;
+		int x;
+
+		q_snprintf(birthday, sizeof(birthday), "Happy Birthday Quake ");
+		q_snprintf(yearstr, sizeof(yearstr), "1996-%d (%d) ", tm->tm_year + 1900, age);
+
+		for (x = 0; x < (int)strlen(birthday); x++)
+			Draw_Character((con_linewidth - strlen(birthday) + x + 2) << 3, vid.conheight - 32, birthday[x] + 128);
+
+		for (x = 0; x < (int)strlen(yearstr); x++)
+			Draw_Character((con_linewidth - strlen(yearstr) + x + 2) << 3, vid.conheight - 24, yearstr[x] + 128);
+	}
+}
+
+/*
+================
 Con_DrawConsole -- johnfitz -- heavy revision
 
 Draws the console with the solid background
@@ -2375,6 +2430,8 @@ void Con_DrawConsole (int lines, qboolean drawinput)
 //draw version number in bottom right
 	for (x = 0; x < (int)strlen(ver); x++)
 		Draw_Character ((con_linewidth - strlen(ver) + x + 2)<<3, vid.conheight - 8, ver[x] /*+ 128*/); // woods iw
+
+	Con_DrawBirthdayMessage (); // woods #qbday - show quake's birthday for 30 seconds on june 22
 }
 
 
