@@ -1890,7 +1890,7 @@ static float S_Voip_Preprocess(short *start, unsigned int samples, float micamp)
 		{
 			f = start[i] * micamp;
 			start[i] = f;
-			f = fabs(start[i]);
+			f = abs(start[i]); // woods
 			level += f*f;
 		}
 

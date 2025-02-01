@@ -1905,7 +1905,7 @@ qboolean CL_CheckDownload(const char *filename)
 qboolean CL_CheckDownloads(void)
 {
 	int i;
-	if (cl.model_download == 0 && cl.model_count && cl.model_name[1])
+	if (cl.model_download == 0 && cl.model_count && cl.model_name[1][0]) // woods
 	{	//haxors, download the lit first, but only if we don't already have the bsp
 		//this ensures that we don't keep requesting the lit for maps that just don't have one (although may be problematic if the first server we find deleted them all, but oh well)
 		char litname[MAX_QPATH];
@@ -1943,7 +1943,7 @@ qboolean CL_CheckDownloads(void)
 
 	for (; cl.model_download < cl.model_count; )
 	{
-		if (*cl.model_name[cl.model_download])
+		if (cl.model_name[cl.model_download][0]) // woods
 		{
 			if (CL_CheckDownload(cl.model_name[cl.model_download]))
 				return false;
@@ -2497,8 +2497,9 @@ void CL_Entdump_f(void)
 	const char* bspversion = GetBspVersionString(header->version);
 	if (!strcmp(bspversion, "Unknown"))
 	{
+		int version = header->version; // woods
 		free(buffer);
-		Con_Printf("unsupported BSP version %d\n", header->version);
+		Con_Printf("unsupported BSP version %d\n", version);
 		return;
 	}
 

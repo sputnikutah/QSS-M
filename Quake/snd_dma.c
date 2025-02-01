@@ -528,7 +528,7 @@ void S_StartSound (int entnum, int entchannel, sfx_t *sfx, vec3_t origin, float 
 	int			ch_idx; // woods (iw) #democontrols
 	int			skip; // woods (iw) #democontrols
 
-	if (abs(cls.demospeed) > 8) // woods (iw) #democontrols
+	if (fabsf(cls.demospeed) > 8) // woods (iw) #democontrols
 		return;
 
 	if (!sound_started)

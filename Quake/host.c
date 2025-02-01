@@ -378,7 +378,7 @@ void Host_Version_f(void)
 #endif
 
 #ifdef USE_CODEC_MIKMOD
-	Con_Printf("%-24s %d.%d.%d\n", "libmikmod",
+	Con_Printf("%-24s %ld.%ld.%ld\n", "libmikmod",
 		LIBMIKMOD_VERSION_MAJOR,
 		LIBMIKMOD_VERSION_MINOR,
 		LIBMIKMOD_REVISION);

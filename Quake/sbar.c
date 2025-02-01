@@ -412,8 +412,10 @@ void Sbar_DrawScrollString (int x, int y, int width, const char *str)
 
 	ofs = ((int)(realtime * 30)) % totalLen;
 
+	char qfylbullet[2] = { 133, '\0' }; // woods -- quake font yellow '*'
+
 	Sbar_DrawString (x - ofs + 5, y, str);
-	Sbar_DrawString (x - ofs + 5 + strLen, y, " Ž ");
+	Sbar_DrawString (x - ofs + 5 + strLen, y, qfylbullet);
 	Sbar_DrawString (x - ofs + 5 + totalLen, y, str);
 
 	glDisable (GL_SCISSOR_TEST);

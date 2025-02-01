@@ -280,7 +280,7 @@ void Chase_UpdateForDrawing (void)
 
 	if (VectorLength(temp) != 0)
 	{	alphadist = VecLength2(r_refdef.vieworg, ideal); // chase_transparent from Qrack
-		absdist = abs(chase_back.value);
+		absdist = fabsf(chase_back.value);
 		alpha = bound(0, (alphadist / absdist), 1);
 
 

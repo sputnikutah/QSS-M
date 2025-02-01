@@ -2122,7 +2122,7 @@ retry:
 	client->signon_sounds = i;
 	//johnfitz
 
-	if (svs.serverinfo)
+	if (svs.serverinfo[0]) // woods
 	{
 		const char *pre = "//fullserverinfo \"";
 		MSG_WriteByte (&client->message, svc_stufftext);
