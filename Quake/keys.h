@@ -173,7 +173,7 @@ extern	char	*keybindings[MAX_BINDMAPS][MAX_KEYS];
 extern	char	key_lines[CMDLINES][MAXCMDLINE];
 extern	char	key_tabhint[MAXCMDLINE]; // woods #iwtabcomplete
 extern	int		edit_line;
-extern	int		key_linepos;
+extern	size_t	key_linepos; // woods -- int to size_t
 extern	int		key_insert;
 extern	double		key_blinktime;
 extern	int		key_bindmap[2];

@@ -1460,7 +1460,7 @@ void R_DrawAliasModel (entity_t *e)
 				if (tex.base && tex.base->source_format == SRC_INDEXED && !tex.upper && !tex.lower)
 				{
 					scoreboard_t* sb = &cl.scores[e->netstate.colormap - 1];
-					struct gltexture_s* t;
+					struct gltexture_s* t = NULL; // woods
 
 					// woods force colors #enemycolors
 

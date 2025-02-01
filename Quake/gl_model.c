@@ -2817,7 +2817,8 @@ static byte *Mod_LoadVisibilityExternal(FILE* f)
 	byte*	visdata;
 
 	filelen = 0;
-	fread(&filelen, 1, 4, f);
+	if (fread(&filelen, 1, 4, f) != 4) // woods
+		return NULL;
 	filelen = LittleLong(filelen);
 	if (filelen <= 0) return NULL;
 	Con_DPrintf("...%d bytes visibility data\n", filelen);
@@ -2833,7 +2834,8 @@ static void Mod_LoadLeafsExternal(FILE* f)
 	void*	in;
 
 	filelen = 0;
-	fread(&filelen, 1, 4, f);
+	if (fread(&filelen, 1, 4, f) != 4) // woods
+		return;
 	filelen = LittleLong(filelen);
 	if (filelen <= 0) return;
 	Con_DPrintf("...%d bytes leaf data\n", filelen);

@@ -32,7 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 char		key_lines[CMDLINES][MAXCMDLINE];
 char		key_tabhint[MAXCMDLINE]; // woods #iwtabcomplete
 
-int		key_linepos;
+size_t	key_linepos = 0; // woods -- int to size_t
 int		key_insert = true;	//johnfitz -- insert key toggle (for editing)
 double		key_blinktime; //johnfitz -- fudge cursor blinking to make it easier to spot in certain cases
 

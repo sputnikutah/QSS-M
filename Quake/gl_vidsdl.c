@@ -1780,8 +1780,13 @@ void	VID_Init (void)
 		v = Cvar_FindVar(read_vars[i]);
 		if (!v || v->callback)
 			Sys_Error("Cvar %s not found yet, or already has a callback", read_vars[i]);
-		else
-			Cvar_SetCallback (v, VID_Changed_f);
+		else // woods
+		{
+			if (strcmp(read_vars[i], "vid_fsaa") == 0)
+				Cvar_SetCallback (v, VID_FSAA_f);
+			else
+				Cvar_SetCallback (v, VID_Changed_f);
+		}
 	}
 
 	Cvar_SetCompletion (&vid_width, VID_Width_Completion_f); // woods #iwtabcomplete

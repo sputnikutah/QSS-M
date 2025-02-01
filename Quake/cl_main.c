@@ -1728,8 +1728,8 @@ void CL_Download_Finished_f(void)
 			if (tmp)
 			{
 				fseek(cls.download.file, 0, SEEK_SET);
-				fread(tmp, 1, size, cls.download.file);
-				hashokay = (hash == CRC_Block(tmp, size));
+				size_t bytes_read = fread(tmp, 1, size, cls.download.file); // woods
+				hashokay = (bytes_read == size && hash == CRC_Block(tmp, size)); // woods
 				free(tmp);
 
 				if (!hashokay) Con_Warning("Download hash failure\n");

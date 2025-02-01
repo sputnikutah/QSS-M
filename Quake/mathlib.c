@@ -693,7 +693,7 @@ void Matrix4_Multiply(const mat4_t a, const mat4_t b, mat4_t out)
  * Return true for success, false for failure (singular matrix)
  * Spike: This comes from mesa's GLU.
  */
-qboolean Matrix4_Invert(const float *m, float *out)
+qboolean Matrix4_Invert(const mat4_t m, mat4_t out) // woods
 {
 /* NB. OpenGL Matrices are COLUMN major. */
 #define SWAP_ROWS(a, b) { float *_tmp = a; (a)=(b); (b)=_tmp; }

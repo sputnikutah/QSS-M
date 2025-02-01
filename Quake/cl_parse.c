@@ -2391,7 +2391,7 @@ static Uint32 last_vote_time = 0; // woods #autovote
 CL_ParseProQuakeString -- // begin rook / woods #pqteam
 =======================
 */
-void CL_ParseProQuakeString(char* string) // #pqteam
+qboolean CL_ParseProQuakeString(const char* string) // #pqteam
 {
 	static int checkping = -1;
 	int i;
@@ -2610,7 +2610,7 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 
 	// JPG 1.05 check for IP information  // woods for #iplog
 	if (iplog_size)
-	{
+	{		
 		if (!strncmp(string, "host:    ", 9))
 		{
 			begin_status = 1;
@@ -2624,7 +2624,7 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 			if (sscanf(string + 9, "%d", &playercount))
 			{
 				if (!cl.console_status)
-					*string = 0;
+					return true;
 			}
 			else
 				playercount = 0;
@@ -2634,7 +2634,7 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 			if (!sscanf(string, "#%d", &checkip) || --checkip < 0 || checkip >= cl.maxclients)
 				checkip = -1;
 			if (!cl.console_status)
-				*string = 0;
+				return true;
 			remove_status = 0;
 		}
 		else if (checkip != -1)
@@ -2646,7 +2646,7 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 			}
 			checkip = -1;
 			if (!cl.console_status)
-				*string = 0;
+				return true;
 			remove_status = 0;
 
 			if (!--playercount)
@@ -2656,9 +2656,11 @@ void CL_ParseProQuakeString(char* string) // #pqteam
 		{
 			playercount = 0;
 			if (remove_status)
-				*string = 0;
+				return true;
 		}
 	}
+
+	return false;
 }
 
 #if 0	/* for debugging. from fteqw. */
@@ -3358,7 +3360,7 @@ void CL_ParseServerMessage (void)
 	int			i;
 	const char		*str; //johnfitz
 	int			lastcmd; //johnfitz
-	char*		s;	// woods #pqteam
+	const char*		s;	// woods #pqteam
 //
 // if recording demos, copy the message out
 //
@@ -3450,10 +3452,12 @@ void CL_ParseServerMessage (void)
 		case svc_disconnect:
 			Host_EndGame ("Server disconnected\n");
 
-		case svc_print:
- 			s = MSG_ReadString();           //   woods pq string #pqteam
-			CL_ParseProQuakeString(s);      //   woods pq string #pqteam
-			CL_ParsePrint(s);				//   woods pq string #pqteam
+		case svc_print: //   woods pq string #pqteam
+			s = MSG_ReadString();
+			if (!CL_ParseProQuakeString(s))
+			{
+				CL_ParsePrint(s);
+			}
 			break;
 
 		case svc_centerprint:

@@ -515,7 +515,11 @@ static int CL_GetDemoMessage (void)
 
 	cls.demo_offset_current = ftell(cls.demofile); // woods #demopercent (Baker Fitzquake Mark V)
 
-	fread (&net_message.cursize, 4, 1, cls.demofile);
+	if (fread (&net_message.cursize, 4, 1, cls.demofile) != 1) // woods
+	{
+		CL_StopPlayback();
+		return 0;
+	}
 	VectorCopy (cl.mviewangles[0], cl.mviewangles[1]);
 	for (i = 0 ; i < 3 ; i++)
 	{

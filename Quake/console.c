@@ -32,6 +32,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif
 #include "quakedef.h"
 #include "q_ctype.h"
+#include <errno.h> // woods
 
 int 		con_linewidth;
 
@@ -925,7 +926,10 @@ void Con_DebugLog(const char *msg)
 	if (log_fd == -1)
 		return;
 
-	write(log_fd, msg, strlen(msg));
+	ssize_t bytes_written = write(log_fd, msg, strlen(msg)); // woods
+	if (bytes_written == -1) {
+		fprintf(stderr, "Error writing to debug log: %s\n", strerror(errno));
+}
 }
 
 

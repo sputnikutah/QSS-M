@@ -4843,7 +4843,14 @@ void Host_DownloadAck(client_t *client)
 		if (data)
 		{
 			fseek(client->download.file, host_client->download.startpos, SEEK_SET);
-			fread(data, 1, host_client->download.size, client->download.file);
+			size_t read_size = fread(data, 1, host_client->download.size, client->download.file); // woods
+			if (read_size != host_client->download.size)
+			{
+				free(data);
+				fclose(client->download.file);
+				client->download.file = NULL;
+				return;
+			}
 			hash = CRC_Block(data, host_client->download.size);
 			free(data);
 		}

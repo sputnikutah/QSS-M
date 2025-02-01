@@ -178,7 +178,8 @@ static byte *Image_LoadDDS(FILE *f, int *width, int *height, enum srcformat *fmt
 	ddsheader_t fmtheader;
 	dds10header_t fmt10header;
 
-	fread(&fmtheader, 1, sizeof(fmtheader), f);
+	if (fread(&fmtheader, 1, sizeof(fmtheader), f) != sizeof(fmtheader)) // woods
+		goto fail;
 
 	if (fmtheader.magic != (('D'<<0)|('D'<<8)|('S'<<16)|(' '<<24)))
 		goto fail;
@@ -279,7 +280,8 @@ static byte *Image_LoadDDS(FILE *f, int *width, int *height, enum srcformat *fmt
 	else if (*(int*)&fmtheader.ddpfPixelFormat.dwFourCC == (('D'<<0)|('X'<<8)|('1'<<16)|('0'<<24)))
 	{
 		//this has some weird extra header with dxgi format types.
-		fread(&fmt10header, 1, sizeof(fmt10header), f);
+		if (fread(&fmt10header, 1, sizeof(fmt10header), f) != sizeof(fmt10header)) // woods
+			goto fail;
 		switch(fmt10header.dxgiformat)
 		{
 //		case 0x0/*DXGI_FORMAT_UNKNOWN*/:				encoding = TexMgr_FormatForName("INVALID");			break;
@@ -501,7 +503,10 @@ static byte *Image_LoadDDS(FILE *f, int *width, int *height, enum srcformat *fmt
 	//just read the mipchain into a new bit of memory and return that.
 	//note that layers and mips are awkward, but we don't support layers here so its just a densely packed pyramid.
 	ret = (byte *) Hunk_Alloc (datasize);
-	fread(ret, 1, datasize, f);
+	if (fread(ret, 1, datasize, f) != datasize) // woods
+	{
+		goto fail;
+	}
 
 	fclose(f);
 
@@ -943,7 +948,8 @@ byte *Image_LoadPCX (FILE *f, int *width, int *height)
 
 	start = ftell (f); //save start of file (since we might be inside a pak file, SEEK_SET might not be the start of the pcx)
 
-	fread(&pcx, sizeof(pcx), 1, f);
+	if (fread(&pcx, sizeof(pcx), 1, f) != 1) // woods
+		Sys_Error("Failed to read PCX header from '%s'", loadfilename);
 	pcx.xmin = (unsigned short)LittleShort (pcx.xmin);
 	pcx.ymin = (unsigned short)LittleShort (pcx.ymin);
 	pcx.xmax = (unsigned short)LittleShort (pcx.xmax);
@@ -966,7 +972,8 @@ byte *Image_LoadPCX (FILE *f, int *width, int *height)
 
 	//load palette
 	fseek (f, start + com_filesize - 768, SEEK_SET);
-	fread (palette, 1, 768, f);
+	if (fread(palette, 1, 768, f) != 768) // woods
+		Sys_Error("Failed to read PCX palette from '%s'", loadfilename);
 
 	//back to start of image data
 	fseek (f, start + sizeof(pcx), SEEK_SET);
@@ -1031,7 +1038,11 @@ byte *Image_LoadLMP (FILE *f, int *width, int *height, enum srcformat *fmt)
 	size_t		pix;
 	void		*data;
 
-	fread(&qpic, sizeof(qpic), 1, f);
+	if (fread(&qpic, sizeof(qpic), 1, f) != 1) // woods
+	{
+		fclose(f);
+		return NULL;
+	}
 	qpic.width = LittleLong (qpic.width);
 	qpic.height = LittleLong (qpic.height);
 
@@ -1044,7 +1055,11 @@ byte *Image_LoadLMP (FILE *f, int *width, int *height, enum srcformat *fmt)
 	}
 
 	data = (byte *) Hunk_Alloc(pix); //+1 to allow reading padding byte on last line
-	fread(data, 1, pix, f);
+	if (fread(data, 1, pix, f) != pix) // woods
+	{
+		fclose(f);
+		return NULL;
+	}
 	fclose(f);
 
 	*width = qpic.width;
