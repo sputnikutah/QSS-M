@@ -3662,6 +3662,8 @@ static void COM_Game_f (void)
 		//fixme -- writing configs without reloading when switching between many mods is SERIOUSLY dangerous. ignore if no 'exec default.cfg' commands were used?
 		Host_WriteConfiguration ();
 
+		Host_BackupConfiguration (); // woods #cfgbackup
+
 		COM_ResetGameDirectories(paths);
 
 		//clear out and reload appropriate data
