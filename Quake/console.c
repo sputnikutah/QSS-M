@@ -1780,6 +1780,121 @@ static qboolean CompleteIP(const char* partial, void* unused) // woods
 	return true;
 }
 
+static qboolean CompleteClients(const char* partial, void* unused) // woods
+{
+	extern char unfun[129];
+
+	if (Cmd_Argc() != 2)
+		return false;
+
+	// Only suggest names if we're connected to a server
+	if (cls.state != ca_connected && cl.maxclients < 1)
+		return false;
+
+	// Check if partial has special chars
+	char unfun_partial[32];
+	qboolean partial_has_special = false;
+	int i;
+
+	for (i = 0; partial[i] && i < 31; i++) {
+		if (partial[i] != ' ' && partial[i] != unfun[partial[i] & 127]) {
+			partial_has_special = true;
+			break;
+		}
+	}
+
+	// Only convert to unfun if special chars present
+	if (partial_has_special) {
+		for (i = 0; partial[i] && i < 31; i++)
+			unfun_partial[i] = unfun[partial[i] & 127];
+		unfun_partial[i] = '\0';
+	}
+
+	// Loop through all possible players
+	for (i = 0; i < cl.maxclients; i++)
+	{
+		scoreboard_t* s = &cl.scores[i];
+		const char* colored_name = s->name;
+		char unfun_name[32];
+		qboolean has_special_chars = false;
+
+		// Skip empty slots
+		if (!colored_name[0])
+			continue;
+
+		// Scan the entire name first to find the true last character
+		int true_end = 0;
+		for (int j = 0; colored_name[j] && j < 31; j++)
+		{
+			if (colored_name[j] != ' ')
+				true_end = j;
+		}
+
+		// Now scan up to true_end to find any large gaps
+		int last_char = 0;
+		int space_count = 0;
+		int max_allowed_spaces = 1;
+
+		for (int j = 0; j <= true_end && j < 31; j++)
+		{
+			if (colored_name[j] == ' ')
+			{
+				space_count++;
+				if (space_count > max_allowed_spaces)
+				{
+					break;
+				}
+			}
+			else
+			{
+				last_char = j;
+				space_count = 0;
+			}
+		}
+
+		// Create permanent copy of trimmed name
+		int trim_len = q_min(last_char + 1, 15);
+		char* permanent_name = (char*)Hunk_AllocName(trim_len + 1, "tabname");
+		memcpy(permanent_name, colored_name, trim_len);
+		permanent_name[trim_len] = '\0';
+
+		// First check if name has any special chars
+		for (int j = 0; permanent_name[j] && j < trim_len; j++)
+		{
+			if (permanent_name[j] != ' ' && permanent_name[j] != unfun[permanent_name[j] & 127])
+			{
+				has_special_chars = true;
+				break;
+			}
+		}
+
+		// Only do unfun conversion if we have special chars
+		if (has_special_chars)
+		{
+			for (int j = 0; permanent_name[j] && j < trim_len; j++)
+			{
+				unfun_name[j] = unfun[permanent_name[j] & 127];
+			}
+			unfun_name[trim_len] = '\0';
+
+			if (q_strcasestr(unfun_name, partial_has_special ? unfun_partial : partial))
+			{
+				Con_AddToTabList(unfun_name, partial, permanent_name, NULL);
+			}
+		}
+		else
+		{
+			// For normal names, just do direct comparison
+			if (q_strcasestr(permanent_name, partial))
+			{
+				Con_AddToTabList(permanent_name, partial, NULL, NULL);
+			}
+		}
+	}
+
+	return true;
+}
+
 extern qboolean CompletePAKList(const char* partial, void* unused); // woods #unpak
 
 qboolean CompleteImageList (const char* partial, void* unused); // woods
@@ -1844,7 +1959,9 @@ static const arg_completion_type_t arg_completion_types[] =
 	{ "flocate",				CompleteLS,				NULL },
 	{ "ip",						CompleteIP,				NULL },
 	{ "unpak",					CompletePAKList,		NULL },
-	{ "cmd",					CompleteGeneralList,	NULL }
+	{ "cmd",					CompleteGeneralList,	NULL },
+	{ "identify",				CompleteClients,		NULL },
+	{ "tell",					CompleteClients,		NULL }
 };
 
 static const int num_arg_completion_types =
