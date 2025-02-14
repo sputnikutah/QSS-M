@@ -305,7 +305,6 @@ void	Host_FindMaxClients (void)
 
 #ifdef USE_CODEC_MP3
 #include <mad.h>
-#include <mpg123.h>
 #endif
 
 void Host_Version_f(void)
