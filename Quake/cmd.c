@@ -1627,13 +1627,16 @@ void Cmd_ForwardToServer (void)
 	if (cls.demoplayback)
 		return;		// not really connected
 
-	for (int i = 0; i < Cmd_Argc() - 1; i++) // woods - hack pending transition to *observer
+	if (cl.modtype == 1)
 	{
-		if (!q_strcasecmp(Cmd_Argv(i), "setinfo") &&
-			!q_strcasecmp(Cmd_Argv(i + 1), "observer"))
+		for (int i = 0; i < Cmd_Argc() - 1; i++) // woods - hack pending transition to *observer
 		{
-			Con_Printf("\nchanging ^mobserver^m key is not allowed\n\n");
-			return;
+			if (!q_strcasecmp(Cmd_Argv(i), "setinfo") &&
+				!q_strcasecmp(Cmd_Argv(i + 1), "observer"))
+			{
+				Con_Printf("\nchanging ^mobserver^m key is not allowed\n\n");
+				return;
+			}
 		}
 	}
 
