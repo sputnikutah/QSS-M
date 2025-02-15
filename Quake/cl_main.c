@@ -2622,6 +2622,8 @@ static void CL_ServerExtension_ItemTimer_f (void) // woods #obstimers (FTE)
 		cl.itemtimers = timer;
 	}
 
+	PScript_RunParticleEffectTypeString(org, NULL, 1, "EF_ITEMTIMER");
+
 	// Update timer properties
 	VectorCopy(org, timer->origin);
 	timer->start = start;
