@@ -33,6 +33,21 @@ typedef struct
 	char	peak; //johnfitz
 } lightstyle_t;
 
+typedef struct // woods #teaminfo
+{
+	vec3_t origin;
+	float time;
+	float health;
+	float armor;
+	int items;
+	double quad_time;
+	double pent_time;
+	double ring_time;
+	vec3_t last_origin;
+	float last_loc_update;
+	float speed;
+} teaminfo_t;
+
 typedef struct
 {
 	char	name[MAX_SCOREBOARDNAME];
@@ -45,7 +60,7 @@ typedef struct
 	int		spectator;	//support for fte's hybrid servers.
 						//FIXME: handle quakeworld's teams.
 						//FIXME: handle quakeworld's skins (QWTF may require it).
-
+	teaminfo_t tinfo; // woods #teaminfo
 	char	userinfo[8192];
 } scoreboard_t;
 

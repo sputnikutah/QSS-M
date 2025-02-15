@@ -2641,6 +2641,54 @@ static void CL_ServerExtension_ItemTimer_f (void) // woods #obstimers (FTE)
 	timer->timername = Z_Strdup(timername);  // Allocate and copy the string
 }
 
+static void CL_ServerExtension_TeamInfo_f(void) // woods #teaminfo
+{
+	static float last_print_time = 0;
+	static float last_loc_update = 0;
+	static char cached_locations[MAX_SCOREBOARD][64];  // Cache for locations
+
+	int pidx = atoi(Cmd_Argv(1));
+	vec3_t org = {
+		atof(Cmd_Argv(2)),
+		atof(Cmd_Argv(3)),
+		atof(Cmd_Argv(4))
+	};
+	float health = atof(Cmd_Argv(5));
+	float armor = atof(Cmd_Argv(6));
+	unsigned int items = strtoul(Cmd_Argv(7), NULL, 0);
+	float speed = atof(Cmd_Argv(8));
+
+	if (pidx < cl.maxclients)
+	{
+		scoreboard_t* player = &cl.scores[pidx];
+		player->tinfo.time = cl.time + 5;
+		player->tinfo.health = health;
+		player->tinfo.armor = armor;
+		player->tinfo.items = items;
+		player->tinfo.speed = speed;
+		VectorCopy(org, player->tinfo.origin);
+
+		for (int i = 0; i < cl.maxclients; i++)
+		{
+			scoreboard_t* p = &cl.scores[i];
+			if (p->name[0] && p->tinfo.time > cl.time && p->tinfo.speed >= 10)
+			{
+				// Only update if enough time passed or moved significantly
+				if (cl.time - p->tinfo.last_loc_update >= 1.0 ||
+					DistanceBetween2Points(p->tinfo.origin, p->tinfo.last_origin) > 32) // 32 units to move before updating location
+				{
+					const char* loc = LOC_GetLocation(p->tinfo.origin);
+					Q_strncpy(cached_locations[i], loc ? loc : "unknown", sizeof(cached_locations[i]));
+
+					// Update tracking info
+					p->tinfo.last_loc_update = cl.time;
+					VectorCopy(p->tinfo.origin, p->tinfo.last_origin);
+				}
+			}
+		}
+	}
+}
+
 static void CL_ServerExtension_FullServerinfo_f(void)
 {
 	const char *newserverinfo = Cmd_Argv(1);
@@ -2987,7 +3035,7 @@ void CL_Init (void)
 	//Cmd_AddCommand_ServerCommand ("at", CL_ServerExtension_Ignore_f); //invalid for nq, autotrack info for mvds
 	Cmd_AddCommand_ServerCommand ("wps", CL_ServerExtension_Ignore_f); //ktx/cspree weapon stats
 	Cmd_AddCommand_ServerCommand ("it", CL_ServerExtension_ItemTimer_f); //cspree item timers -- woods #obstimers
-	Cmd_AddCommand_ServerCommand ("tinfo", CL_ServerExtension_Ignore_f); //ktx team info
+	Cmd_AddCommand_ServerCommand ("tinfo", CL_ServerExtension_TeamInfo_f); //ktx team info -- woods #teaminfo
 	Cmd_AddCommand_ServerCommand ("exectrigger", CL_ServerExtension_Ignore_f); //spike
 	Cmd_AddCommand_ServerCommand ("csqc_progname", CL_ServerExtension_Ignore_f); //spike
 	Cmd_AddCommand_ServerCommand ("csqc_progsize", CL_ServerExtension_Ignore_f); //spike
