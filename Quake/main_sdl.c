@@ -32,6 +32,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "SDL.h"
 #endif
 #include <stdio.h>
+#if defined(__linux__) || defined(__APPLE__) // woods #idlesleep
+#include <sys/select.h>
+#include <sys/time.h>
+#endif
+
+extern cvar_t sv_idlesleep; // woods #idlespeep
 
 void Host_Reconnect_Con_f (void);
 
@@ -123,9 +129,44 @@ int main(int argc, char *argv[])
 			newtime = Sys_DoubleTime ();
 			time = newtime - oldtime;
 
-			while (time < sys_ticrate.value )
+			while (time < sys_ticrate.value)
 			{
-				SDL_Delay(1);
+				int i;
+				qboolean hasClients = false;
+#if defined(__linux__) || defined(__APPLE__)
+				struct timeval timeout = { 0, 0 };
+#endif
+
+				if (sv.active) // woods #idlesleep -- sleep longer if server is empty
+				{
+					for (i = 0; i < svs.maxclients; i++)
+					{
+						if (svs.clients[i].active ||
+							(svs.clients[i].netconnection != NULL) ||  // Has an active network connection
+							svs.clients[i].sendsignon != PRESPAWN_DONE)  // Is in the process of connecting
+						{
+							hasClients = true;
+							break;
+						}
+					}
+
+					if (!hasClients && sv_idlesleep.value > 0)
+					{
+#ifdef _WIN32
+						SDL_Delay(CLAMP(1, (int)sv_idlesleep.value, 50));
+#else
+						int delay_ms = CLAMP(1, (int)sv_idlesleep.value, 50);
+						timeout.tv_sec = 0;
+						timeout.tv_usec = delay_ms * 1000;
+						select(0, NULL, NULL, NULL, &timeout);
+#endif
+					}
+					else
+						SDL_Delay(1);
+				}
+				else
+					SDL_Delay(1);
+
 				newtime = Sys_DoubleTime ();
 				time = newtime - oldtime;
 			}

@@ -31,6 +31,7 @@ server_static_t	svs;
 static char	localmodels[MAX_MODELS][8];	// inline model names for precache
 
 cvar_t	sv_defaultmap = {"sv_defaultmap","start", CVAR_ARCHIVE}; // woods #mapchangeprotect (R00k) 
+cvar_t  sv_idlesleep = {"sv_idlesleep", "8", CVAR_ARCHIVE}; // woods #idlesleep (ezquake)
 
 int				sv_protocol = PROTOCOL_RMQ;//spike -- enough maps need this now that we can probably afford incompatibility with engines that still don't support 999 (vanilla was already broken) -- PROTOCOL_FITZQUAKE; //johnfitz
 unsigned int	sv_protocol_pext1 = PEXT1_SUPPORTED_SERVER; //spike
@@ -1611,6 +1612,7 @@ void SV_Init (void)
 	Cvar_RegisterVariable (&sv_map_rotation); // woods #maprotation
 	Cvar_RegisterVariable (&sv_defaultmap); // woods #mapchangeprotect
 	Cvar_SetCompletion (&sv_defaultmap, &Extralevels_Completion_f); // woods #iwtabcomplete
+	Cvar_RegisterVariable (&sv_idlesleep); // woods #idlesleep
 
 	if (isDedicated)
 		sv_public.string = "1";
