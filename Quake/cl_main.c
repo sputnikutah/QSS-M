@@ -84,6 +84,7 @@ cvar_t  cl_bobbing = {"cl_bobbing", "0", CVAR_ARCHIVE}; // woods (joequake #weap
 cvar_t	cl_web_download_url = {"cl_web_download_url", "q1tools.github.io", CVAR_ARCHIVE}; // woods #webdl
 cvar_t	cl_web_download_url2 = { "cl_web_download_url2", "maps.quakeworld.nu", CVAR_ARCHIVE }; // woods #webdl
 cvar_t	cl_autovote = {"cl_autovote", "0", CVAR_ARCHIVE}; // woods #autovote
+cvar_t	cl_onload = {"cl_onload", "", CVAR_ARCHIVE}; // woods #onload
 
 client_static_t	cls;
 client_state_t	cl;
@@ -2859,6 +2860,26 @@ static void CL_LegacyColor_f(void)
 }
 
 /*
+===============
+CL_Onload_Completion_f -- woods #onload
+===============
+*/
+static void CL_Onload_Completion_f(cvar_t* cvar, const char* partial)
+{
+	Con_AddToTabList("\"\"", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("bookmarks", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("browser", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("connect", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("console", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("demo", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("exec", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("history", partial, NULL, NULL); // #demolistsort add arg
+	Con_AddToTabList("save", partial, NULL, NULL); // #demolistsort add arg
+
+	return;
+}
+
+/*
 =================
 CL_Init
 =================
@@ -2932,6 +2953,8 @@ void CL_Init (void)
 	Cvar_SetCallback (&cl_web_download_url2, &Web2CheckCallback_f); // woods #webdl
 
 	Cvar_RegisterVariable (&cl_autovote); // woods #autovote
+	Cvar_RegisterVariable (&cl_onload); // woods #onload
+	Cvar_SetCompletion (&cl_onload, &CL_Onload_Completion_f); // woods #onload
 
 	WebCheckInit (); // woods -- check if the web downloads servers are live at launch (threaded) #webdl
 

@@ -93,8 +93,6 @@ cvar_t	campaign = {"campaign","0",CVAR_NONE}; // for the 2021 rerelease
 cvar_t	horde = {"horde","0",CVAR_NONE}; // for the 2021 rerelease
 cvar_t	sv_cheats = {"sv_cheats","0",CVAR_NONE}; // for the 2021 rerelease
 
-cvar_t	cl_menuskip = { "cl_menuskip","0",CVAR_ARCHIVE}; // woods #menuskip
-
 devstats_t dev_stats, dev_peakstats;
 overflowtimes_t dev_overflows; //this stores the last time overflow messages were displayed, not the last time overflows occured
 
@@ -451,15 +449,108 @@ void Host_InitDeQuake (void)
 
 /*
 ===============
-Menu_Skip_f -- woods #menuskip
+Startup_Place -- woods #onload (inspired by ezquake)
+
+Customize the initial behavior of the game client based on user
+preferences stored in cl_onload
 ===============
 */
-void Menu_Skip_f(void)
+void Startup_Place (void)
 {
-	if (cl_menuskip.value)
-		Cbuf_AddText("toggleconsole\n");
-	if (cl_menuskip.value)
-		Cbuf_AddText("togglemenu\n");
+	extern cvar_t cl_onload;
+	extern cvar_t cl_demoreel;
+	const char* cmd = cl_onload.string;
+
+	// Early return for empty or default "menu" command
+	if (!cmd[0] || !q_strcasecmp(cmd, "menu"))
+		return;
+
+	// Define blocked commands that could cause loops or crashes
+	const char* blocked_cmds[] = {
+		"quit",
+		"startup",
+		NULL
+	};
+
+	// Check for blocked commands
+	for (int i = 0; blocked_cmds[i]; i++) {
+		if (!q_strcasecmp(cmd, blocked_cmds[i])) {
+			Con_DPrintf("cl_onload: command '%s' is not allowed\n", blocked_cmds[i]);
+			return;
+		}
+	}
+
+	// Define command mappings
+	struct {
+		const char* name;
+		const char* command;
+	} command_map[] = {
+		{"browser", "menu_slist"},
+		{"bookmarks", "menu_bookmarks"},
+		{"save", "menu_load"},
+		{"history", "menu_history"},
+		{NULL, NULL}
+	};
+
+	// Check for special commands first
+	if (!q_strcasecmp(cmd, "console")) {
+		key_dest = key_console;
+		return;
+	}
+	if (!q_strcasecmp(cmd, "demo")) {
+		key_dest = (cl_demoreel.value) ? key_game : key_menu;
+		return;
+	}
+
+	// Look up command in mapping table
+	for (int i = 0; command_map[i].name != NULL; i++) {
+		if (!q_strcasecmp(cmd, command_map[i].name)) {
+			Cbuf_AddText(va("%s\n", command_map[i].command));
+			return;
+		}
+	}
+
+	// Handle command with potential arguments
+	const char* space = strchr(cmd, ' ');
+	if (space) {
+		// We have a command with arguments
+		char command[128];
+		int cmdlen = space - cmd;
+
+		if (cmdlen < sizeof(command)) {
+			memcpy(command, cmd, cmdlen);
+			command[cmdlen] = '\0';
+
+			// Check if the first word is a valid command
+			if (Cmd_Exists(command)) {
+				Cbuf_AddText(va("%s\n", cmd));  // Use full command string with args
+				return;
+			}
+			key_dest = key_console;
+			Con_DPrintf("cl_onload command does not exist: %s\n", command);
+			return;
+		}
+	}
+
+	// Handle single word command
+	if (Cmd_Exists(cmd)) {
+		Cbuf_AddText(va("%s\n", cmd));
+		return;
+	}
+
+	// Command not found
+	key_dest = key_console;
+	Con_DPrintf("cl_onload command does not exist: %s\n", cmd);
+}
+
+/*
+===============
+Host_Startup_f -- woods #onload
+===============
+*/
+void Host_Startup_f (void)
+{
+	Startup_Place ();
 }
 
 /*
@@ -471,7 +562,7 @@ void Host_InitLocal (void)
 {
 	Cmd_AddCommand ("version", Host_Version_f);
 	Cmd_AddCommand ("svnextmap", SV_Next_Map_f); // woods #maprotation
-	Cmd_AddCommand ("menuskip", Menu_Skip_f); // woods #menuskip
+	Cmd_AddCommand ("startup", Host_Startup_f); // woods #onload
 
 	Host_InitCommands ();
 
@@ -508,8 +599,6 @@ void Host_InitLocal (void)
 	Cvar_RegisterVariable (&campaign);
 	Cvar_RegisterVariable (&horde);
 	Cvar_RegisterVariable (&sv_cheats);
-
-	Cvar_RegisterVariable (&cl_menuskip); // woods #menuskip
 
 	Cvar_RegisterVariable (&pausable);
 
@@ -1173,27 +1262,27 @@ static void UpdateWindowTitle(void)
 		if ((cl.gametype == GAME_DEATHMATCH) && (cls.state == ca_connected) && !cls.demoplayback) // woods added connected server
 {
     if (ln[0] != '\0')
-			q_snprintf(title, sizeof(title), "%s  |  %s (%s)  -  " ENGINE_NAME_AND_VER, lastmphost, ln, current.map);
+        q_snprintf(title, sizeof(title), "%s  |  %s (%s)  -  " ENGINE_NAME_AND_VER, lastmphost, ln, current.map);
     else
         q_snprintf(title, sizeof(title), "%s  |  %s  -  " ENGINE_NAME_AND_VER, lastmphost, current.map);
 }
-		else if (cls.demoplayback) // woods added demofile
+else if (cls.demoplayback) // woods added demofile
 {
     if (ln[0] != '\0')
-			q_snprintf(title, sizeof(title), "%s (%s)  |  %s  -  " ENGINE_NAME_AND_VER, ln, current.map, demoplaying);
-		else
+        q_snprintf(title, sizeof(title), "%s (%s)  |  %s  -  " ENGINE_NAME_AND_VER, ln, current.map, demoplaying);
+    else
         q_snprintf(title, sizeof(title), "%s  |  %s  -  " ENGINE_NAME_AND_VER, current.map, demoplaying);
 }
 else
 {
     if (ln[0] != '\0')
-			q_snprintf(title, sizeof(title),
-				"%s (%s)  |  skill %d  |  %d/%d kills  |  %d/%d secrets  -  " ENGINE_NAME_AND_VER,
-				ln, current.map,
-				current.stats.skill,
-				current.stats.monsters, current.stats.total_monsters,
-				current.stats.secrets, current.stats.total_secrets
-			);
+        q_snprintf(title, sizeof(title),
+            "%s (%s)  |  skill %d  |  %d/%d kills  |  %d/%d secrets  -  " ENGINE_NAME_AND_VER,
+            ln, current.map,
+            current.stats.skill,
+            current.stats.monsters, current.stats.total_monsters,
+            current.stats.secrets, current.stats.total_secrets
+        );
     else
         q_snprintf(title, sizeof(title),
             "%s  |  skill %d  |  %d/%d kills  |  %d/%d secrets  -  " ENGINE_NAME_AND_VER,
@@ -1203,7 +1292,7 @@ else
             current.stats.secrets, current.stats.total_secrets
         );
 }
-		VID_SetWindowTitle(title);
+VID_SetWindowTitle(title);
 	}
 	else
 	{
@@ -1637,8 +1726,8 @@ void Host_Init (void)
 	// johnfitz -- in case the vid mode was locked during vid_init, we can unlock it now.
 		// note: two leading newlines because the command buffer swallows one of them.
 		Cbuf_AddText ("\n\nvid_unlock\n");
-		Cbuf_AddText("menuskip\n"); // woods #menuskip
 		Cbuf_AddText("namebk\n"); // woods #smartafk lets run a backup name check for AFK leftovers (crash/force quit)
+		Cbuf_AddText("startup\n"); // woods #onload
 	}
 
 	if (cls.state == ca_dedicated)
