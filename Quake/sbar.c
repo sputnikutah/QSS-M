@@ -408,7 +408,7 @@ void Sbar_DrawScrollString (int x, int y, int width, const char *str)
 	glScissor (left, 0, (width - 10) * scale, glheight);
 
 	strLen = strlen(str) * 8;
-	totalLen = strLen + 3 * 8;  // text width + " - " divider width
+	totalLen = strLen + 2 * 8;  // text width + " - " divider width
 
 	ofs = ((int)(realtime * 30)) % totalLen;
 
