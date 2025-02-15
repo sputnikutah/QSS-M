@@ -2328,6 +2328,26 @@ static void Host_Map_f (void)
 	p = strstr(name, ".bsp");
 	if (p && p[4] == '\0')
 		*p = '\0';
+
+	if (cls.state != ca_dedicated) // woods -- try to download map
+	{
+		char mapPath[MAX_QPATH];
+
+		q_snprintf(mapPath, sizeof(mapPath), "maps/%s.bsp", name);
+
+		if (!COM_FileExists(mapPath, NULL))
+		{
+			Con_Printf("\nmap ^m%s^m not found\n\n", name);
+
+			Cmd_ExecuteString(va("download %s.bsp", name), src_command);
+
+			if (!COM_FileExists(mapPath, NULL))
+			{
+				Con_Printf("\nfailed to download map ^m%s^m\n\n", name);
+			}
+		}
+	}
+
 	PR_SwitchQCVM(&sv.qcvm);
 	SV_SpawnServer (name);
 	PR_SwitchQCVM(NULL);
