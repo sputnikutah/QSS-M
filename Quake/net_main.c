@@ -730,15 +730,39 @@ qsocket_t *NET_GetServerMessage(void)
 Spike: This function is for the menus+status command
 Just queries each driver's public addresses (which often requires system-specific calls)
 */
-int NET_ListAddresses(qhostaddr_t *addresses, int maxaddresses)
+int NET_ListAddresses(qhostaddr_t *addresses, int maxaddresses) // woods
 {
 	int result = 0;
+
+	if (!addresses || maxaddresses <= 0)
+		return 0;
+
 	for (net_driverlevel = 0; net_driverlevel < net_numdrivers; net_driverlevel++)
 	{
+		int new_addresses;
+		void* query_func;
+
+		// Skip if driver not initialized
 		if (!net_drivers[net_driverlevel].initialized)
 			continue;
-		if (net_drivers[net_driverlevel].QueryAddresses)
-			result += net_drivers[net_driverlevel].QueryAddresses(addresses+result, maxaddresses-result);
+
+		// Skip if no query function (normal for some drivers like Loopback)
+		query_func = (void*)net_drivers[net_driverlevel].QueryAddresses;
+		if (!query_func || (uintptr_t)query_func < 0x10000)
+			continue;
+
+		new_addresses = net_drivers[net_driverlevel].QueryAddresses(
+			addresses + result,
+			maxaddresses - result
+		);
+
+		if (new_addresses < 0) {
+			Con_DPrintf("Warning: Failed to query addresses for driver %s\n",
+				net_drivers[net_driverlevel].name);
+			continue;
+		}
+
+		result += new_addresses;
 	}
 	return result;
 }

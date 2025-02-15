@@ -9092,8 +9092,6 @@ void M_LanConfig_Draw (void)
 	qpic_t	*p;
 	int		basex;
 	int		y;
-	int		numaddresses;
-	qhostaddr_t addresses[16];
 	const char	*startJoin;
 	//const char	*protocol;
 
@@ -9114,8 +9112,13 @@ void M_LanConfig_Draw (void)
 
 	y = 52;
 	M_Print(basex, y, "Address:");
-	numaddresses = NET_ListAddresses(addresses, sizeof(addresses) / sizeof(addresses[0]));
-	if (!numaddresses)
+
+	if (!addresses_cached) {
+		cached_numaddresses = NET_ListAddresses(cached_addresses, sizeof(cached_addresses) / sizeof(cached_addresses[0]));
+		addresses_cached = true;
+	}
+
+	if (!cached_numaddresses)
 	{
 		M_Print(basex + (9 * 8) + 10, y, "NONE KNOWN");
 		y += 8;
@@ -9128,9 +9131,9 @@ void M_LanConfig_Draw (void)
 		ip_clickables[0].label_width = 7 * 8;
 		ip_clickables[0].x = basex + (9 * 8) + 10 + 7 * 8;
 		ip_clickables[0].y = y;
-		ip_clickables[0].width = strlen(addresses[0]) * 8;
-		strncpy(ip_clickables[0].text, addresses[0], sizeof(ip_clickables[0].text));
-		M_Print(basex + (9 * 8) + 10, y, va("local: %s", addresses[0]));
+		ip_clickables[0].width = strlen(cached_addresses[0]) * 8;
+		strncpy(ip_clickables[0].text, cached_addresses[0], sizeof(ip_clickables[0].text));
+		M_Print(basex + (9 * 8) + 10, y, va("local: %s", cached_addresses[0]));
 		y += 8;
 
 		// External IP
