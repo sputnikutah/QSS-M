@@ -8978,6 +8978,10 @@ static clickable_text_t ip_clickables[2];  // For local and external IPs
 static float copy_message_time = 0;
 static char last_copied_ip[128] = "";
 
+static qboolean addresses_cached = false;
+static qhostaddr_t cached_addresses[16];
+static int cached_numaddresses = 0;
+
 void SetProtocol(int protocol_cursor)
 {
 	if (protocol_cursor < 3)
