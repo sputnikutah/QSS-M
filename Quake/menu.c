@@ -8287,7 +8287,7 @@ Misc Menu
 */
 
 extern cvar_t pr_checkextension, r_replacemodels, gl_load24bit, cl_nopext, r_lerpmodels, r_lerpmove, 
-sys_throttle, r_particles, sv_nqplayerphysics, cl_nopred, cl_autodemo, cl_smartspawn, cl_bobbing;
+sys_throttle, r_particles, sv_nqplayerphysics, cl_nopred, cl_autodemo, cl_smartspawn, cl_bobbing, cl_onload;
 
 static enum extras_e
 {
@@ -8300,6 +8300,7 @@ static enum extras_e
 	EXTRAS_SPAWNTRAINER,
 	EXTRAS_ITEMBOB,
 	EXTRAS_RESETCONFIG,
+	EXTRAS_STARTUP,
 	EXTRAS_COUNT
 } extras_cursor;
 
@@ -8340,6 +8341,8 @@ static const char* M_Extras_GetItemText(int index) // Add this helper function
 		return "Q3 Item Bobbing";
 	case EXTRAS_RESETCONFIG:
 		return "Reset Config";
+	case EXTRAS_STARTUP:
+		return "Start-up Screen";
 	default:
 		q_snprintf(buffer, sizeof(buffer), "Unknown Item %d", index);
 		return buffer;
@@ -8417,6 +8420,44 @@ static void M_Extras_AdjustSliders (int dir)
 		Cbuf_AddText("cfg_reset\n");  // Reset to default config
 		Cbuf_AddText("cfg_save\n");   // Save the reset config
 		M_Menu_Options_f();           // Return to Options menu
+		break;
+	case EXTRAS_STARTUP:
+		if (dir > 0) {
+			if (!strcmp(cl_onload.string, "") || !strcmp(cl_onload.string, "menu"))
+				Cvar_Set("cl_onload", "browser");
+			else if (!strcmp(cl_onload.string, "browser"))
+				Cvar_Set("cl_onload", "bookmarks");
+			else if (!strcmp(cl_onload.string, "bookmarks"))
+				Cvar_Set("cl_onload", "save");
+			else if (!strcmp(cl_onload.string, "save"))
+				Cvar_Set("cl_onload", "history");
+			else if (!strcmp(cl_onload.string, "history"))
+				Cvar_Set("cl_onload", "console");
+			else if (!strcmp(cl_onload.string, "console"))
+				Cvar_Set("cl_onload", "demo");
+			else if (!strcmp(cl_onload.string, "demo"))
+				Cvar_Set("cl_onload", "menu");
+			else  // If it's a custom command, cycle back to menu
+				Cvar_Set("cl_onload", "menu");
+		}
+		else {
+			if (!strcmp(cl_onload.string, "") || !strcmp(cl_onload.string, "menu"))
+				Cvar_Set("cl_onload", "demo");
+			else if (!strcmp(cl_onload.string, "demo"))
+				Cvar_Set("cl_onload", "console");
+			else if (!strcmp(cl_onload.string, "console"))
+				Cvar_Set("cl_onload", "history");
+			else if (!strcmp(cl_onload.string, "history"))
+				Cvar_Set("cl_onload", "save");
+			else if (!strcmp(cl_onload.string, "save"))
+				Cvar_Set("cl_onload", "bookmarks");
+			else if (!strcmp(cl_onload.string, "bookmarks"))
+				Cvar_Set("cl_onload", "browser");
+			else if (!strcmp(cl_onload.string, "browser"))
+				Cvar_Set("cl_onload", "menu");
+			else  // If it's a custom command, cycle back to menu
+				Cvar_Set("cl_onload", "menu");
+		}
 		break;
 	case EXTRAS_ITEMS:	//not a real option
 		break;
@@ -8512,6 +8553,32 @@ void M_Extras_Draw(void)
 		case EXTRAS_RESETCONFIG:
 			text = "      Reset Config";
 			value = "confirm";
+			break;
+
+		case EXTRAS_STARTUP:
+			text = "   Start-up Screen";
+			if (!strcmp(cl_onload.string, "") || !strcmp(cl_onload.string, "menu"))
+				value = "menu (default)";
+			else if (!strcmp(cl_onload.string, "browser"))
+				value = "server browser";
+			else if (!strcmp(cl_onload.string, "bookmarks"))
+				value = "bookmarks";
+			else if (!strcmp(cl_onload.string, "save"))
+				value = "save menu";
+			else if (!strcmp(cl_onload.string, "history"))
+				value = "server history";
+			else if (!strcmp(cl_onload.string, "console"))
+				value = "console";
+			else if (!strcmp(cl_onload.string, "demo"))
+				value = "demo playback";
+			else if (!strncmp(cl_onload.string, "connect ", 8))
+				value = va("connect: %s", cl_onload.string + 8);
+			else if (!strncmp(cl_onload.string, "exec ", 5))
+				value = va("exec: %s", cl_onload.string + 5);
+			else if (strchr(cl_onload.string, ' '))
+				value = va("cmd: %s", cl_onload.string);
+			else
+				value = cl_onload.string;
 			break;
 
 		default:
@@ -12144,6 +12211,11 @@ void M_Menu_Credits_f (void)
 {
 }
 
+void M_Menu_SearchInternet_f (void) // woods
+{
+	M_Menu_Search_f(SLIST_INTERNET);
+}
+
 static struct
 {
 	const char *name;
@@ -12157,6 +12229,7 @@ static struct
 	{"menu_save", M_Menu_Save_f},
 	{"menu_skill", M_Menu_Skill_f},
 	{"menu_multiplayer", M_Menu_MultiPlayer_f},
+	{"menu_slist", M_Menu_SearchInternet_f},
 	{"menu_setup", M_Menu_Setup_f},
 	{"menu_options", M_Menu_Options_f},
 	{"menu_keys", M_Menu_Keys_f},
