@@ -1171,10 +1171,22 @@ static void UpdateWindowTitle(void)
 		}
 
 		if ((cl.gametype == GAME_DEATHMATCH) && (cls.state == ca_connected) && !cls.demoplayback) // woods added connected server
+{
+    if (ln[0] != '\0')
 			q_snprintf(title, sizeof(title), "%s  |  %s (%s)  -  " ENGINE_NAME_AND_VER, lastmphost, ln, current.map);
+    else
+        q_snprintf(title, sizeof(title), "%s  |  %s  -  " ENGINE_NAME_AND_VER, lastmphost, current.map);
+}
 		else if (cls.demoplayback) // woods added demofile
+{
+    if (ln[0] != '\0')
 			q_snprintf(title, sizeof(title), "%s (%s)  |  %s  -  " ENGINE_NAME_AND_VER, ln, current.map, demoplaying);
 		else
+        q_snprintf(title, sizeof(title), "%s  |  %s  -  " ENGINE_NAME_AND_VER, current.map, demoplaying);
+}
+else
+{
+    if (ln[0] != '\0')
 			q_snprintf(title, sizeof(title),
 				"%s (%s)  |  skill %d  |  %d/%d kills  |  %d/%d secrets  -  " ENGINE_NAME_AND_VER,
 				ln, current.map,
@@ -1182,6 +1194,15 @@ static void UpdateWindowTitle(void)
 				current.stats.monsters, current.stats.total_monsters,
 				current.stats.secrets, current.stats.total_secrets
 			);
+    else
+        q_snprintf(title, sizeof(title),
+            "%s  |  skill %d  |  %d/%d kills  |  %d/%d secrets  -  " ENGINE_NAME_AND_VER,
+            current.map,
+            current.stats.skill,
+            current.stats.monsters, current.stats.total_monsters,
+            current.stats.secrets, current.stats.total_secrets
+        );
+}
 		VID_SetWindowTitle(title);
 	}
 	else
